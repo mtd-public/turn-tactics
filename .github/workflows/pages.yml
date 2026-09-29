@@ -7,25 +7,49 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Publish site to the gh-pages branch
+      - name: Assemble site
         run: |
-          mkdir -p /tmp/site
-          cp index.html .nojekyll manifest.webmanifest sw.js /tmp/site/
-          cp -r vendor icons /tmp/site/
-          cd /tmp/site
+          mkdir -p _site
+          cp index.html .nojekyll manifest.webmanifest sw.js _site/
+          cp -r vendor icons _site/
+      # Works when Settings → Pages → Source is "Deploy from a branch" (gh-pages)
+      - name: Publish to the gh-pages branch
+        run: |
+          cd _site
           git init -q -b gh-pages
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -q -m "Deploy ${GITHUB_SHA::7}"
           git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+          rm -rf .git
+      # Works when Settings → Pages → Source is "GitHub Actions"
+      - uses: actions/configure-pages@v5
+        continue-on-error: true
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,5 +1,5 @@
 // Void Armada service worker: makes the game playable offline once it has loaded once.
-const VERSION = 'va-v2';
+const VERSION = 'va-v3';
 const CORE = [
   './',
   './index.html',

@@ -742,7 +742,7 @@ function waveUnits(w) {
    ================================================================ */
 const canvas = $('stage');
 /* graphics mode: 'retro' = low-res, palette-dithered · 'classic' = full-res, smooth-shaded, full colour */
-let GFX = (() => { try { return JSON.parse(localStorage.getItem('void-armada-ui-v1') || '{}').gfx || 'retro'; } catch (e) { return 'retro'; } })();
+let GFX = (() => { try { const g = JSON.parse(localStorage.getItem('void-armada-ui-v1') || '{}').gfx; return g === 'classic' || g === 'grunge' ? 'classic' : 'retro'; } catch (e) { return 'retro'; } })();
 const CLASSIC_PAL = { id:'classic', name:'CLASSIC', dk:'#0a0f1f', lt:'#eaf0ff', ac:'#ff4b5c', fb:'#3d8bff', fg:'#35d07f', fy:'#ffc94a', fm:'#b25cff' };
 const renderer = new THREE.WebGLRenderer({ canvas, antialias:false, powerPreference:'high-performance' });
 renderer.setPixelRatio(1);

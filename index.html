@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=VT323&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&text=%E8%89%A6%E9%9A%8A%E9%85%8D%E7%BD%AE%E7%A7%BB%E5%8B%95%E6%94%BB%E6%92%83%E9%98%B2%E5%BE%A1%E4%BF%AE%E7%90%86%E5%85%85%E5%A1%AB%E9%8A%80%E6%B2%B3%E6%88%A6%E8%A1%93%E6%B3%A2%E7%A0%B2%E7%99%BA%E5%B0%84%E5%85%A8%E5%BC%BE%E3%83%84%E3%82%A4%E3%83%B3%E3%83%90%E3%82%B9%E3%82%BF%E3%83%BC%E9%9B%B7%E9%87%8D%E5%8A%9B%E8%87%AA%E8%BB%8D%E3%83%95%E3%82%A7%E3%82%BA%E4%BA%A4%E6%95%B5%E6%8E%A5%E8%A7%A6%E5%8B%9D%E5%88%A9%E6%95%97%E5%8C%97%E9%80%B2%E6%92%A4%E9%80%80&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&text=%E3%82%A4%E3%82%A7%E3%82%B9%E3%82%BA%E3%82%BF%E3%83%84%E3%83%90%E3%83%95%E3%83%B3%E3%83%BC%E4%BA%A4%E5%85%A8%E5%88%A9%E5%8A%9B%E5%8B%95%E5%8B%9D%E5%8C%97%E5%B0%84%E5%BC%BE%E6%88%A6%E6%8E%A5%E6%92%A4%E6%95%97%E6%95%B5%E6%B2%B3%E6%B3%A2%E6%B5%B7%E7%99%BA%E7%A0%B2%E7%BD%AE%E8%87%AA%E8%89%A6%E8%A1%93%E8%A7%A6%E8%B3%8A%E8%BB%8D%E9%80%80%E9%80%B2%E9%85%8D%E9%87%8D%E9%8A%80%E9%9A%8A&display=swap">
 <style>
 /* Layout: full-bleed dithered 3-colour battlespace; paper-document HUD stacks pinned top and bottom (portrait) or docked left (short landscape); Z-layer rail right, view rail left. */
 :root{
@@ -35,7 +35,7 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html,body{height:100%;margin:0;overflow:hidden;background:var(--dk);color:var(--lt);font-family:var(--f-txt);font-size:18px;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+html,body{height:100%;margin:0;overflow:hidden;background:var(--dk);color:var(--lt);font-family:var(--f-txt);font-size:19px;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
 body{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 #stage{position:fixed;inset:0;width:100%;height:100%;display:block;image-rendering:pixelated;image-rendering:crisp-edges;z-index:1}
 button{font-family:var(--f-pix);color:inherit;cursor:pointer;background:none;border:0;padding:0}
@@ -72,7 +72,7 @@ button:focus-visible{outline:2px dashed var(--ac);outline-offset:2px}
 #timeline{display:flex;gap:2px}
 .notch{flex:1 1 0;min-width:0;height:28px;border:2px solid var(--lt);display:flex;flex-direction:column;align-items:center;justify-content:space-between;font-size:13px;line-height:1;padding:1px 0}
 .notch .mk{height:11px;font-size:12px;letter-spacing:-1px;white-space:nowrap;overflow:hidden}
-.notch .tn{font-size:12px;opacity:.8}
+.notch .tn{font-size:14px}
 .notch.past{background:var(--lt);color:var(--dk)}
 .notch.now{border-color:var(--ac);background:var(--ac);color:var(--dk)}
 .notch.fog{border-style:dotted;opacity:.55}
@@ -93,7 +93,7 @@ button:focus-visible{outline:2px dashed var(--ac);outline-offset:2px}
 .comm .ct{min-width:0;flex:1}
 .comm .cn{font-family:var(--f-pix);font-weight:700;font-size:14px;letter-spacing:.04em}
 .comm .cr{font-size:14px;margin-left:6px;opacity:.75;text-transform:uppercase}
-.comm .cm{font-size:19px;line-height:1.05;margin-top:2px;min-height:2.1em;text-wrap:pretty}
+.comm .cm{font-size:20px;line-height:1.05;margin-top:2px;min-height:2.1em;text-wrap:pretty}
 .comm.foe{align-self:flex-end;flex-direction:row-reverse;padding:5px 5px 5px 9px;border-color:var(--ac)}
 .comm.foe canvas{border-color:var(--ac)}
 .comm.foe .ct{text-align:right}
@@ -116,7 +116,7 @@ button:focus-visible{outline:2px dashed var(--ac);outline-offset:2px}
 /* ---------- bottom stack ---------- */
 #hudBot{left:var(--g);right:var(--g);bottom:calc(env(safe-area-inset-bottom,0px) + var(--g));display:flex;flex-direction:column;gap:5px}
 #barRow{display:flex;gap:6px;align-items:flex-end}
-#hint{flex:1 1 auto;min-width:0;font-size:17px;line-height:1.05;padding:3px 8px;background:var(--dk);border-left:4px solid var(--lt);max-width:560px;text-wrap:pretty}
+#hint{flex:1 1 auto;min-width:0;font-size:19px;line-height:1.08;padding:3px 8px;background:var(--dk);border-left:4px solid var(--lt);max-width:560px;text-wrap:pretty}
 #hint b{font-weight:400;background:var(--lt);color:var(--dk);padding:0 3px}
 #btnRow{display:flex;gap:5px;flex:0 0 auto}
 .big{font-family:var(--f-pix);font-weight:700;font-size:16px;letter-spacing:.06em;padding:10px 14px;background:var(--lt);color:var(--dk);border:2px solid var(--lt);white-space:nowrap;box-shadow:3px 3px 0 var(--ac)}
@@ -128,11 +128,11 @@ button:focus-visible{outline:2px dashed var(--ac);outline-offset:2px}
 #fleetStrip{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;padding-bottom:1px}
 #fleetStrip::-webkit-scrollbar{display:none}
 .fchip{flex:0 0 auto;min-width:98px;padding:3px 7px 4px;text-align:left;font-family:var(--f-txt)}
-.fchip .n{font-family:var(--f-pix);font-weight:700;font-size:13px;white-space:nowrap}
+.fchip .n{font-family:var(--f-pix);font-weight:700;font-size:14px;white-space:nowrap}
 .fchip .c{font-size:13px;white-space:nowrap;opacity:.75;line-height:1}
 .fchip .hp{height:4px;margin-top:3px;background:repeating-conic-gradient(var(--lt) 0 25%,var(--dk) 0 50%) 0 0/2px 2px}
 .fchip .hp b{display:block;height:100%;background:var(--lt)}
-.fchip .st{font-size:14px;white-space:nowrap;line-height:1.1}
+.fchip .st{font-size:16px;white-space:nowrap;line-height:1.1}
 .fchip.sel{background:var(--lt);color:var(--dk)}
 .fchip.sel .hp{background:repeating-conic-gradient(var(--dk) 0 25%,var(--lt) 0 50%) 0 0/2px 2px}
 .fchip.sel .hp b{background:var(--dk)}
@@ -150,7 +150,7 @@ button:focus-visible{outline:2px dashed var(--ac);outline-offset:2px}
 #card.foe{border-color:var(--ac)}
 #card.foe #cardName{color:var(--ac)}
 #card.foe #cardHp b{background:var(--ac)}
-#cardStats{font-size:16px;line-height:1.05;display:flex;flex-wrap:wrap;gap:0 10px}
+#cardStats{font-size:18px;line-height:1.05;display:flex;flex-wrap:wrap;gap:0 10px}
 #cardStats b{font-weight:400;border-bottom:2px solid currentColor}
 .tags{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}
 .tag{font-size:14px;padding:0 5px;border:2px solid currentColor;text-transform:uppercase;line-height:1.1}
@@ -163,17 +163,24 @@ button:focus-visible{outline:2px dashed var(--ac);outline-offset:2px}
 .act.on.hasT .k{color:var(--dk)}
 .act.bigSt .k::after{content:" ★"}
 .act{min-height:48px;padding:3px 1px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
-.act .k{font-size:13px;font-weight:700;letter-spacing:.03em}
+.act .k{font-size:14px;font-weight:700;letter-spacing:.03em}
 .act .jp{font-size:11px}
-.act .s{font-family:var(--f-txt);font-size:13px;font-weight:400;line-height:1;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;opacity:.8}
+.act .s{font-family:var(--f-txt);font-size:15px;font-weight:400;line-height:1;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;opacity:.8}
 
 /* ---------- world labels ---------- */
 #labels{position:fixed;inset:0;pointer-events:none;z-index:3;overflow:hidden}
-.ulab{position:absolute;left:0;top:0;white-space:nowrap;font-family:var(--f-txt);font-size:15px;line-height:1;will-change:transform;
+.ulab{position:absolute;left:0;top:0;white-space:nowrap;font-family:var(--f-txt);font-size:18px;line-height:1;will-change:transform;
   text-shadow:1px 1px 0 var(--dk),-1px -1px 0 var(--dk),1px -1px 0 var(--dk),-1px 1px 0 var(--dk)}
-.ulab .bar{width:40px;height:4px;margin-top:2px;background:var(--dk);border:1px solid currentColor}
+.ulab .nm{background:var(--dk);padding:0 2px}
+.ulab .bar{width:44px;height:5px;margin-top:2px;background:var(--dk);border:1px solid currentColor}
 .ulab .bar b{display:block;height:100%;background:currentColor}
 .ulab.foe{color:var(--ac)}
+.ulab.pirate{color:var(--fg)}
+.ulab.obj{color:var(--fy)}
+.ulab.obj.derelict{color:var(--fm)}
+#card.pirate{border-color:var(--fg)}
+#card.pirate #cardName{color:var(--fg)}
+#card.pirate #cardHp b{background:var(--fg)}
 .ulab .ic{margin-left:3px;background:currentColor}
 .ulab .ic span{color:var(--dk);padding:0 2px;text-shadow:none}
 .dmg{position:absolute;left:0;top:0;font-family:var(--f-pix);font-weight:700;font-size:24px;color:var(--lt);white-space:nowrap;
@@ -198,6 +205,7 @@ button:focus-visible{outline:2px dashed var(--ac);outline-offset:2px}
 @media (max-width:560px){#cutin canvas{left:3%;width:96px;height:96px;top:14px}#cutin .txt{left:calc(3% + 110px)}}
 #alert{position:fixed;left:50%;top:30%;transform:translateX(-50%);z-index:15;pointer-events:none;font-family:var(--f-pix);font-weight:700;font-size:clamp(18px,4.6vw,30px);letter-spacing:.12em;white-space:nowrap;padding:4px 12px;background:var(--dk);border:2px solid currentColor;color:var(--ac);opacity:0}
 #alert.lt{color:var(--lt)}
+#alert.gr{color:var(--fg)}
 #alert.show{animation:alertA 1.8s steps(18) forwards}
 @keyframes alertA{0%,20%,40%{opacity:1}10%,30%{opacity:0}85%{opacity:1}100%{opacity:0}}
 
@@ -276,9 +284,11 @@ body.col-comms .comm .cr{display:none}
   html,body{font-size:17px}
   #phaseName{font-size:15px}
   #phaseJp{display:none}
-  .act .s{display:none}
-  .act{min-height:44px}
+  .act{min-height:46px}
   #actions{flex-basis:100%}
+  #barRow{flex-wrap:wrap}
+  #hint{flex-basis:100%;max-width:none;font-size:18px}
+  #btnRow{margin-left:auto}
   .comm canvas{width:68px;height:68px;flex-basis:68px}
   .comm .cm{font-size:18px}
   .big{padding:9px 11px;font-size:15px}
@@ -385,7 +395,7 @@ body.col-comms .comm .cr{display:none}
     <div class="titleJp">銀河艦隊戦術</div>
     <p>An enemy dreadnought hides in the nebula. Place your fleet on the grid, push into the fog as it lifts, and sink their flagship before the war clock runs out.</p>
     <div class="rules">
-      <div class="rule"><b>1 · DEPLOY</b>Place your ships in the two rows nearest you, on any of the four Z-layers.</div>
+      <div class="rule"><b>1 · DEPLOY</b>Place your ships in the three rows nearest you, on any of the four Z-layers.</div>
       <div class="rule"><b>2 · SCOUT</b>Fog lifts from random sectors each turn. A ship that enters a sector clears it.</div>
       <div class="rule"><b>3 · ENGAGE</b>Moving burns fuel. Close shots hit harder. Two or more ships on one target get a focus bonus.</div>
       <div class="rule"><b>4 · SURVIVE</b>Wins bring loot. Losses and retreats send ships to the repair bay for later operations.</div>
@@ -443,7 +453,7 @@ const campDefault = () => ({
   repair:{}, flagPatched:false,
   palette:'gunboots',
   npc:{ adm:{ valor:0 }, ops:{ valor:0 }, pilot:{ valor:0 }, ace:{ valor:0 },
-        foe:{ defeats:0, wins:0, met:0 }, rival:{ defeats:0, wins:0, met:0 } },
+        foe:{ defeats:0, wins:0, met:0 }, rival:{ defeats:0, wins:0, met:0 }, pirate:{ defeats:0, wins:0, met:0 } },
   log:[],
 });
 function loadCamp() { try { const s = localStorage.getItem(SAVE_KEY); if (s) { const c = JSON.parse(s); return Object.assign(campDefault(), c, { npc:Object.assign(campDefault().npc, c.npc || {}) }); } } catch (e) {} return null; }
@@ -469,20 +479,22 @@ const NX = 8, NY = 8, NZ = 4;
 const CS = 1.7, CZ = 1.9;
 const SX = 2, SY = 2, SZ = 2;
 const NSX = NX/SX, NSY = NY/SY, NSZ = NZ/SZ;
-const DEPLOY_ROWS = 2;
+const DEPLOY_ROWS = 3;   // deploy in the three rows nearest you
 const FUEL_MAX = 24, FUEL_BASE = 14, FUEL_REGEN = 3;
 const TL = 12;   // war timeline length: the enemy main fleet arrives after turn 12
 
 const TYPES = {
   flagship:  { side:'ally', cls:'Battleship · flagship', size:'L', hp:170, move:1, mass:3 },
-  cruiser:   { side:'ally', cls:'Heavy cruiser', size:'M', hp:95, move:2, mass:2 },
-  mecha:     { side:'ally', cls:'Mobile suit · wing type', size:'M', hp:75, move:3, mass:1.5 },
-  fighter:   { side:'ally', cls:'Fighter squadron', size:'S', hp:42, move:3, mass:1, pawn:true },
+  cruiser:   { side:'ally', cls:'Heavy cruiser', size:'M', hp:95, move:1, mass:2 },
+  mecha:     { side:'ally', cls:'Mobile suit · wing type', size:'M', hp:75, move:1, mass:1 },
+  fighter:   { side:'ally', cls:'Fighter squadron', size:'S', hp:42, move:1, mass:1, pawn:true },
   e_fighter: { side:'foe', cls:'Interceptor wing', size:'S', hp:34, move:2, pawn:true },
   e_mecha:   { side:'foe', cls:'Mono-eye mobile suit', size:'M', hp:68, move:2, pawn:true },
   e_ace:     { side:'foe', cls:'Custom suit · enemy ace', size:'M', hp:112, move:3 },
   e_destroyer:{ side:'foe', cls:'Destroyer', size:'M', hp:88, move:1 },
   e_boss:    { side:'foe', cls:'Dreadnought · enemy flagship', size:'L', hp:330, move:1, flag:true },
+  p_raider:  { side:'pirate', cls:'Pirate raider wing', size:'S', hp:30, move:2, pawn:true },
+  p_corsair: { side:'pirate', cls:'Pirate corsair', size:'M', hp:84, move:2 },
 };
 /* Attack styles. Pawns (fighters, grunt suits) get one; everything else picks from two or three.
    kind: single · splash (target + radius) · line (pierces everything along the shot) · aura (all around the shooter) · multi (nearest N)
@@ -513,6 +525,12 @@ const STYLES = {
   e_destroyer: [
     { id:'battery', name:'BEAM BATTERY',   short:'BEAM', range:4.2, dmg:16, kind:'single', fx:'beam' },
     { id:'torps',   name:'TORPEDO SPREAD', short:'TORP', range:5,   dmg:14, kind:'splash', radius:1.6, cd:3, fx:'missiles' },
+  ],
+  p_raider:  [ { id:'scatter', name:'SCATTER GUNS', short:'SCATTER', range:3.0, dmg:10, kind:'single', fx:'bolts' } ],
+  p_corsair: [
+    { id:'cannons', name:'BROADSIDE CANNONS', short:'CANNON', range:4.0, dmg:17, kind:'single', fx:'beam' },
+    { id:'harpoon', name:'BOARDING HARPOON',  short:'HARPOON', range:1.8, dmg:30, kind:'single', fx:'melee', nofall:true, pierce:true },
+    { id:'mines',   name:'MINE SPRAY',        short:'MINES', range:2.4, dmg:12, kind:'aura', cd:2, fx:'flak' },
   ],
   e_boss: [
     { id:'cannon',    name:'MAIN CANNON',     short:'CANNON', range:5.2, dmg:22, kind:'single', fx:'beam' },
@@ -546,7 +564,9 @@ const unitAt = (x,y,z) => S.units.find(u => u.alive && u.placed && u.x === x && 
 const isVisible = u => u.side === 'ally' || !!S.revealed[sectorKey(u.x,u.y,u.z)];
 const allies = () => S.units.filter(u => u.alive && u.side === 'ally');
 const foes = () => S.units.filter(u => u.alive && u.side === 'foe');
-const visFoes = () => foes().filter(isVisible);
+const pirates = () => S.units.filter(u => u.alive && u.side === 'pirate');
+const hostiles = () => S.units.filter(u => u.alive && u.side !== 'ally');
+const visFoes = () => hostiles().filter(isVisible);   // everything the player can see and shoot
 const stylesOf = u => STYLES[u.type];
 const styleOf = (u, id) => STYLES[u.type].find(q => q.id === id) || STYLES[u.type][0];
 const isReady = (u, st) => !((u.cds || {})[st.id] > 0);
@@ -561,7 +581,7 @@ function newState() {
     kills:0, lost:[], said:{}, lastBand:null, bossSeen:false, waves:[], valor:{ adm:0, ops:0, pilot:0, ace:0 }, rivalMet:false, rivalBeaten:false, marshalBeaten:false, rivalKills:0, result:null, nameIdx:{} };
 }
 function makeUnit(def, side) {
-  const t = TYPES[def.type], mhp = side === 'foe' ? Math.round(t.hp*hpMul()) : t.hp;
+  const t = TYPES[def.type], mhp = side !== 'ally' ? Math.round(t.hp*hpMul()) : t.hp;
   return { id:S.nextId++, type:def.type, name:def.name, side, hp:mhp, maxHp:mhp, x:-1, y:-1, z:-1,
     alive:true, placed:false, moved:false, acted:false, shield:false, bossCharge:0, active:false,
     cds:Object.fromEntries(STYLES[def.type].filter(q => q.cd).map(q => [q.id, q.cd - 1])) };
@@ -574,7 +594,7 @@ function foeName(type) {
 function freeCell(y0, y1, avoidRevealed) {
   for (let i = 0; i < 400; i++) {
     const x = rint(0,NX-1), y = rint(y0,y1), z = rint(0,NZ-1);
-    if (unitAt(x,y,z)) continue;
+    if (unitAt(x,y,z) || objAt(x,y,z)) continue;
     if (avoidRevealed && i < 200 && S.revealed[sectorKey(x,y,z)]) continue;
     return { x, y, z };
   }
@@ -590,8 +610,10 @@ function planOp() {
   const d = diff();
   spawnFoe('e_boss', NY-2, NY-1, false, 'GRAUHALLE');
   for (let i = 0; i < 1 + (d >= 2 ? 1 : 0); i++) spawnFoe('e_destroyer', 4, NY-1, false);
-  for (let i = 0; i < 1 + (d >= 3 ? 1 : 0); i++) spawnFoe('e_mecha', 3, NY-2, false);
-  for (let i = 0; i < 2 + Math.floor(d/2); i++) spawnFoe('e_fighter', 3, NY-2, false);
+  for (let i = 0; i < 1 + (d >= 3 ? 1 : 0); i++) spawnFoe('e_mecha', 4, NY-2, false);
+  for (let i = 0; i < 2 + Math.floor(d/2); i++) spawnFoe('e_fighter', 4, NY-2, false);
+  placeObjects();
+  S.pirateTurn = Math.random() < .6 ? rint(4, 7) : 0;
   // reinforcement waves on the war timeline
   const w1 = rint(2,3), w2 = rint(5,6), w3 = rint(8,9), rivalWave = pick([1, 2]);
   const sizes = [1, 2, 3];
@@ -699,7 +721,7 @@ const outlineMat = new THREE.MeshBasicMaterial({ color:0x000000, side:THREE.Back
 const ACC = 0xff0000;       // any pure-red pixel becomes the palette accent
 const BLU = 0x1a4dff;       // allied thrusters / bolts
 const YEL = 0xffe600;       // missiles, torpedoes, blast cores
-const GRN = 0x00ff2a;       // moderate hits
+const GRN = 0x00ff2a;       // moderate hits · pirates · pickups
 const MAG = 0xff00ff;       // devastating hits
 const WHITE = 0xffffff;
 // attack colour follows damage: blue < green < yellow < red < violet
@@ -901,10 +923,11 @@ const HULL = 0xf2f2f2, MID = 0x9a9a9a, DARK = 0x3a3a3a, FOE = 0x2a2a2a, FOE2 = 0
 function mFlagship() {
   const g = new THREE.Group();
   part(g, G.wedge, HULL, [0,0,0], { s:[.66,.3,2.6] });
-  part(g, G.wedge, MID, [0,-.2,.08], { s:[.52,.2,2.3] });
+  part(g, G.wedge, BLU, [0,-.2,.08], { s:[.52,.2,2.3] });
+  mirror(sd => part(g, G.box, GRN, [sd*.34,.1,.1], { s:[.02,.06,1.0], ol:false }));
   part(g, G.box, HULL, [0,.24,.38], { s:[.3,.2,.56] });
   part(g, G.box, HULL, [0,.46,.46], { s:[.18,.26,.28] });
-  part(g, G.box, DARK, [0,.62,.46], { s:[.26,.05,.14] });
+  part(g, G.box, YEL, [0,.62,.46], { s:[.26,.05,.14] });
   for (const z of [-.62,-.28,.92]) { part(g, G.cyl, DARK, [0,.2,z], { s:[.13,.08,.13] }); mirror(sd => part(g, G.box, DARK, [sd*.045,.23,z + (z > 0 ? .2 : -.2)], { s:[.03,.03,.3], ol:false })); }
   part(g, G.tor, DARK, [0,-.03,-1.3], { s:[.1,.1,.1] });
   mirror(sd => part(g, G.box, HULL, [sd*.46,-.05,.6], { s:[.38,.04,.5], r:[0,0,sd*.22] }));
@@ -916,9 +939,9 @@ function mFlagship() {
 function mCruiser() {
   const g = new THREE.Group();
   part(g, G.wedgeS, HULL, [0,0,0], { s:[.42,.2,1.8] });
-  part(g, G.wedgeS, MID, [0,-.02,.02], { s:[.44,.06,1.62], ol:false });
+  part(g, G.wedgeS, GRN, [0,-.02,.02], { s:[.44,.06,1.62], ol:false });
   part(g, G.box, HULL, [0,.17,.35], { s:[.15,.15,.34] });
-  part(g, G.box, MID, [0,.24,.62], { s:[.03,.22,.3] });
+  part(g, G.box, BLU, [0,.24,.62], { s:[.03,.22,.3] });
   part(g, G.cyl, DARK, [0,.13,-.3], { s:[.09,.06,.09] });
   mirror(sd => part(g, G.cyl, DARK, [sd*.27,-.04,.52], { r:[PI/2,0,0], s:[.08,.66,.08] }));
   mirror(sd => part(g, G.box, HULL, [sd*.18,-.04,.5], { s:[.2,.03,.3], ol:false }));
@@ -927,32 +950,33 @@ function mCruiser() {
 }
 function mMecha() {
   const g = new THREE.Group(), b = new THREE.Group(); b.position.y = .05; g.add(b);
-  part(b, G.box, MID, [0,.16,0], { s:[.36,.24,.22] });
-  part(b, G.box, DARK, [0,-.01,0], { s:[.18,.1,.16] });
+  part(b, G.box, BLU, [0,.16,0], { s:[.36,.24,.22] });
+  part(b, G.box, GRN, [0,-.01,0], { s:[.18,.1,.16] });
   part(b, G.box, HULL, [0,-.12,0], { s:[.28,.08,.2] });
   part(b, G.box, HULL, [0,.36,0], { s:[.13,.13,.13] });
   part(b, G.box, WHITE, [0,.37,-.067], { s:[.09,.022,.01], glow:true });
-  mirror(sd => part(b, G.box, HULL, [sd*.055,.46,-.07], { s:[.15,.022,.022], r:[0,0,sd*.62], ol:false }));
+  mirror(sd => part(b, G.box, YEL, [sd*.055,.46,-.07], { s:[.15,.022,.022], r:[0,0,sd*.62], ol:false }));
   mirror(sd => {
     part(b, G.box, HULL, [sd*.26,.22,0], { s:[.17,.15,.19] });
     part(b, G.box, MID, [sd*.28,.05,0], { s:[.08,.16,.08] });
     part(b, G.box, HULL, [sd*.28,-.11,-.03], { s:[.11,.17,.11] });
     part(b, G.box, MID, [sd*.09,-.26,0], { s:[.1,.18,.1] });
     part(b, G.box, HULL, [sd*.1,-.46,.02], { s:[.13,.25,.15] });
-    part(b, G.box, DARK, [sd*.1,-.61,-.03], { s:[.12,.06,.21] });
+    part(b, G.box, BLU, [sd*.1,-.61,-.03], { s:[.12,.06,.21] });
     for (let i = 0; i < 4; i++) part(b, G.box, i % 2 ? HULL : 0xd0d0d0, [sd*(.2 + i*.05), .26 - i*.03, .17 + i*.02], { s:[.05, .56 - i*.07, .025], r:[.25 + i*.04, 0, sd*(-.55 - i*.32)] });
     engine(b, [sd*.12,.14,.17], BLU, .35);
   });
   part(b, G.cyl, MID, [.3,-.15,-.32], { r:[PI/2,0,0], s:[.035,.58,.035] });
   part(b, G.box, HULL, [.3,-.13,-.1], { s:[.07,.08,.26] });
   part(b, G.box, HULL, [-.37,-.09,-.03], { s:[.03,.3,.17] });
+  part(b, G.box, GRN, [-.39,-.07,-.03], { s:[.01,.16,.04], ol:false }); part(b, G.box, GRN, [-.39,-.03,-.03], { s:[.01,.04,.12], ol:false });
   g.userData.bob = 1; return g;
 }
 function fighterCraft(body, wing, glowC) {
   const f = new THREE.Group();
   part(f, G.cone4, body, [0,0,-.02], { r:[-PI/2,0,0], s:[.1,.46,.055] });
   part(f, G.box, wing, [0,-.01,.1], { s:[.38,.016,.14] });
-  part(f, G.box, body, [0,.05,.14], { s:[.014,.09,.09], ol:false });
+  part(f, G.box, GRN, [0,.05,.14], { s:[.014,.09,.09], ol:false });
   engine(f, [0,0,.24], glowC, .3);
   return f;
 }
@@ -961,17 +985,17 @@ function squad(make) {
   [[0,0,-.28],[-.42,-.06,.14],[.42,.06,.14]].forEach(p => { const f = make(); f.position.set(p[0],p[1],p[2]); g.add(f); (g.userData.glows = g.userData.glows || []).push(...(f.userData.glows || [])); });
   g.userData.sway = 1; return g;
 }
-const mFighterSqn = () => squad(() => fighterCraft(HULL, MID, BLU));
+const mFighterSqn = () => squad(() => fighterCraft(HULL, BLU, BLU));
 const mFoeFighters = () => squad(() => {
   const f = new THREE.Group();
-  part(f, G.oct, FOE2, [0,0,0], { s:[.12,.06,.3] });
+  part(f, G.oct, MAG, [0,0,0], { s:[.12,.06,.3] });
   mirror(sd => part(f, G.box, ACC, [sd*.14,0,-.02], { s:[.2,.015,.1], r:[0,sd*.5,0] }));
   engine(f, [0,0,.28], ACC, .3);
   return f;
 });
 function mFoeMecha(ace) {
   const g = new THREE.Group(), b = new THREE.Group(); b.position.y = .05; g.add(b);
-  const body = ace ? ACC : FOE2, trim = ace ? FOE : FOE;
+  const body = ace ? ACC : MAG, trim = ace ? MAG : FOE;
   part(b, G.box, body, [0,.13,0], { s:[.4,.3,.28] });
   part(b, G.sph, body, [0,.37,0], { s:[.13,.12,.13] });
   part(b, G.box, 0x000000, [0,.37,-.1], { s:[.19,.035,.06], ol:false });
@@ -997,7 +1021,7 @@ function mFoeDestroyer() {
   const g = new THREE.Group();
   part(g, G.sph, FOE2, [0,0,.05], { s:[.36,.22,.9] });
   part(g, G.cone, FOE2, [0,0,-.9], { r:[-PI/2,0,0], s:[.18,.5,.18] });
-  mirror(sd => part(g, G.box, FOE, [sd*.36,-.02,.28], { s:[.32,.05,.46], r:[0,sd*.45,0] }));
+  mirror(sd => part(g, G.box, MAG, [sd*.36,-.02,.28], { s:[.32,.05,.46], r:[0,sd*.45,0] }));
   mirror(sd => part(g, G.box, FOE2, [sd*.46,.1,.5], { s:[.04,.2,.3] }));
   part(g, G.sph, ACC, [0,.17,-.05], { s:[.12,.08,.22] });
   part(g, G.box, FOE, [0,.28,.25], { s:[.03,.18,.36] });
@@ -1011,10 +1035,10 @@ function mFoeBoss() {
   part(g, G.wedge, FOE, [0,-.24,.1], { s:[.8,.2,2.7] });
   part(g, G.sph, ACC, [0,.28,.45], { s:[.46,.26,.86] });
   part(g, G.box, FOE, [0,.5,.5], { s:[.3,.05,.2] });
-  [-.4, 0, .4].forEach(x => part(g, G.cone4, x ? FOE2 : ACC, [x,0,-1.72], { r:[-PI/2,0,0], s:[.12, x ? .75 : .95, .12] }));
+  [-.4, 0, .4].forEach(x => part(g, G.cone4, x ? MAG : ACC, [x,0,-1.72], { r:[-PI/2,0,0], s:[.12, x ? .75 : .95, .12] }));
   mirror(sd => {
     part(g, G.wedge, FOE2, [sd*.66,-.05,.45], { s:[.32,.26,1.7] });
-    part(g, G.box, FOE, [sd*.66,.16,.55], { s:[.06,.28,.9] });
+    part(g, G.box, MAG, [sd*.66,.16,.55], { s:[.06,.28,.9] });
     for (let i = 0; i < 4; i++) part(g, G.box, ACC, [sd*.83,-.04,-.1 + i*.3], { s:[.02,.04,.1], glow:true });
     part(g, G.cyl6, FOE, [sd*.4,.28,-.4], { s:[.12,.1,.12] });
     part(g, G.box, FOE, [sd*.4,.3,-.62], { s:[.04,.04,.4], ol:false });
@@ -1024,9 +1048,135 @@ function mFoeBoss() {
   g.scale.setScalar(1.08);
   return g;
 }
-const MODEL = { flagship:mFlagship, cruiser:mCruiser, mecha:mMecha, fighter:mFighterSqn, e_fighter:mFoeFighters, e_mecha:() => mFoeMecha(false), e_ace:() => mFoeMecha(true), e_destroyer:mFoeDestroyer, e_boss:mFoeBoss };
+const mPirateRaiders = () => squad(() => {
+  const f = new THREE.Group();
+  part(f, G.cone4, GRN, [0,0,-.02], { r:[-PI/2,0,PI/4], s:[.1,.42,.06] });
+  part(f, G.box, MAG, [0,-.01,.08], { s:[.42,.016,.1], r:[0,0,.25] });
+  part(f, G.box, FOE, [0,.04,.12], { s:[.012,.08,.08], ol:false });
+  engine(f, [0,0,.22], GRN, .3);
+  return f;
+});
+function mPirateCorsair() {
+  const g = new THREE.Group();
+  part(g, G.box, FOE2, [0,0,.1], { s:[.5,.3,1.2] });
+  part(g, G.wedge, GRN, [0,.02,-.75], { s:[.46,.26,.6] });
+  mirror(sd => part(g, G.box, MAG, [sd*.42,.14,.1], { s:[.06,.5,.7], r:[0,0,sd*.35] }));
+  part(g, G.cyl, FOE, [0,.28,.2], { s:[.1,.14,.1] });
+  part(g, G.box, YEL, [0,.2,-.25], { s:[.12,.04,.3], ol:false });
+  part(g, G.cone, GRN, [0,0,-1.1], { r:[-PI/2,0,0], s:[.05,.3,.05] });
+  mirror(sd => engine(g, [sd*.18,0,.75], GRN, .55));
+  return g;
+}
+const MODEL = { p_raider:mPirateRaiders, p_corsair:mPirateCorsair, flagship:mFlagship, cruiser:mCruiser, mecha:mMecha, fighter:mFighterSqn, e_fighter:mFoeFighters, e_mecha:() => mFoeMecha(false), e_ace:() => mFoeMecha(true), e_destroyer:mFoeDestroyer, e_boss:mFoeBoss };
 const HEIGHT = { S:.55, M:.85, L:1.0 };
 const HITR = { S:.62, M:.75, L:1.05 };
+
+/* ================================================================
+   BATTLEFIELD EVENTS: fuel depots, munitions caches, derelicts
+   ================================================================ */
+const OBJ_INFO = {
+  fuel:     { name:'FUEL DEPOT', short:'FUEL', info:'Fly onto it: +8 fleet fuel. Enemies use it to patch hull.' },
+  ammo:     { name:'MUNITIONS CACHE', short:'AMMO', info:'Fly onto it: resets that ship\'s weapon cooldowns and overcharges its next attack (+35%).' },
+  derelict: { name:'DERELICT CRUISER', short:'DERELICT', info:'Stay next to it two turns with no rival ship beside it to salvage it. Anyone can claim it: the enemy and pirates want it too.' },
+};
+const OV = {};
+const objAt = (x,y,z) => ((S && S.objs) || []).find(o => !o.gone && o.x === x && o.y === y && o.z === z);
+const objVisible = o => !!S.revealed[sectorKey(o.x,o.y,o.z)];
+function placeObjects() {
+  S.objs = [];
+  const put = (kind, y0, y1, x0 = 0, x1 = NX-1) => {
+    for (let i = 0; i < 300; i++) { const x = rint(x0,x1), y = rint(y0,y1), z = rint(0,NZ-1); if (!unitAt(x,y,z) && !objAt(x,y,z)) { S.objs.push({ id:'o' + S.objs.length, kind, x, y, z, gone:false, prog:{} }); return; } }
+  };
+  put('fuel', 3, 5); put('fuel', 4, 6); put('ammo', 3, 6); put('derelict', 3, 5, 2, 5);
+}
+function mObject(kind) {
+  const g = new THREE.Group();
+  if (kind === 'fuel') {
+    part(g, G.cyl, GRN, [0,0,0], { s:[.22,.5,.22] });
+    part(g, G.cyl, HULL, [0,.12,0], { s:[.235,.06,.235], ol:false }); part(g, G.cyl, HULL, [0,-.12,0], { s:[.235,.06,.235], ol:false });
+    part(g, G.cyl, DARK, [0,.3,0], { s:[.08,.1,.08] });
+    engine(g, [0,0,0], GRN, .9);
+  } else if (kind === 'ammo') {
+    part(g, G.box, YEL, [0,0,0], { s:[.46,.3,.34] });
+    part(g, G.box, FOE, [0,0,-.172], { s:[.3,.06,.01], ol:false }); part(g, G.box, FOE, [0,0,.172], { s:[.3,.06,.01], ol:false });
+    engine(g, [0,.1,0], YEL, .7);
+  } else {
+    part(g, G.wedge, MID, [0,0,0], { s:[.6,.3,1.9], r:[.25,.5,.35] });
+    part(g, G.box, DARK, [.3,.25,.4], { s:[.2,.3,.5], r:[.4,.2,.8] });
+    part(g, G.box, MID, [-.5,-.2,-.5], { s:[.3,.05,.4], r:[.8,.3,.2] });
+    part(g, G.sph, MAG, [0,.05,.1], { s:[.12,.12,.12], glow:true });
+    engine(g, [0,.05,.1], MAG, 1.1);
+  }
+  return g;
+}
+function syncObjs() {
+  if (!S || !S.objs) return;
+  for (const o of S.objs) {
+    const vis = !o.gone && objVisible(o);
+    if (!vis) { if (OV[o.id]) removeObj(o.id); continue; }
+    if (!OV[o.id]) {
+      const root = new THREE.Group(), body = mObject(o.kind); root.add(body); root.position.copy(W(o.x,o.y,o.z)); scene.add(root);
+      const hit = new THREE.Mesh(G.sph, hitMat); hit.scale.setScalar(.7); hit.userData.oid = o.id; root.add(hit);
+      const lab = document.createElement('div'); lab.className = 'ulab obj ' + o.kind; lab.innerHTML = '<span class="nm"></span>'; labelsEl.appendChild(lab);
+      OV[o.id] = { root, body, hit, lab, ph:Math.random()*6 };
+    }
+    const pr = Object.entries(o.prog || {}).filter(([, v]) => v > 0).map(([k, v]) => (k === 'ally' ? 'YOU' : k === 'foe' ? 'ENEMY' : 'PIRATE') + ' ' + v + '/2');
+    OV[o.id].lab.querySelector('.nm').textContent = OBJ_INFO[o.kind].short + (pr.length ? ' · ' + pr.join(' · ') : '');
+  }
+}
+function removeObj(id) { const v = OV[id]; if (!v) return; scene.remove(v.root); v.lab.remove(); delete OV[id]; }
+function clearObjs() { for (const id in OV) removeObj(id); }
+ambient.push(t => {
+  for (const id in OV) {
+    const v = OV[id]; v.body.rotation.y = t*.5 + v.ph; v.body.position.y = Math.sin(t*1.4 + v.ph)*.06;
+    const [sx, sy] = projectToScreen(_off.set(0, .75, 0).add(v.root.position));
+    v.lab.style.transform = `translate(${Math.round(sx - 22)}px,${Math.round(sy - 20)}px)`;
+  }
+});
+async function collectAt(u) {
+  const o = objAt(u.x, u.y, u.z); if (!o || o.kind === 'derelict') return;
+  o.gone = true; const p = W(o.x,o.y,o.z); removeObj(o.id);
+  ringWave(p, o.kind === 'fuel' ? GRN : YEL, 3, 500); sparks(p, o.kind === 'fuel' ? GRN : YEL, 12, 1.6); sfx.heal();
+  if (o.kind === 'fuel') {
+    if (u.side === 'ally') { S.fuel = Math.min(FUEL_MAX, S.fuel + 8); popText(p.clone().add(new THREE.Vector3(0,1,0)), '+8 FUEL', 'info', 'var(--fg)'); log(`${u.name} refuels at a depot`); if (!S.said.depot) { S.said.depot = 1; say('ops', 'Fuel depot tapped. Tanks topped up!', 'happy'); } }
+    else { const h = Math.round(u.maxHp*.25); u.hp = Math.min(u.maxHp, u.hp + h); if (isVisible(u)) popText(p.clone().add(new THREE.Vector3(0,1,0)), '+' + h, 'heal'); log(`${u.name} patches up at a fuel depot`, 'foe'); }
+  } else {
+    u.cds = {}; u.oc = true;
+    popText(p.clone().add(new THREE.Vector3(0,1,0)), 'OVERCHARGED', 'info', 'var(--fy)');
+    log(`${u.name} loads munitions`, u.side === 'ally' ? '' : 'foe');
+    if (u.side === 'ally' && !S.said.ammo) { S.said.ammo = 1; say(u.type === 'mecha' ? 'pilot' : u.type === 'fighter' ? 'ace' : 'ops', 'Munitions loaded. Every weapon is hot again.', 'happy'); }
+  }
+  syncVisual(u, false);
+}
+async function salvageTick(side) {
+  if (!S.objs) return;
+  for (const o of S.objs.filter(q => q.kind === 'derelict' && !q.gone)) {
+    const near = S.units.filter(u => u.alive && cheb(u, o) <= 1), sides = new Set(near.map(u => u.side));
+    if (!sides.has(side)) continue;
+    const p = W(o.x,o.y,o.z).add(new THREE.Vector3(0,1.3,0));
+    if (sides.size > 1) { if (objVisible(o)) popText(p, 'CONTESTED', 'info', 'var(--fm)'); continue; }
+    o.prog = o.prog || {}; for (const k in o.prog) if (k !== side) o.prog[k] = 0;
+    o.prog[side] = (o.prog[side] || 0) + 1;
+    if (objVisible(o)) popText(p, `SALVAGE ${o.prog[side]}/2`, 'info', 'var(--fm)');
+    if (o.prog[side] >= 2) await claimDerelict(o, side, near);
+    syncObjs();
+  }
+}
+async function claimDerelict(o, side, near) {
+  o.gone = true; const p = W(o.x,o.y,o.z);
+  explode(p, false); removeObj(o.id);
+  if (side === 'ally') {
+    S.kits += 2; S.fuel = Math.min(FUEL_MAX, S.fuel + 6); S.salvage = (S.salvage || 0) + 1;
+    popText(p.clone().add(new THREE.Vector3(0,1.4,0)), '+2 KITS +6 FUEL +1 PART', 'info', 'var(--fm)');
+    log('Derelict salvaged: kits, fuel and a spare part');
+    say('ops', 'Salvage crews are back! Two repair kits, fuel, and a spare part for the repair bay.', 'happy');
+  } else {
+    for (const u of near.filter(q => q.side === side)) { u.hp = Math.min(u.maxHp, u.hp + Math.round(u.maxHp*.4)); u.oc = true; syncVisual(u, false); }
+    log(`${side === 'pirate' ? 'Pirates' : 'The enemy'} stripped the derelict`, 'foe');
+    if (side === 'pirate') say('pirate', 'Finders keepers! Load it all, Jackals.', 'happy');
+    else say('foe', 'The derelict is ours. Its guns will serve the Empire.', 'smirk');
+  }
+}
 
 /* ================================================================
    UNIT VISUALS
@@ -1036,17 +1186,18 @@ const labelsEl = $('labels');
 const hitMat = new THREE.MeshBasicMaterial({ visible:false });
 const stemMatA = new THREE.LineDashedMaterial({ color:0xffffff, dashSize:.08, gapSize:.12 });
 const stemMatF = new THREE.LineDashedMaterial({ color:ACC, dashSize:.08, gapSize:.12 });
+const stemMatP = new THREE.LineDashedMaterial({ color:0x00ff2a, dashSize:.08, gapSize:.12 });
 function buildVisual(u) {
   if (V[u.id]) return V[u.id];
   const root = new THREE.Group(), body = MODEL[u.type]();
-  const yaw0 = u.side === 'ally' ? 0 : PI;
+  const yaw0 = u.side === 'ally' ? 0 : u.side === 'pirate' ? (u.x < NX/2 ? -PI/2 : PI/2) : PI;
   body.rotation.y = yaw0; root.add(body);
   const hit = new THREE.Mesh(G.sph, hitMat); hit.scale.setScalar(HITR[T(u).size]); hit.userData.uid = u.id; root.add(hit);
-  const col = u.side === 'ally' ? WHITE : ACC;
+  const col = u.side === 'ally' ? WHITE : u.side === 'pirate' ? GRN : ACC;
   const base = new THREE.Mesh(new THREE.RingGeometry(.36, .44, u.side === 'ally' ? 4 : 3, 1, PI/4), new THREE.MeshBasicMaterial({ color:col, side:THREE.DoubleSide, depthWrite:false }));
   base.rotation.x = -PI/2; root.add(base);
   const stemG = new THREE.BufferGeometry(); stemG.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0, 0,-1,0],3));
-  const stem = new THREE.Line(stemG, u.side === 'ally' ? stemMatA : stemMatF); root.add(stem);
+  const stem = new THREE.Line(stemG, u.side === 'ally' ? stemMatA : u.side === 'pirate' ? stemMatP : stemMatF); root.add(stem);
   const foot = new THREE.Mesh(new THREE.PlaneGeometry(.22, .22), new THREE.MeshBasicMaterial({ color:col, side:THREE.DoubleSide, depthWrite:false }));
   foot.rotation.x = -PI/2; foot.rotation.z = PI/4; root.add(foot);
   scene.add(root);
@@ -1074,6 +1225,7 @@ function syncVisual(u, snap) {
   if (u.bossCharge >= 2) ics += '<span class="ic"><span>CHG</span></span>';
   const pv = (S && typeof ui !== 'undefined') ? ui.preview.get(u.id) : null;
   if (pv) ics += `<span class="ic" style="background:var(--${TIERS[tierOf(pv)][2]})"><span>~${pv}</span></span>`;
+  if (u.oc) ics += '<span class="ic" style="background:var(--fy)"><span>OC</span></span>';
   v.lab.querySelector('.ics').innerHTML = ics;
   if (u.shield && !v.shieldM) {
     const m = new THREE.Mesh(new THREE.IcosahedronGeometry(HITR[T(u).size]*1.25, 1), new THREE.MeshBasicMaterial({ color:u.side === 'ally' ? BLU : ACC, wireframe:true, transparent:true, opacity:.8, depthWrite:false }));
@@ -1235,6 +1387,7 @@ const NPC = {
   ace:   { name:'LT. JACK "HAWK" MORROW', role:'Squadron leader', side:'ally', hero:true, hi:false },
   foe:   { name:'MARSHAL VON GRAU', role:'Enemy commander', side:'foe', hero:false, hi:false },
   rival: { name:'CAPT. SIGRUN VEX', role:'Enemy ace · rival', side:'foe', hero:false, hi:true },
+  pirate:{ name:'CAPT. RASKA MORN', role:'Void Jackals · pirate', side:'foe', hero:false, hi:false },
 };
 const VALOR_STEPS = [3, 8, 14];
 function traitsOf(who, src) {
@@ -1249,41 +1402,52 @@ function traitText(who, src) {
   const got = [t.scar && 'scarred', t.patch && 'eyepatch', t.implant && 'cyber-eye'].filter(Boolean);
   return `Beaten ${t.defeats}×` + (got.length ? ' · ' + got.join(', ') : '') + (t.medals ? ` · ${t.medals} kill medal${t.medals > 1 ? 's' : ''}` : '');
 }
-const INK = '#000000', A = '#ff0000', ADK = '#8a0000';
+const INK = '#000000', A = '#ff0000', ADK = '#8a0000', CB = '#2050ff', CG = '#10e040', CY = '#ffe000', CM = '#e000ff';
 const BASE = {
-  adm:  { skin:'#f4f4f4', shade:'#a8a8a8', hair:'#dedede', eye:'#a0a0a0', eyeD:'#202020', uni:'#262626', bg:'#222222',
+  adm:  { skin:'#f4f4f4', shade:'#a8a8a8', hair:'#dedede', eye:CB, eyeD:'#101030', uni:'#262626', bg:'#222222',
           tips:[[-34,16],[-27,-4],[-17,-11],[-7,-5],[3,-15],[13,-6],[24,-9],[34,16]],
           back:g => { g.moveTo(-32,-30); g.bezierCurveTo(-58,0,-50,48,-62,82); g.lineTo(62,82); g.bezierCurveTo(50,48,58,0,32,-30); },
           collar:g => { g.fillStyle = '#f0f0f0'; g.beginPath(); g.moveTo(-17,34); g.lineTo(-30,44); g.lineTo(-10,62); g.lineTo(0,46); g.lineTo(10,62); g.lineTo(30,44); g.lineTo(17,34); g.closePath(); g.fill(); g.stroke();
-            g.fillStyle = '#c8c8c8'; for (const sd of [-1,1]) { g.beginPath(); g.ellipse(sd*56,54,14,6,sd*.35,0,7); g.fill(); g.stroke(); } } },
-  ops:  { skin:'#f6f6f6', shade:'#b0b0b0', hair:'#7a7a7a', eye:'#b0b0b0', eyeD:'#1a1a1a', uni:'#e8e8e8', bg:'#2a2a2a', blush:true,
+            g.fillStyle = CY; for (const sd of [-1,1]) { g.beginPath(); g.ellipse(sd*56,54,14,6,sd*.35,0,7); g.fill(); g.stroke(); }
+            g.fillStyle = CB; g.fillRect(-4,46,8,14); g.strokeRect(-4,46,8,14); } },
+  ops:  { skin:'#f6f6f6', shade:'#b0b0b0', hair:'#7a7a7a', eye:CG, eyeD:'#062010', uni:'#e8e8e8', bg:'#2a2a2a', blush:true,
           tips:[[-34,22],[-25,-8],[-15,-9],[-5,-11],[5,-10],[15,-9],[25,-9],[34,22]],
           back:g => { g.moveTo(-32,-30); g.bezierCurveTo(-48,0,-46,26,-40,34); g.lineTo(40,34); g.bezierCurveTo(46,26,48,0,32,-30); },
-          collar:g => { g.fillStyle = '#303030'; g.beginPath(); g.moveTo(-15,36); g.lineTo(-28,46); g.lineTo(0,64); g.lineTo(28,46); g.lineTo(15,36); g.lineTo(0,50); g.closePath(); g.fill(); g.stroke(); },
+          collar:g => { g.fillStyle = CB; g.beginPath(); g.moveTo(-15,36); g.lineTo(-28,46); g.lineTo(0,64); g.lineTo(28,46); g.lineTo(15,36); g.lineTo(0,50); g.closePath(); g.fill(); g.stroke(); },
           acc:g => { g.lineWidth = 5; g.strokeStyle = '#1a1a1a'; g.beginPath(); g.arc(0,-20,40,PI*1.05,PI*1.95); g.stroke(); g.lineWidth = 2.4; g.strokeStyle = INK;
-            g.fillStyle = '#1a1a1a'; g.beginPath(); g.arc(-36,-2,9,0,7); g.fill(); g.fillStyle = '#ffffff'; g.fillRect(-38,-4,4,4);
+            g.fillStyle = '#1a1a1a'; g.beginPath(); g.arc(-36,-2,9,0,7); g.fill(); g.fillStyle = CG; g.fillRect(-39,-5,6,6);
             g.strokeStyle = '#1a1a1a'; g.lineWidth = 3; g.beginPath(); g.moveTo(-34,6); g.quadraticCurveTo(-30,24,-12,26); g.stroke(); g.strokeStyle = INK; g.lineWidth = 2.4; } },
-  pilot:{ skin:'#f0f0f0', shade:'#9c9c9c', hair:'#1e1e1e', eye:'#9a9a9a', eyeD:'#141414', uni:'#3a3a3a', bg:'#1a1a1a', stern:true,
+  pilot:{ skin:'#f0f0f0', shade:'#9c9c9c', hair:'#1e1e1e', eye:CB, eyeD:'#0a0a28', uni:'#3a3a3a', bg:'#1a1a1a', stern:true,
           tips:[[-37,6],[-29,-13],[-19,-3],[-9,-17],[1,-6],[11,-19],[21,-5],[31,-12],[37,8]],
           back:g => { g.moveTo(-32,-30); g.bezierCurveTo(-44,-5,-42,10,-35,18); g.lineTo(35,18); g.bezierCurveTo(42,10,44,-5,32,-30); },
-          collar:g => { g.fillStyle = '#f2f2f2'; g.beginPath(); g.rect(-17,32,34,11); g.fill(); g.stroke(); g.fillStyle = '#8a8a8a'; g.beginPath(); g.moveTo(-26,48); g.lineTo(26,48); g.lineTo(18,80); g.lineTo(-18,80); g.closePath(); g.fill(); g.stroke(); },
+          collar:g => { g.fillStyle = '#f2f2f2'; g.beginPath(); g.rect(-17,32,34,11); g.fill(); g.stroke(); g.fillStyle = CB; g.beginPath(); g.moveTo(-26,48); g.lineTo(26,48); g.lineTo(18,80); g.lineTo(-18,80); g.closePath(); g.fill(); g.stroke(); g.fillStyle = CY; g.fillRect(-6,56,12,6); },
           acc:g => { g.save(); g.translate(18,15); g.rotate(-.5); g.fillStyle = '#ffffff'; g.fillRect(-6,-3,12,6); g.strokeRect(-6,-3,12,6); g.restore(); } },
-  ace:  { skin:'#f2f2f2', shade:'#a0a0a0', hair:'#5c5c5c', eye:'#a8a8a8', eyeD:'#1c1c1c', uni:'#5a5a5a', bg:'#303030', grin:true,
+  ace:  { skin:'#f2f2f2', shade:'#a0a0a0', hair:'#5c5c5c', eye:CY, eyeD:'#302000', uni:'#5a5a5a', bg:'#303030', grin:true,
           tips:[[-36,10],[-30,-10],[-20,-2],[-14,-16],[-4,-4],[6,-18],[16,-3],[26,-14],[36,10]],
           back:g => { g.moveTo(-32,-30); g.bezierCurveTo(-44,-5,-42,12,-36,20); g.lineTo(36,20); g.bezierCurveTo(42,12,44,-5,32,-30); },
           collar:g => { g.fillStyle = '#cfcfcf'; g.beginPath(); g.moveTo(-18,34); g.lineTo(-34,46); g.lineTo(-20,70); g.lineTo(0,50); g.lineTo(20,70); g.lineTo(34,46); g.lineTo(18,34); g.closePath(); g.fill(); g.stroke(); },
-          acc:g => { g.fillStyle = '#2a2a2a'; g.fillRect(-40,-40,80,7); for (const sd of [-1,1]) { g.fillStyle = '#1a1a1a'; g.beginPath(); g.ellipse(sd*14,-38,11,8,0,0,7); g.fill(); g.stroke(); g.fillStyle = '#e8e8e8'; g.beginPath(); g.ellipse(sd*14,-38,7,5,0,0,7); g.fill(); g.fillStyle = '#fff'; g.fillRect(sd*14 - 4,-41,3,3); } } },
+          acc:g => { g.fillStyle = '#2a2a2a'; g.fillRect(-40,-40,80,7); for (const sd of [-1,1]) { g.fillStyle = '#1a1a1a'; g.beginPath(); g.ellipse(sd*14,-38,11,8,0,0,7); g.fill(); g.stroke(); g.fillStyle = CB; g.beginPath(); g.ellipse(sd*14,-38,7,5,0,0,7); g.fill(); g.fillStyle = '#fff'; g.fillRect(sd*14 - 4,-41,3,3); } } },
   foe:  { skin:'#ececec', shade:'#a0a0a0', hair:'#c8c8c8', eye:A, eyeD:ADK, uni:'#222222', bg:'#1a1a1a', narrow:true, crown:-58,
           tips:[[-32,-10],[-21,-28],[-7,-33],[6,-12],[12,-31],[25,-24],[33,-8]],
           back:g => { g.moveTo(-32,-30); g.bezierCurveTo(-40,-5,-38,14,-30,20); g.lineTo(30,20); g.bezierCurveTo(38,14,40,-5,32,-30); },
           collar:g => { g.fillStyle = A; g.beginPath(); g.rect(-16,28,32,16); g.fill(); g.stroke();
-            g.fillStyle = '#c0c0c0'; for (const sd of [-1,1]) { g.beginPath(); g.moveTo(sd*44,48); g.lineTo(sd*70,58); g.lineTo(sd*66,66); g.lineTo(sd*42,58); g.closePath(); g.fill(); g.stroke(); } },
-          acc:g => { g.strokeStyle = '#ffffff'; g.lineWidth = 2.5; g.beginPath(); g.arc(13,3,11,0,7); g.stroke(); g.lineWidth = 1.6; g.beginPath(); g.moveTo(23,9); g.quadraticCurveTo(34,26,28,44); g.stroke(); g.strokeStyle = INK; g.lineWidth = 2.4; } },
+            g.fillStyle = CY; for (const sd of [-1,1]) { g.beginPath(); g.moveTo(sd*44,48); g.lineTo(sd*70,58); g.lineTo(sd*66,66); g.lineTo(sd*42,58); g.closePath(); g.fill(); g.stroke(); } },
+          acc:g => { g.strokeStyle = CY; g.lineWidth = 2.5; g.beginPath(); g.arc(13,3,11,0,7); g.stroke(); g.lineWidth = 1.6; g.beginPath(); g.moveTo(23,9); g.quadraticCurveTo(34,26,28,44); g.stroke(); g.strokeStyle = INK; g.lineWidth = 2.4; } },
   rival:{ skin:'#efefef', shade:'#a4a4a4', hair:'#141414', eye:A, eyeD:ADK, uni:'#1a1a1a', bg:'#2a0000', narrow:true,
           tips:[[-34,4],[-24,-14],[-12,-21],[0,-19],[10,-4],[19,10],[27,18],[35,26]],
           back:g => { g.moveTo(-32,-30); g.bezierCurveTo(-50,0,-48,40,-44,56); g.lineTo(46,62); g.bezierCurveTo(50,30,50,0,32,-30); },
           collar:g => { g.fillStyle = '#1a1a1a'; g.beginPath(); g.rect(-17,30,34,14); g.fill(); g.stroke(); g.fillStyle = A; g.fillRect(-60,56,120,5); },
-          acc:g => { g.strokeStyle = A; g.lineWidth = 3; g.beginPath(); g.moveTo(-4,-50); g.quadraticCurveTo(14,-30,26,14); g.stroke(); g.strokeStyle = INK; g.lineWidth = 2.4; } },
+          acc:g => { g.strokeStyle = CM; g.lineWidth = 4; g.beginPath(); g.moveTo(-4,-50); g.quadraticCurveTo(14,-30,26,14); g.stroke(); g.strokeStyle = INK; g.lineWidth = 2.4; } },
+  pirate:{ skin:'#e8e8e8', shade:'#9a9a9a', hair:'#242424', eye:CG, eyeD:'#042008', uni:'#303030', bg:'#062a10', narrow:true, grin:true,
+          tips:[[-36,10],[-28,-6],[-18,2],[-10,-10],[0,-2],[10,-12],[20,0],[30,-8],[36,12]],
+          back:g => { g.moveTo(-32,-30); g.bezierCurveTo(-56,0,-50,40,-60,74); g.lineTo(60,74); g.bezierCurveTo(50,40,56,0,32,-30); },
+          collar:g => { g.fillStyle = '#505050'; for (const sd of [-1,1]) { g.beginPath(); g.moveTo(sd*8,40); g.lineTo(sd*34,42); g.lineTo(sd*20,80); g.closePath(); g.fill(); g.stroke(); }
+            g.strokeStyle = CY; g.lineWidth = 2.5; g.beginPath(); g.moveTo(-18,56); g.quadraticCurveTo(0,68,18,56); g.stroke(); g.strokeStyle = INK; g.lineWidth = 2.4; },
+          acc:g => { g.fillStyle = CG; g.beginPath(); g.moveTo(-38,-26); g.quadraticCurveTo(0,-50,38,-26); g.lineTo(36,-16); g.quadraticCurveTo(0,-38,-36,-16); g.closePath(); g.fill(); g.stroke();
+            g.beginPath(); g.moveTo(34,-22); g.lineTo(50,-10); g.lineTo(44,-4); g.closePath(); g.fill(); g.stroke();
+            g.strokeStyle = CY; g.lineWidth = 2.5; g.beginPath(); g.arc(-31,18,5,0,7); g.stroke();
+            g.strokeStyle = '#6a6a6a'; g.lineWidth = 1.2; for (let i = 0; i < 14; i++) { const x = -18 + (i % 7)*6, y = 20 + Math.floor(i/7)*5; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 1, y + 2); g.stroke(); }
+            g.strokeStyle = INK; g.lineWidth = 2.4; } },
 };
 const SLICK_TIPS = [[-32,-6],[-22,-30],[-8,-36],[4,-20],[8,-35],[22,-30],[33,-6]];
 function bangsPath(g, tips, crown) {
@@ -1394,11 +1558,19 @@ function renderPortrait(cv, who, st, src) {
   drawPortraitHi(who, st || { mouth:0, blink:false, expr:'normal' }, src);
   const N = cv.width, g = cv.getContext('2d');
   g.imageSmoothingEnabled = true; g.clearRect(0,0,N,N); g.drawImage(hiC, 0, 0, N, N);
-  const id = g.getImageData(0,0,N,N), d = id.data, dk = hexRGB(PAL.dk), lt = hexRGB(PAL.lt), ac = hexRGB(PAL.ac);
+  const id = g.getImageData(0,0,N,N), d = id.data, dk = hexRGB(PAL.dk), lt = hexRGB(PAL.lt), ac = hexRGB(PAL.ac), fb = hexRGB(PAL.fb), fg = hexRGB(PAL.fg), fy = hexRGB(PAL.fy), fm = hexRGB(PAL.fm);
   for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
     const i = (y*N + x)*4, r = d[i], gg = d[i+1], b = d[i+2], th = (bayer[(y & 3)*4 + (x & 3)] + .5)/16*255;
     let o;
-    if (r - Math.max(gg, b) > 60) o = r*1.2 > th ? ac : dk;
+    const mx = Math.max(r, gg, b), mn = Math.min(r, gg, b);
+    if (mx - mn > 60) {
+      let hue = ac;
+      if (r > gg*1.4 && b > gg*1.4 && Math.min(r, b) > 64) hue = fm;
+      else if (b > r*1.4 && b > gg*1.2) hue = fb;
+      else if (gg > r*1.4 && gg > b*1.4) hue = fg;
+      else if (gg > b*1.6 && r > b*1.6 && gg > r*.55) hue = fy;
+      o = mx*1.2 > th ? hue : dk;
+    }
     else o = (.299*r + .587*gg + .114*b) > th ? lt : dk;
     d[i] = o[0]; d[i+1] = o[1]; d[i+2] = o[2]; d[i+3] = 255;
   }
@@ -1463,6 +1635,8 @@ const reticleGroup = new THREE.Group(); scene.add(reticleGroup);
 const markMove = new THREE.SpriteMaterial({ map:markTex, color:BLU, transparent:true, depthWrite:false });
 const markStrike = new THREE.SpriteMaterial({ map:markTex, color:YEL, transparent:true, depthWrite:false });
 const markDim = new THREE.SpriteMaterial({ map:softDot, color:BLU, transparent:true, opacity:.9, depthWrite:false });
+const markPick = new THREE.SpriteMaterial({ map:markTex, color:GRN, transparent:true, depthWrite:false });
+const padPick = new THREE.MeshBasicMaterial({ color:GRN, side:THREE.DoubleSide, depthWrite:false });
 const markDimStrike = new THREE.SpriteMaterial({ map:softDot, color:YEL, transparent:true, opacity:.9, depthWrite:false });
 const padGeo = new THREE.RingGeometry(.34, .5, 4, 1, PI/4);
 const padMove = new THREE.MeshBasicMaterial({ color:BLU, side:THREE.DoubleSide, depthWrite:false });
@@ -1483,14 +1657,16 @@ function computeValid() {
   ui.valid = new Map();
   const u = selUnit(); if (!u || u.side !== 'ally' || !u.alive) return;
   if (S.phase === 'deploy') {
-    for (let x = 0; x < NX; x++) for (let y = 0; y < DEPLOY_ROWS; y++) for (let z = 0; z < NZ; z++) { const o = unitAt(x,y,z); if (o) continue; ui.valid.set(key3(x,y,z), { x, y, z, cost:0 }); }
+    for (let x = 0; x < NX; x++) for (let y = 0; y < DEPLOY_ROWS; y++) for (let z = 0; z < NZ; z++) { const o = unitAt(x,y,z); if (o || objAt(x,y,z)) continue; ui.valid.set(key3(x,y,z), { x, y, z, cost:0 }); }
   } else if (S.phase === 'player' && ui.mode === 'move' && !u.moved) {
     const m = T(u).move, vf = visFoes(), sts = u.acted ? [] : stylesOf(u).filter(st => isReady(u, st));
     for (let dx = -m; dx <= m; dx++) for (let dy = -m; dy <= m; dy++) for (let dz = -m; dz <= m; dz++) {
       const x = u.x + dx, y = u.y + dy, z = u.z + dz;
       if (!inBounds(x,y,z) || (!dx && !dy && !dz)) continue;
       const o = unitAt(x,y,z); if (o && isVisible(o)) continue;
+      const ob = objAt(x,y,z); if (ob && ob.kind === 'derelict') continue;
       const c = { x, y, z }, cost = moveCost(u, c); if (cost > S.fuel) continue;
+      c.pick = !!(ob && objVisible(ob));
       c.cost = cost; c.strike = sts.some(st => vf.some(f => { const d = dist(c, f); return d <= st.range + 1e-6; }));
       ui.valid.set(key3(x,y,z), c);
     }
@@ -1501,8 +1677,8 @@ function rebuildMarkers() {
   for (const [k, c] of ui.valid) {
     const p = W(c.x, c.y, c.z);
     if (c.z === ui.layer) {
-      const m = new THREE.Sprite(c.strike ? markStrike : markMove); m.position.copy(p); m.userData = { big:true, key:k }; m.scale.setScalar(.5); markerGroup.add(m);
-      const pad = new THREE.Mesh(padGeo, c.strike ? padStrike : padMove); pad.rotation.x = -PI/2; pad.position.copy(p); pad.position.y -= .01; markerGroup.add(pad);
+      const m = new THREE.Sprite(c.pick ? markPick : c.strike ? markStrike : markMove); m.position.copy(p); m.userData = { big:true, key:k }; m.scale.setScalar(.5); markerGroup.add(m);
+      const pad = new THREE.Mesh(padGeo, c.pick ? padPick : c.strike ? padStrike : padMove); pad.rotation.x = -PI/2; pad.position.copy(p); pad.position.y -= .01; markerGroup.add(pad);
     } else { const s = new THREE.Sprite(c.strike ? markDimStrike : markDim); s.position.copy(p); s.scale.setScalar(.22); markerGroup.add(s); }
   }
 }
@@ -1584,7 +1760,7 @@ document.addEventListener('pointerdown', e => { if (e.target.closest('.colBtn'))
 document.addEventListener('click', e => { const b = e.target.closest('[data-col]'); if (!b) return; e.stopPropagation(); setCol(b.dataset.col, !col[b.dataset.col]); sfx.blip(); });
 function setLayer(z) { ui.layer = clamp(z, 0, NZ-1); refresh(); }
 (function buildGauge() { const g = $('fuelGauge'); for (let i = 0; i < FUEL_MAX; i++) g.appendChild(document.createElement('i')); })();
-const PHASES = { deploy:['FLEET DEPLOYMENT','艦隊配置'], player:['PLAYER PHASE','自軍フェイズ'], resolving:['OPEN FIRE','交戦'], enemy:['ENEMY PHASE','敵軍フェイズ'], fog:['SENSOR SWEEP','接触'] };
+const PHASES = { pirate:['PIRATE PHASE','海賊'], deploy:['FLEET DEPLOYMENT','艦隊配置'], player:['PLAYER PHASE','自軍フェイズ'], resolving:['OPEN FIRE','交戦'], enemy:['ENEMY PHASE','敵軍フェイズ'], fog:['SENSOR SWEEP','接触'] };
 function renderHUD() {
   const u = selUnit(), op = String(camp.op).padStart(2,'0');
   $('phaseTop').textContent = S.phase === 'deploy' ? `OP ${op} · PRE-BATTLE` : `OP ${op} · TURN ${S.turn}/${TL}`;
@@ -1628,8 +1804,8 @@ function renderHUD() {
   const card = $('card');
   card.hidden = !u || S.phase === 'deploy';
   if (u && S.phase !== 'deploy') {
-    const t = T(u), foe = u.side === 'foe';
-    card.classList.toggle('foe', foe);
+    const t = T(u), foe = u.side !== 'ally';
+    card.classList.toggle('foe', u.side === 'foe'); card.classList.toggle('pirate', u.side === 'pirate');
     $('cardName').textContent = u.name; $('cardClass').textContent = t.cls;
     $('cardHp').firstElementChild.style.width = (100*Math.max(0,u.hp)/u.maxHp) + '%';
     let stats = `<span>HP <b>${Math.max(0,u.hp)}/${u.maxHp}</b></span><span>MOV <b>${t.move}</b></span>`;
@@ -1643,6 +1819,7 @@ function renderHUD() {
     if (u.shield) tags += '<span class="tag inv">Shielded</span>';
     if (u.bossCharge >= 2) tags += '<span class="tag ac">Graviton cannon charging</span>';
     if (u.type === 'e_ace') tags += '<span class="tag ac">Rival · Capt. Vex</span>';
+    if (u.oc) tags += '<span class="tag inv">Overcharged +35%</span>';
     if (t.pawn) tags += '<span class="tag">Pawn · one weapon</span>';
     if (!foe && S.phase === 'player') { if (u.moved) tags += '<span class="tag">Moved</span>'; if (u.acted) tags += '<span class="tag">Attacked</span>'; }
     if (foe && t.flag) tags += '<span class="tag ac">Flagship · sink to win</span>';
@@ -1695,6 +1872,7 @@ function renderTimeline() {
       else if (ahead <= 5) mk = w.size >= 2 ? '▲' : '·';
       else mk = w.size >= 3 ? '~' : '';
     } else if (w && t < now) mk = '✕';
+    if (S.pirateTurn > 0 && t === S.pirateTurn && t >= now) mk += ahead <= 2 ? '☠' : ahead <= 4 ? '?' : '';
     if (t === TL) mk = '⚑';
     n.innerHTML = `<span class="mk${w || t === TL ? ' w' : ''}">${mk}</span><span class="tn">${t}</span>`;
     el.appendChild(n);
@@ -1709,10 +1887,12 @@ function renderTimeline() {
 function intelDetail() {
   const now = S.phase === 'deploy' ? 0 : S.turn;
   const next = S.waves.filter(w => !w.arrived && w.turn > now).sort((a,b) => a.turn - b.turn)[0];
-  if (!next) return `No further signals. The enemy main fleet arrives after turn ${TL}; sink the Grauhalle before then or withdraw.`;
+  const pir = S.pirateTurn > 0 && S.pirateTurn - now <= 4 ? ` Unidentified raiders in about ${S.pirateTurn - now} turn${S.pirateTurn - now > 1 ? 's' : ''}.` : '';
+  if (!next) return pir + ` No further enemy signals.`;
+  if (false) return `No further signals. The enemy main fleet arrives after turn ${TL}; sink the Grauhalle before then or withdraw.`;
   const ahead = next.turn - now;
   const size = ahead <= 2 ? ['a light patrol','a mixed group','a heavy battle group'][next.size - 1] : ahead <= 5 ? (next.size >= 2 ? 'significant movement' : 'faint movement') : 'distant, unclear signals';
-  return `Intel: ${size} in about ${ahead} turn${ahead > 1 ? 's' : ''}${next.elite && ahead <= 2 ? ', with an elite signature' : ''}. The main enemy fleet arrives after turn ${TL}.`;
+  return `Intel: ${size} in about ${ahead} turn${ahead > 1 ? 's' : ''}${next.elite && ahead <= 2 ? ', with an elite signature' : ''}.${pir} The main enemy fleet arrives after turn ${TL}.`;
 }
 $('timelineBox').addEventListener('click', e => { if (!S || e.target.closest('[data-col]')) return; setCol('hint', false); $('hintTxt').innerHTML = intelDetail(); sfx.blip(); });
 function renderHint() {
@@ -1725,7 +1905,7 @@ function renderHint() {
     else h = left ? 'Pick a ship below, then tap a node in your deployment zone.' : 'Fleet in position. Drag ships to adjust, or press LAUNCH.';
   } else if (S.phase === 'player') {
     if (!u) h = allies().some(a => !a.acted) ? 'Tap a ship. Each one can move and attack this turn. Tap the timeline for intel.' : 'Every ship has attacked. Press END TURN.';
-    else if (u.side === 'foe') h = `<b>${u.name}</b> ${T(u).cls}. Select your ship, then tap this target.`;
+    else if (u.side !== 'ally') h = `<b>${u.name}</b> ${T(u).cls}${u.side === 'pirate' ? ' (pirate, fights everyone)' : ''}. Select your ship, then tap this target.`;
     else if (ui.mode === 'move') {
       const onL = [...ui.valid.values()].filter(c => c.z === ui.layer).length, strike = [...ui.valid.values()].some(c => c.strike);
       h = ui.valid.size ? `Tap a node to move <b>${u.name}</b>. <span style="color:var(--fb)">Blue</span> moves${strike ? ', <span style="color:var(--fy)">yellow</span> puts an enemy in range' : ''}.${onL ? '' : ' No nodes on Z' + (ui.layer+1) + '.'}${u.acted ? '' : ' Or tap a marked enemy to attack first.'}` : `Not enough fuel to move ${u.name}.`;
@@ -1753,7 +1933,7 @@ function styleDmg(src, t, st, from = src) {
   if (t.shield && !st.pierce) v *= .5;
   return v;
 }
-function oppOf(src) { return src.side === 'ally' ? visFoes() : allies(); }
+function oppOf(src) { return src.side === 'ally' ? visFoes() : S.units.filter(u => u.alive && u.side !== src.side); }
 function hitsFor(src, st, target, from = src) {
   const opp = oppOf(src), inR = o => dist(from, o) <= st.range + 1e-6;
   if (st.kind === 'aura') return opp.filter(inR).map(u => ({ u, m:1 }));
@@ -1828,7 +2008,7 @@ async function doMove(u, c) {
   const occupant = unitAt(c.x, c.y, c.z);
   S.fuel -= cost; u.moved = true;
   const from = posOf(u);
-  if (occupant && occupant.side === 'foe' && !isVisible(occupant)) {
+  if (occupant && occupant.side !== 'ally' && !isVisible(occupant)) {
     const to = from.clone().lerp(W(c.x,c.y,c.z), .45);
     await animateMove(u, from, to, 300); await animateMove(u, to, from, 260);
     log(`${u.name}: proximity alarm at ${c.x+1}·${c.y+1}·Z${c.z+1}`, 'foe');
@@ -1838,6 +2018,7 @@ async function doMove(u, c) {
     await animateMove(u, from, W(c.x,c.y,c.z), 420);
     const sk = sectorKey(u.x,u.y,u.z);
     if (!S.revealed[sk]) { log(`${u.name} scouts sector ${sk.replace(/,/g,'·')}`); await revealSector(sk); }
+    await collectAt(u);
   }
   if (S.fuel <= 4 && !S.said.fuel) { S.said.fuel = 1; say('ops', 'Fuel is under five units, Admiral. Hold position a turn and let the tanks refill.', 'worried'); }
   ui.busy = false;
@@ -1866,7 +2047,8 @@ async function executeAttack(src, st, target) {
   if (!hits.length) return;
   const main = target || hits[0].u;
   if (st.big) await cutIn(ally ? (src.type === 'mecha' ? 'pilot' : src.type === 'fighter' ? 'ace' : 'adm') : (src.type === 'e_ace' ? 'rival' : 'foe'), src.name, st.name, st.jp || '', src.side);
-  const rolls = hits.map(h => { const combo = S.combo[h.u.id] || 0; return { u:h.u, combo, amt:Math.max(1, Math.round(styleDmg(src, h.u, st)*h.m*(1 + .25*combo)*(.9 + Math.random()*.2))) }; });
+  const oc = src.oc ? 1.35 : 1; src.oc = false;
+  const rolls = hits.map(h => { const combo = S.combo[h.u.id] || 0; return { u:h.u, combo, amt:Math.max(1, Math.round(styleDmg(src, h.u, st)*h.m*oc*(1 + .25*combo)*(.9 + Math.random()*.2))) }; });
   await faceToward(src, posOf(main), 200);
   const mainRoll = rolls.find(r => r.u === main) || rolls[0];
   await playFx(src, st, main, rolls, tierCol(mainRoll.amt));
@@ -1983,6 +2165,9 @@ $('auxBtn').addEventListener('click', () => {
 async function launch() {
   if (!allies().every(a => a.placed)) return;
   ui.sel = null; ui.mode = null; S.phase = 'player';
+  for (const a of allies()) { const k = sectorKey(a.x,a.y,a.z); if (!S.revealed[k]) { S.revealed[k] = true; clearFogInstant(k); } }
+  for (const f of hostiles().filter(isVisible)) { f.active = true; buildVisual(f); }
+  syncObjs();
   sfx.big(); alertMsg('ALL SHIPS · ADVANCE', 'lt');
   const adm = traitsOf('adm');
   say('adm', adm.aviators ? 'Same drill as always. Advance, find the dreadnought, and bring everyone home.' : 'All ships, advance into the nebula. Keep formation tight and watch your fuel.');
@@ -2019,6 +2204,7 @@ async function startPlayerTurn(first) {
   S.combo = {}; S.phase = 'player'; ui.sel = null; ui.mode = null; ui.confirmFlee = false;
   const w = S.waves.find(q => q.turn === S.turn && !q.arrived);
   if (w) await arriveWave(w);
+  if (S.pirateTurn > 0 && S.pirateTurn === S.turn) await arrivePirates();
   if (!first) { alertMsg('TURN ' + S.turn + ' · PLAYER PHASE', 'lt'); statusReport(); }
   log(`Turn ${S.turn}${first ? '' : ': +' + FUEL_REGEN + ' fuel'}`);
   refresh();
@@ -2059,7 +2245,10 @@ async function mainFleetArrives() {
 function tickCds(u) { if (!u.cds) u.cds = {}; for (const k in u.cds) u.cds[k] = Math.max(0, u.cds[k] - 1); }
 async function endTurn() {
   S.phase = 'enemy'; ui.sel = null; ui.mode = null; refresh();
+  await salvageTick('ally');
   await enemyPhase(); if (checkEnd()) return;
+  await salvageTick('foe');
+  if (pirates().length) { S.phase = 'pirate'; refresh(); await piratePhase(); if (checkEnd()) return; await salvageTick('pirate'); }
   S.phase = 'fog'; refresh();
   await fogPhase(); if (checkEnd()) return;
   await startPlayerTurn(false);
@@ -2091,7 +2280,13 @@ async function destroy(u, src) {
   const v = V[u.id];
   if (v) await tween(420, k => { v.body.scale.setScalar(Math.max(.01, 1 - k)); v.body.rotation.z += .08; }, lin);
   removeVisual(u.id);
-  if (u.side === 'foe') {
+  if (u.side === 'pirate') {
+    S.kills++; creditKill(src, u); S.pirateLosses = (S.pirateLosses || 0) + 1;
+    log(`${u.name} destroyed`);
+    if (!pirates().length) { S.piratesBeaten = true; say('pirate', 'Jackals, scatter! We\'ll be back for the scraps!', 'worried'); }
+    else if (src && src.side === 'foe' && !S.said.pvf) { S.said.pvf = 1; say('ops', 'The Empire and the pirates are shooting each other!', 'happy'); }
+    else if (Math.random() < .4) say('pirate', pick(['That was my favourite ship!', 'You\'ll pay for that one!']), 'shout');
+  } else if (u.side === 'foe') {
     S.kills++; creditKill(src, u);
     log(`${u.name} destroyed`);
     if (u.type === 'e_ace') {
@@ -2110,9 +2305,11 @@ async function destroy(u, src) {
     S.lost.push(u.name);
     log(`${u.name} lost`, 'foe');
     if (src && src.type === 'e_ace') S.rivalKills++;
+    if (src && src.side === 'pirate') S.pirateKills = (S.pirateKills || 0) + 1;
     if (u.type !== 'flagship') {
       say('ops', `We've lost ${u.name}! The crew made it to the escape pods… I hope.`, 'worried');
       if (src && src.type === 'e_ace') say('rival', 'Too easy. Send me someone who can fly.', 'smirk');
+      else if (src && src.side === 'pirate') say('pirate', 'Ha! Strip it for parts!', 'happy');
       else if (Math.random() < .6) say('foe', pick(['One more rebel ship reduced to scrap.', 'How fragile. Who is next?']), 'smirk');
     }
   }
@@ -2120,7 +2317,7 @@ async function destroy(u, src) {
   refresh();
 }
 /* ---------- enemy AI ---------- */
-function nearestAlly(f) { let best = null, bd = 1e9; for (const a of allies()) { const d = dist(a, f); if (d < bd) { bd = d; best = a; } } return best; }
+function nearestOpp(f) { let best = null, bd = 1e9; for (const a of oppOf(f)) { const d = dist(a, f); if (d < bd) { bd = d; best = a; } } return best; }
 async function enemyPhase() {
   for (const f of foes()) { f.shield = false; tickCds(f); if (isVisible(f)) f.active = true; }
   S.combo = {};
@@ -2138,19 +2335,52 @@ async function enemyPhase() {
   }
   refresh();
 }
+async function piratePhase() {
+  S.combo = {};
+  for (const p of pirates()) { p.shield = false; tickCds(p); }
+  const act = pirates();
+  if (act.some(isVisible)) { alertMsg('PIRATE PHASE', 'gr'); sfx.alarm(); await wait(500); }
+  for (const p of act) { if (!p.alive) continue; await foeTurn(p); if (checkEnd()) return; await wait(isVisible(p) ? 90 : 0); }
+  refresh();
+}
+async function arrivePirates() {
+  S.pirateTurn = -S.pirateTurn;
+  const x0 = Math.random() < .5 ? 0 : NX - 1, spawned = [];
+  for (const type of ['p_corsair', 'p_raider', 'p_raider']) {
+    for (let i = 0; i < 60; i++) {
+      const x = x0 + (x0 ? -rint(0,1) : rint(0,1)), y = rint(3, 5), z = rint(0, NZ-1);
+      if (unitAt(x,y,z) || objAt(x,y,z)) continue;
+      const u = makeUnit({ type, name:type === 'p_corsair' ? 'JACKAL' : 'RAIDER-' + (spawned.length) }, 'pirate');
+      Object.assign(u, { x, y, z, placed:true, active:true }); S.units.push(u); spawned.push(u); break;
+    }
+  }
+  S.pirateMet = true; sfx.alarm();
+  alertMsg('PIRATE SIGNALS', 'gr');
+  for (const u of spawned) if (isVisible(u)) { buildVisual(u); flash(posOf(u), GRN, 2.6, 500); }
+  log(`Pirates warp in on the ${x0 ? 'right' : 'left'} flank`, 'foe');
+  const met = camp.npc.pirate.met || 0, tr = traitsOf('pirate');
+  say('pirate', tr.patch ? 'Lost an eye to you lot. Today I take a ship in trade.' : met ? 'The rebels again! Your hull plating sold well last time.' : 'Void Jackals, boys! Two fleets, one battlefield, and all that salvage. Take everything!', 'happy');
+  say('ops', 'Third-party contacts! Pirates, and they\'re shooting at everyone. Let them soften up the Empire if you can.', 'shout');
+  await wait(600);
+}
 /* the planner: try every reachable cell and every ready weapon, take the most damage */
 function planFoe(f, exclude) {
   const m = T(f).move, cands = [{ x:f.x, y:f.y, z:f.z }];
   for (let dx = -m; dx <= m; dx++) for (let dy = -m; dy <= m; dy++) for (let dz = -m; dz <= m; dz++) {
     const x = f.x + dx, y = f.y + dy, z = f.z + dz;
-    if ((dx || dy || dz) && inBounds(x,y,z) && !unitAt(x,y,z)) cands.push({ x, y, z });
+    const ob = inBounds(x,y,z) && objAt(x,y,z);
+    if ((dx || dy || dz) && inBounds(x,y,z) && !unitAt(x,y,z) && !(ob && ob.kind === 'derelict')) cands.push({ x, y, z });
   }
+  const wantObj = c => { const ob = objAt(c.x,c.y,c.z); let b = 0;
+    if (ob && ob.kind === 'fuel' && f.hp < f.maxHp*.8) b += 4; if (ob && ob.kind === 'ammo') b += 4;
+    for (const d of (S.objs || []).filter(q => q.kind === 'derelict' && !q.gone)) if (cheb(c, d) <= 1) b += f.side === 'pirate' ? 6 : 2.5;
+    return b; };
   let best = null;
   const sts = stylesOf(f).filter(st => isReady(f, st) && !(exclude && exclude(st)));
   for (const c of cands) {
-    const pen = cheb(f, c)*.8 + Math.random()*.4;
+    const pen = cheb(f, c)*.8 + Math.random()*.4 - wantObj(c);
     for (const st of sts) {
-      const tg = st.kind === 'aura' || st.kind === 'multi' ? [null] : allies().filter(a => { const d = dist(c, a); return d <= st.range + 1e-6 && d >= (st.min || 0); });
+      const tg = st.kind === 'aura' || st.kind === 'multi' ? [null] : oppOf(f).filter(a => { const d = dist(c, a); return d <= st.range + 1e-6 && d >= (st.min || 0); });
       for (const t of tg) {
         const hits = hitsFor(f, st, t, c); if (!hits.length) continue;
         const val = hits.reduce((s, h) => s + styleDmg(f, h.u, st, c)*h.m + (h.u.type === 'flagship' ? 3 : 0), 0) - pen;
@@ -2166,20 +2396,22 @@ async function moveFoeTo(f, c) {
   f.x = c.x; f.y = c.y; f.z = c.z;
   const nowVis = isVisible(f);
   if (wasVis && V[f.id]) await animateMove(f, from, W(f.x,f.y,f.z), 420);
+  await collectAt(f);
   if (nowVis && !V[f.id]) { buildVisual(f); log(`${f.name} emerges from the fog`, 'foe'); flash(posOf(f), ACC, 2.2, 400); }
   syncVisual(f, true);
   if (wasVis && !nowVis) log(`${f.name} slips into the fog`, 'foe');
 }
 async function foeTurn(f, exclude) {
   const plan = planFoe(f, exclude);
-  if (!plan) {   // nothing in reach: close the distance
-    const tgt = nearestAlly(f); if (!tgt) return;
+  if (!plan) {   // nothing in reach: go for salvage, or close the distance
+    const wreck = (S.objs || []).find(q => q.kind === 'derelict' && !q.gone && dist(q, f) <= (f.side === 'pirate' ? 6 : 3));
+    const tgt = wreck && cheb(wreck, f) > 1 ? wreck : nearestOpp(f); if (!tgt) return;
     const m = T(f).move, want = stylesOf(f)[0].range*.8;
     let best = null, bs = Math.abs(dist(f, tgt) - want);
     for (let dx = -m; dx <= m; dx++) for (let dy = -m; dy <= m; dy++) for (let dz = -m; dz <= m; dz++) {
       const x = f.x + dx, y = f.y + dy, z = f.z + dz;
-      if (!inBounds(x,y,z) || unitAt(x,y,z)) continue;
-      const sc = Math.abs(dist({ x,y,z }, tgt) - want) + Math.random()*.2;
+      if (!inBounds(x,y,z) || unitAt(x,y,z) || objAt(x,y,z)) continue;
+      const sc = Math.abs(dist({ x,y,z }, tgt) - (tgt.kind ? 1 : want)) + Math.random()*.2;
       if (sc < bs) { bs = sc; best = { x,y,z }; }
     }
     if (best) await moveFoeTo(f, best);
@@ -2199,7 +2431,7 @@ async function bossAct(b) {
   if (b.bossCharge >= 2) {
     b.bossCharge = 0; syncVisual(b);
     const flag = allies().find(u => u.type === 'flagship');
-    const tgt = flag && dist(b, flag) <= grav.range ? flag : nearestAlly(b);
+    const tgt = flag && dist(b, flag) <= grav.range ? flag : nearestOpp(b);
     if (tgt) await executeAttack(b, grav, tgt);
     return;
   }
@@ -2218,7 +2450,9 @@ async function revealSector(k) {
   if (S.revealed[k]) return;
   S.revealed[k] = true; sfx.blip();
   const p = dissolveFog(k);
-  const found = foes().filter(f => sectorKey(f.x,f.y,f.z) === k);
+  const objs = (S.objs || []).filter(o => !o.gone && sectorKey(o.x,o.y,o.z) === k);
+  if (objs.length) { syncObjs(); for (const o of objs) { log(`Sighted: ${OBJ_INFO[o.kind].name}`); if (o.kind === 'derelict' && !S.said.derelict) { S.said.derelict = 1; say('ops', 'A derelict cruiser, Admiral! Park a ship beside it for two turns and we can strip it. Everyone out here will want it.', 'shout'); } } }
+  const found = hostiles().filter(f => sectorKey(f.x,f.y,f.z) === k);
   for (const f of found) {
     f.active = true;
     const v = buildVisual(f); v.root.position.copy(W(f.x,f.y,f.z)); setStem(v); syncVisual(f, true);
@@ -2329,9 +2563,13 @@ function settleOp(res) {
   if (S.rivalKills) camp.npc.rival.wins += S.rivalKills;
   if (S.bossSeen) camp.npc.foe.met = (camp.npc.foe.met || 0) + 1;
   if (S.marshalBeaten) camp.npc.foe.defeats++;
+  if (S.pirateMet) camp.npc.pirate.met = (camp.npc.pirate.met || 0) + 1;
+  if (S.piratesBeaten) camp.npc.pirate.defeats++;
+  if (S.pirateKills) camp.npc.pirate.wins += S.pirateKills;
+  if (S.salvage) { camp.parts += S.salvage; loot.push(['Derelict salvage (spare parts)', '+' + S.salvage]); }
   if (res === 'lose') camp.npc.foe.wins++;
   const changes = [];
-  for (const k of ['adm','ops','pilot','ace','rival','foe']) {
+  for (const k of ['adm','ops','pilot','ace','rival','foe','pirate']) {
     const a = traitsOf(k, before), b = traitsOf(k, camp);
     const msg = [];
     if (NPC[k].hero) { if (!a.slick && b.slick) msg.push('slicks back their hair'); if (!a.jacket && b.jacket) msg.push('is issued a flight jacket'); if (!a.aviators && b.aviators) msg.push('earns aviators · VALOR HERO'); if (b.valor > a.valor && !msg.length) msg.push(`valor +${b.valor - a.valor}`); }
@@ -2374,7 +2612,7 @@ function showReport(r) {
    ================================================================ */
 function availableRoster() { return ALLY_ROSTER.filter(d => d.type === 'flagship' || !(camp.repair[d.name] > 0)); }
 function dossierHTML(src) {
-  return `<div class="people">${['adm','ops','pilot','ace','rival','foe'].map(k => `<div class="person ${NPC[k].side}"><canvas width="64" height="64" data-who="${k}"></canvas><div class="pn">${NPC[k].name}</div><div class="pt">${NPC[k].role}<br>${traitText(k, src)}</div></div>`).join('')}</div>`;
+  return `<div class="people">${['adm','ops','pilot','ace','rival','foe','pirate'].map(k => `<div class="person ${NPC[k].side}"><canvas width="64" height="64" data-who="${k}"></canvas><div class="pn">${NPC[k].name}</div><div class="pt">${NPC[k].role}<br>${traitText(k, src)}</div></div>`).join('')}</div>`;
 }
 function paintDossiers(root, src) { root.querySelectorAll('canvas[data-who]').forEach(cv => renderPortrait(cv, cv.dataset.who, { mouth:0, blink:false, expr:NPC[cv.dataset.who].side === 'foe' ? 'smirk' : 'normal' }, src)); }
 function showBriefing() {
@@ -2547,9 +2785,15 @@ function hoverUpdate(cx, cy) {
   canvas.style.cursor = (pickUnit(cx, cy) || k) ? 'pointer' : 'grab';
   if (k !== hoverKey) { hoverKey = k; renderHUD(); }
 }
+function pickObj(cx, cy) {
+  setRay(cx, cy); const hs = Object.values(OV).map(v => v.hit);
+  const r = raycaster.intersectObjects(hs, false); return r.length ? S.objs.find(o => o.id === r[0].object.userData.oid) : null;
+}
 function handleTap(cx, cy) {
   if (ui.busy) return;
   const u = pickUnit(cx, cy);
+  const ob = !u && pickObj(cx, cy);
+  if (ob && !(ui.mode === 'move' && ui.valid.has(key3(ob.x,ob.y,ob.z)))) { setCol('hint', false); $('hintTxt').innerHTML = `<b>${OBJ_INFO[ob.kind].name}</b> ${OBJ_INFO[ob.kind].info}`; sfx.blip(); return; }
   if (S.phase === 'deploy') {
     const cur = selUnit(), c = pickCell(cx, cy, ui.layer);
     if (cur && c && ui.valid.has(key3(c.x,c.y,c.z)) && (!u || u === cur)) {
@@ -2563,7 +2807,7 @@ function handleTap(cx, cy) {
   if (S.phase !== 'player') { if (u) { ui.sel = u.id; refresh(); } return; }
   const cur = selUnit();
   if (u) {
-    if (u.side === 'foe' && cur && cur.side === 'ally' && !cur.acted) {
+    if (u.side !== 'ally' && cur && cur.side === 'ally' && !cur.acted) {
       let st = ui.mode === 'attack' && ui.style ? styleOf(cur, ui.style) : null;
       if (st && !(st.kind === 'aura' ? dist(cur, u) <= st.range + 1e-6 && isReady(cur, st) : canTarget(cur, st, u))) st = null;
       if (!st) st = bestStyleFor(cur, u);
@@ -2631,9 +2875,11 @@ function newGame() {
   campStart = JSON.parse(JSON.stringify(camp));
   S = newState();
   for (const d of availableRoster()) { const u = makeUnit(d, 'ally'); if (u.type === 'flagship' && camp.flagPatched) u.hp = Math.round(u.maxHp*.6); S.units.push(u); }
+  clearObjs();
   planOp();
   buildFog();
   for (let sx = 0; sx < NSX; sx++) for (let sz = 0; sz < NSZ; sz++) { const k = sx + ',0,' + sz; S.revealed[k] = true; clearFogInstant(k); }
+  syncObjs();
   $('log').innerHTML = '';
   ui.sel = null; ui.mode = null; ui.layer = 1;
   refresh();
@@ -2641,10 +2887,11 @@ function newGame() {
 function beginDeploy() {
   ui.sel = nextUnplaced(); ui.layer = 1; refresh();
   const out = Object.keys(camp.repair).filter(n => camp.repair[n] > 0);
-  say('ops', out.length ? `Grid is live. ${out.join(' and ')} ${out.length > 1 ? 'are' : 'is'} still in the repair bay, so we fight short-handed.` : 'Grid is live, Admiral. Place our ships in the two rows nearest us. Any Z-layer works.', out.length ? 'worried' : 'normal');
+  say('ops', out.length ? `Grid is live. ${out.join(' and ')} ${out.length > 1 ? 'are' : 'is'} still in the repair bay, so we fight short-handed.` : 'Grid is live, Admiral. Place our ships in the three rows nearest us. Any Z-layer works.', out.length ? 'worried' : 'normal');
 }
 function restore(data) {
   if (S) clearVisuals();
+  clearObjs();
   camp = data.camp || camp; campStart = data.campStart || JSON.parse(JSON.stringify(camp));
   S = data.S; ui.sel = null; ui.mode = null; ui.busy = false;
   if (['resolving','enemy','fog'].includes(S.phase)) S.phase = 'player';
@@ -2655,7 +2902,8 @@ function restore(data) {
   if (data.cam) Object.assign(cam, data.cam, { shake:0, vaz:0, vel:0 });
   $('titleOv').hidden = true; ui.overlay = S.phase === 'over';
   if (S.phase === 'over') showBriefing();
-  for (const f of S.units.filter(u => u.side === 'foe' && u.alive && isVisible(u))) buildVisual(f);
+  for (const f of S.units.filter(u => u.side !== 'ally' && u.alive && isVisible(u))) buildVisual(f);
+  syncObjs();
   refresh();
 }
 

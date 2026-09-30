@@ -6,15 +6,25 @@ Play it: **https://mtd-public.github.io/turn-tactics/**
 
 ## How a match works
 
-1. **Deploy.** Place your ships in the two rows nearest you, on any of the four Z-layers of the 8 × 8 × 4 grid. Tap a ship, then tap a node, or drag ships around. AUTO places everything for you.
+1. **Deploy.** Place your ships in the three rows nearest you, on any of the four Z-layers of the 8 × 8 × 4 grid. Tap a ship, then tap a node, or drag ships around. AUTO places everything for you.
 2. **Scout.** The enemy side starts under fog. Each turn, fog lifts from random sectors, and any ship that moves into a sector clears it.
-3. **Engage.** Each ship gets one move and one action per turn:
-   - **Move** burns fuel (a shared pool that refills a little each turn). Heavier ships burn more per cell.
-   - **Fire** queues an attack. Closer shots hit harder, and each extra ship firing on the same target adds 25% (focus fire).
-   - **Shield** halves incoming damage until your next turn.
-   - **Repair** uses a repair kit.
-   - **Charge** arms the ship's special for its next shot (Hadron Lance, Missile Storm, Twin Buster, Torpedo Run).
-4. Press **ENGAGE**. Your orders resolve, the enemy moves and fires, then the fog sweeps again.
+3. **Engage.** Every ship can move and attack each turn, in either order:
+   - **Move** into the 3×3 block around the ship (and one layer up or down). Moving burns fuel from a shared tank that refills a little each turn. Blue nodes are plain moves, yellow nodes put an enemy in range, green nodes pick something up.
+   - **Attack** resolves right away. Fighters and grunt suits have one weapon; bigger craft pick from two or three, such as the flagship's Main Guns, Flak Screen (hits everything nearby) and Hadron Lance (pierces a whole line, long cooldown). Reticles and shots are coloured by damage.
+   - Hitting a target another ship already hit this turn adds a **combo** bonus (+25% per hit).
+   - **Shield** halves incoming damage until your next turn; **Repair** uses a kit. Either one takes the place of the attack.
+   - **Dogfight** takes one enemy (and any wingmen beside it) into a real-time skirmish, below.
+4. Press **END TURN**. The enemy moves and fires, pirates (if any) take their turn, then the fog sweeps again.
+
+## Battlefield events
+
+- **Fuel depots** (+8 fuel) and **munitions caches** (resets a ship's cooldowns and overcharges its next attack) sit in the fog. Enemies use them too.
+- A **derelict cruiser** can be salvaged by any side that keeps a ship beside it for two turns with no rival ship next to it. Your salvage brings kits, fuel and a spare part.
+- The **Void Jackals** pirates may warp in partway through. They fight everyone, go after salvage, and their captain remembers you between operations.
+
+## Dogfights
+
+A skirmish zooms into a flat 9 × 9 arena. Its flight model is borrowed from [space-lion](https://github.com/mtd-public/space-lion): your ship always flies forward, you steer with a thumbstick on the lower-left of the screen, and you tap or hold anywhere else to fire at the reticle ahead of your nose. Dodge drifting asteroids, grab repair and overdrive pickups, and use SPECIAL once if the ship has a charged big weapon. Win, lose or break off after 45 seconds; hull damage and kills carry back to the map. The rival ace sometimes challenges SERAPH-01 to a duel on her own.
 
 Sink the enemy dreadnought **Grauhalle** to win. If your flagship **Hyperion** is lost, the match is over.
 
@@ -42,7 +52,7 @@ The campaign and the match in progress are saved in your browser (`localStorage`
 | Pinch to zoom, twist to rotate | Scroll to zoom |
 | Two-finger drag to pan | Right-drag or Shift-drag to pan |
 | Tap ships, nodes and reticles | Click, or drag ships to move them |
-| | `1`–`4` switch Z-layer, `Q`/`E` rotate 90°, `M` `F` `S` `R` `C` for actions, `Enter` to engage, `Esc` to deselect |
+| | `1`–`4` switch Z-layer, `Q`/`E` rotate 90°, `M` move, `F` cycle weapons, `S` shield, `R` repair, `Enter` end turn, `Esc` deselect. Dogfight: WASD/arrows steer, Space fires, `E` special |
 
 Most HUD panels collapse with their ▾ buttons: the timeline, log, comms, hint, fleet dock, and the view and layer rails.
 

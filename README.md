@@ -14,6 +14,7 @@ Play it: **https://mtd-public.github.io/turn-tactics/**
    - Hitting a target another ship already hit this turn adds a **combo** bonus (+25% per hit).
    - **Shield** halves incoming damage until your next turn; **Repair** uses a kit. Either one takes the place of the attack.
    - **Dogfight** takes one enemy (and any wingmen beside it) into a real-time skirmish, below.
+   - **AUTO MOVE** repositions every ship that hasn't moved yet, before you attack: each one takes the block with the best mix of targets in reach, pickups and salvage, safety (the flagship and damaged ships hang back) and progress into the fog, while keeping a little fuel in reserve. Ships you've already moved stay put. The ≡ menu can run it automatically at the start of every turn.
 4. Press **END TURN**. The enemy moves and fires, pirates (if any) take their turn, then the fog sweeps again.
 
 ## Battlefield events

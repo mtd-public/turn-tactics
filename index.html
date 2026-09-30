@@ -1813,7 +1813,7 @@ function setCol(k, v) {
   try { localStorage.setItem(COL_KEY, JSON.stringify(col)); } catch (e) {}
   requestAnimationFrame(measureFree);
 }
-for (const k of Object.keys(col)) setCol(k, col[k]);
+for (const k of Object.keys(col)) if (k !== 'autoMove') setCol(k, col[k]);
 document.addEventListener('pointerdown', e => { if (e.target.closest('.colBtn')) e.stopPropagation(); }, true);
 document.addEventListener('click', e => { const b = e.target.closest('[data-col]'); if (!b) return; e.stopPropagation(); setCol(b.dataset.col, !col[b.dataset.col]); sfx.blip(); });
 function setLayer(z) { ui.layer = clamp(z, 0, NZ-1); refresh(); }
@@ -1889,11 +1889,12 @@ function renderHUD() {
   const mb = $('mainBtn'), ab = $('auxBtn');
   mb.classList.remove('hot');
   if (S.phase === 'deploy') {
-    ab.hidden = false; ab.textContent = 'AUTO';
+    ab.hidden = false; ab.textContent = 'AUTO'; ab.disabled = false;
     mb.disabled = !allies().every(a => a.placed); mb.innerHTML = 'LAUNCH<span class="jp">発進</span>'; if (!mb.disabled) mb.classList.add('hot');
   } else if (S.phase === 'player') {
-    ab.hidden = false; ab.textContent = ui.confirmFlee ? 'CONFIRM?' : 'FLEE';
-    ab.classList.toggle('hot', ui.confirmFlee);
+    const unmoved = allies().filter(a => !a.moved).length;
+    ab.hidden = false; ab.textContent = unmoved ? `AUTO MOVE ${unmoved}` : 'AUTO MOVE';
+    ab.disabled = ui.busy || !unmoved; ab.classList.remove('hot');
     const left = allies().filter(a => !a.acted).length;
     mb.disabled = ui.busy; mb.innerHTML = `END TURN${left ? '<span class="jp">' + left + ' ready</span>' : ''}`;
     if (!left) mb.classList.add('hot');
@@ -1964,7 +1965,7 @@ function renderHint() {
     else if (u) h = `Moving <b>${u.name}</b>. Tap a new node or drag the ship.`;
     else h = left ? 'Pick a ship below, then tap a node in your deployment zone.' : 'Fleet in position. Drag ships to adjust, or press LAUNCH.';
   } else if (S.phase === 'player') {
-    if (!u) h = allies().some(a => !a.acted) ? 'Tap a ship. Each one can move and attack this turn. Tap the timeline for intel.' : 'Every ship has attacked. Press END TURN.';
+    if (!u) h = ui.autoMoving ? 'Auto-moving the fleet…' : allies().some(a => !a.acted) ? 'Tap a ship to move and attack, or AUTO MOVE to reposition the whole fleet first.' : 'Every ship has attacked. Press END TURN.';
     else if (u.side !== 'ally') h = `<b>${u.name}</b> ${T(u).cls}${u.side === 'pirate' ? ' (pirate, fights everyone)' : ''}. Select your ship, then tap this target.`;
     else if (ui.mode === 'move') {
       const onL = [...ui.valid.values()].filter(c => c.z === ui.layer).length, strike = [...ui.valid.values()].some(c => c.strike);
@@ -2063,7 +2064,7 @@ function afterOrder(u) {
     else { ui.sel = null; ui.mode = null; refresh(); }
   } else { ui.mode = !u.moved ? 'move' : 'attack'; ui.style = defaultStyle(u); refresh(); }
 }
-async function doMove(u, c) {
+async function doMove(u, c, auto) {
   const cost = moveCost(u, c); if (cost > S.fuel) return;
   ui.busy = true;
   const occupant = unitAt(c.x, c.y, c.z);
@@ -2076,14 +2077,75 @@ async function doMove(u, c) {
     await revealSector(sectorKey(c.x,c.y,c.z));
   } else {
     u.x = c.x; u.y = c.y; u.z = c.z;
-    await animateMove(u, from, W(c.x,c.y,c.z), 420);
+    await animateMove(u, from, W(c.x,c.y,c.z), auto ? 300 : 420);
     const sk = sectorKey(u.x,u.y,u.z);
     if (!S.revealed[sk]) { log(`${u.name} scouts sector ${sk.replace(/,/g,'·')}`); await revealSector(sk); }
     await collectAt(u);
   }
   if (S.fuel <= 4 && !S.said.fuel) { S.said.fuel = 1; say('ops', 'Fuel is under five units, Admiral. Hold position a turn and let the tanks refill.', 'worried'); }
   ui.busy = false;
-  afterOrder(u);
+  if (!auto) afterOrder(u);
+}
+/* AUTO MOVE: reposition every ship that hasn't moved, before anyone attacks.
+   Each ship takes the cell with the best mix of: damage it could deal from there,
+   pickups and salvage, safety (big and damaged ships hang back), and progress into the fog. */
+function moveOptions(u) {
+  const out = [{ x:u.x, y:u.y, z:u.z, cost:0, stay:true }], m = T(u).move;
+  for (let dx = -m; dx <= m; dx++) for (let dy = -m; dy <= m; dy++) for (let dz = -m; dz <= m; dz++) {
+    const x = u.x + dx, y = u.y + dy, z = u.z + dz;
+    if (!inBounds(x,y,z) || (!dx && !dy && !dz)) continue;
+    const o = unitAt(x,y,z); if (o && isVisible(o)) continue;
+    const ob = objAt(x,y,z); if (ob && ob.kind === 'derelict') continue;
+    const c = { x, y, z }; c.cost = moveCost(u, c); if (c.cost > S.fuel) continue;
+    out.push(c);
+  }
+  return out;
+}
+function scoreMove(u, c, reserve) {
+  const vf = visFoes(), hpFrac = u.hp/u.maxHp, fragile = T(u).size === 'L' || hpFrac < .4;
+  let strike = 0;
+  for (const st of stylesOf(u)) {
+    if (!isReady(u, st)) continue;
+    if (st.kind === 'aura') { strike = Math.max(strike, expected(u, st, null, c)); continue; }
+    for (const f of vf) { const d = dist(c, f); if (d <= st.range + 1e-6 && d >= (st.min || 0)) strike = Math.max(strike, expected(u, st, f, c) + (f.hp < styleDmg(u, f, st, c) ? 12 : 0) + (T(f).flag ? 6 : 0)); }
+  }
+  let sc = strike;
+  let danger = 0;
+  for (const f of vf) { const r = Math.max(...stylesOf(f).map(st => st.range)); if (dist(c, f) <= r + 1) danger += stylesOf(f)[0].dmg; }
+  sc -= danger*(fragile ? .45 : .15);
+  const ob = objAt(c.x,c.y,c.z);
+  if (ob && objVisible(ob) && ob.kind === 'fuel') sc += S.fuel < 16 ? 9 : 3;
+  if (ob && objVisible(ob) && ob.kind === 'ammo') sc += 7;
+  for (const d of (S.objs || []).filter(q => q.kind === 'derelict' && !q.gone && objVisible(q))) if (cheb(c, d) <= 1) sc += 6;
+  if (!strike) {   // nothing to hit from here: close in on what we can see, or push into the fog
+    if (vf.length) sc -= Math.min(...vf.map(f => dist(c, f)))*(fragile ? .8 : 1.6);
+    else sc += c.y*2 + (S.revealed[sectorKey(c.x,c.y,c.z)] ? 0 : 3);
+  }
+  sc -= c.cost*.7;
+  if (!c.stay && S.fuel - reserve - c.cost < 0) sc -= strike ? 8 : 50;   // keep a little fuel back for manual moves
+  for (const a of allies()) if (a !== u && cheb(a, c) === 0) sc -= 99;
+  return sc + Math.random()*.3;
+}
+async function autoMoveAll() {
+  if (S.phase !== 'player' || ui.busy) return;
+  const movers = allies().filter(a => !a.moved).sort((a, b) => b.y - a.y);
+  if (!movers.length) return;
+  ui.sel = null; ui.mode = null; ui.autoMoving = true; refresh();
+  let moved = 0;
+  for (const u of movers) {
+    if (!u.alive || S.phase !== 'player') continue;
+    const opts = moveOptions(u), best = opts.map(c => ({ c, v:scoreMove(u, c, 4) })).sort((a, b) => b.v - a.v)[0];
+    if (!best || best.c.stay) continue;
+    await doMove(u, best.c, true); moved++;
+    if (checkEnd()) return;
+  }
+  ui.autoMoving = false;
+  log(`Auto move: ${moved} ship${moved === 1 ? '' : 's'} repositioned`);
+  const ready = allies().find(a => !a.acted && visFoes().some(f => bestStyleFor(a, f)));
+  if (ready) { select(ready.id, false); popText(posOf(ready).add(new THREE.Vector3(0,1.2,0)), 'READY', 'info'); }
+  else { ui.sel = null; ui.mode = null; refresh(); }
+  setCol('hint', false);
+  $('hintTxt').innerHTML = ready ? `Fleet repositioned. <b>${ready.name}</b> has a target; attack, or pick any ship.` : 'Fleet repositioned. Nothing in range yet; tap a ship to shield or repair, or END TURN.';
 }
 async function animateMove(u, from, to, dur) {
   const v = V[u.id]; if (!v) return;
@@ -2219,10 +2281,7 @@ $('mainBtn').addEventListener('click', () => {
 });
 $('auxBtn').addEventListener('click', () => {
   if (S.phase === 'deploy') autoDeploy();
-  else if (S.phase === 'player' && !ui.busy) {
-    if (!ui.confirmFlee) { ui.confirmFlee = true; setCol('hint', false); $('hintTxt').innerHTML = 'Withdraw from the battle? No loot, and badly damaged ships go to the repair bay. Tap <b>CONFIRM?</b> to flee.'; renderHUD(); $('hintTxt').innerHTML = 'Withdraw from the battle? No loot, and badly damaged ships go to the repair bay. Tap <b>CONFIRM?</b> to flee.'; sfx.alarm(); }
-    else { ui.confirmFlee = false; endGame('retreat'); }
-  }
+  else if (S.phase === 'player' && !ui.busy) { sfx.blip(); autoMoveAll(); }
 });
 async function launch() {
   if (!allies().every(a => a.placed)) return;
@@ -2270,6 +2329,7 @@ async function startPlayerTurn(first) {
   if (!first) { alertMsg('TURN ' + S.turn + ' · PLAYER PHASE', 'lt'); statusReport(); }
   log(`Turn ${S.turn}${first ? '' : ': +' + FUEL_REGEN + ' fuel'}`);
   refresh();
+  if (col.autoMove && allies().length) { await wait(700); await autoMoveAll(); }
 }
 async function arriveWave(w) {
   w.arrived = true;
@@ -2734,6 +2794,7 @@ function openMenu() {
     <div class="sec">Options</div>
     <div class="menuList">
       <button class="big ghost" id="mSound"><span>Sound</span><span>${muted ? 'OFF' : 'ON'}</span></button>
+      <button class="big ghost" id="mAuto"><span>Auto move at the start of each turn</span><span>${col.autoMove ? 'ON' : 'OFF'}</span></button>
       ${inBattle ? '<button class="big ghost" id="mFlee"><span>Withdraw from battle</span><span>FLEE</span></button>' : ''}
     </div>
     <div class="sec">Play offline</div>
@@ -2745,6 +2806,7 @@ function openMenu() {
   paintDossiers(p, campStart);
   p.querySelectorAll('[data-pal]').forEach(b => b.onclick = () => { applyPalette(b.dataset.pal); camp.palette = b.dataset.pal; saveCamp(); openMenu(); });
   $('mSound').onclick = () => { muted = !muted; openMenu(); };
+  $('mAuto').onclick = () => { col.autoMove = !col.autoMove; try { localStorage.setItem(COL_KEY, JSON.stringify(col)); } catch (e) {} openMenu(); };
   if ($('mFlee')) $('mFlee').onclick = () => { $('menuOv').hidden = true; ui.overlay = false; endGame('retreat'); };
   $('mClose').onclick = () => { $('menuOv').hidden = true; ui.overlay = !$('titleOv').hidden || !$('briefOv').hidden || !$('reportOv').hidden; };
   $('menuOv').hidden = false; ui.overlay = true;
@@ -3291,7 +3353,7 @@ function start(data) {
 window.claude?.hot?.snapshot?.(() => ({ S:S && JSON.parse(JSON.stringify(S)), camp, campStart, cam:{ az:cam.az, el:cam.el, zoom:cam.zoom, tx:cam.tx, ty:cam.ty, tz:cam.tz } }));
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
 
-window.__va = { SK, startSkirmish, get S() { return S; }, get camp() { return camp; }, autoDeploy, launch, endTurn, select, doMove, attackWith, bestStyleFor, endGame, showBriefing, openMenu, applyPalette, cam, ui, V, say };
+window.__va = { autoMoveAll, SK, startSkirmish, get S() { return S; }, get camp() { return camp; }, autoDeploy, launch, endTurn, select, doMove, attackWith, bestStyleFor, endGame, showBriefing, openMenu, applyPalette, cam, ui, V, say };
 })();
 </script>
 </body>

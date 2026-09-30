@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=VT323&family=Oxanium:wght@600;800&family=Chakra+Petch:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&text=%E3%82%A4%E3%82%A7%E3%82%B9%E3%82%BA%E3%82%BF%E3%83%84%E3%83%90%E3%83%95%E3%83%B3%E3%83%BC%E4%B8%AD%E4%BA%A4%E5%85%A8%E5%88%A9%E5%8A%9B%E5%8B%95%E5%8B%9D%E5%8C%97%E5%B0%84%E5%BC%BE%E6%88%A6%E6%8E%A5%E6%92%A4%E6%95%97%E6%95%B5%E6%B2%B3%E6%B3%A2%E6%B5%B7%E7%99%BA%E7%A0%B2%E7%A9%BA%E7%BD%AE%E8%87%AA%E8%89%A6%E8%A1%93%E8%A7%A6%E8%B3%8A%E8%BB%8D%E9%80%80%E9%80%B2%E9%85%8D%E9%87%8D%E9%8A%80%E9%9A%8A&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&text=%E3%82%A4%E3%82%A7%E3%82%B9%E3%82%BA%E3%82%BF%E3%83%84%E3%83%90%E3%83%95%E3%83%B3%E3%83%BC%E4%B8%AD%E4%BA%A4%E5%85%A8%E5%88%A9%E5%8A%9B%E5%8B%95%E5%8B%9D%E5%8C%97%E5%B0%84%E5%BC%BE%E6%88%A6%E6%8E%A5%E6%92%83%E6%92%A4%E6%94%BB%E6%95%97%E6%95%B5%E6%B2%B3%E6%B3%A2%E6%B5%B7%E7%99%BA%E7%A0%B2%E7%A9%BA%E7%B7%8F%E7%BD%AE%E8%87%AA%E8%89%A6%E8%A1%93%E8%A7%A6%E8%B3%8A%E8%BB%8D%E9%80%80%E9%80%B2%E9%85%8D%E9%87%8D%E9%8A%80%E9%9A%8A&display=swap">
 <style>
 /* Layout: full-bleed dithered 3-colour battlespace; paper-document HUD stacks pinned top and bottom (portrait) or docked left (short landscape); Z-layer rail right, view rail left. */
 :root{
@@ -272,6 +272,27 @@ body.sk #hudTop,body.sk #hudBot,body.sk #layerRail,body.sk #viewRail,body.sk .ul
 #skSpecial{position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px)}
 #skBail{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 12px)}
 
+/* ---------- arcade juice ---------- */
+.rushRow{display:flex;align-items:center;gap:4px;margin-top:3px}
+.rushRow .lbl{font-size:12px}
+.rushBar{flex:1;height:6px;background:repeating-conic-gradient(var(--lt) 0 25%,var(--dk) 0 50%) 0 0/2px 2px;opacity:.9}
+.rushBar b{display:block;height:100%;width:0;background:var(--fm);transition:width .25s}
+.rushBar.full b{background:var(--fy);animation:blink .4s steps(2) infinite}
+#scoreRow{display:flex;align-items:center;gap:8px}
+#score{font-family:var(--f-pix);font-weight:700;font-size:20px;color:var(--fy);text-shadow:2px 2px 0 var(--dk),-1px -1px 0 var(--dk);font-variant-numeric:tabular-nums;display:inline-block}
+#score.pop{animation:scorePop .25s steps(3)}
+@keyframes scorePop{0%{transform:scale(1.5)}100%{transform:scale(1)}}
+#hiScore{font-size:14px;opacity:.75;text-shadow:1px 1px 0 var(--dk)}
+#announce{position:fixed;left:50%;top:44%;z-index:16;pointer-events:none;transform:translate(-50%,-50%);font-family:var(--f-pix);font-weight:700;font-size:clamp(28px,8vw,56px);letter-spacing:.04em;white-space:nowrap;color:var(--fy);
+  text-shadow:3px 3px 0 var(--dk),-2px -2px 0 var(--dk),0 0 18px var(--fm);opacity:0}
+#announce.show{animation:ann 1.1s cubic-bezier(.2,1.6,.4,1) forwards}
+#announce small{display:block;font-size:.42em;letter-spacing:.2em;color:var(--lt);text-align:center}
+@keyframes ann{0%{opacity:0;transform:translate(-50%,-50%) scale(2.4) rotate(-6deg)}18%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-3deg)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-80%) scale(1.05) rotate(-3deg)}}
+#flashFx{position:fixed;inset:0;z-index:14;pointer-events:none;background:#fff;opacity:0}
+#flashFx.go{animation:flashGo .18s linear}
+@keyframes flashGo{0%{opacity:.55}100%{opacity:0}}
+#rushBtn{animation:blink .5s steps(2) infinite}
+
 /* ---------- collapsible panels ---------- */
 .colBtn{flex:0 0 auto;min-width:24px;height:22px;padding:0 5px;font-family:var(--f-txt);font-size:15px;line-height:1;border:2px solid var(--lt);background:var(--dk);color:var(--lt);cursor:pointer}
 .colBtn:active{background:var(--lt);color:var(--dk)}
@@ -406,6 +427,7 @@ body.classic .fchip .c,body.classic .fchip .st{font-size:13px}
     <div class="box" id="fuelBox">
       <div class="lbl">FUEL <span id="fuelNum"></span></div>
       <div class="gauge" id="fuelGauge"></div>
+      <div class="rushRow"><span class="lbl">RUSH</span><div class="rushBar"><b id="rushFill"></b></div></div>
     </div>
     <div class="box" id="resBox">
       <div>KIT <span id="kitNum">0</span></div>
@@ -418,7 +440,7 @@ body.classic .fchip .c,body.classic .fchip .st{font-size:13px}
     <div id="intel"><span id="intelL"></span><span id="intelR"></span><button class="colBtn" data-col="timeline" aria-label="Collapse timeline">▾</button></div>
   </div>
   <div class="comm box foe pe" id="commFoe" hidden><canvas width="64" height="64"></canvas><div class="ct"><div class="chead"><span class="cn"></span><span class="cr"></span><button class="colBtn" data-col="comms" aria-label="Compact comms">▾</button></div><div class="cm"></div></div></div>
-  <div id="logWrap"><button class="colBtn pe" data-col="log" aria-label="Toggle combat log">LOG ▾</button><div id="log" aria-live="polite"></div></div>
+  <div id="logWrap"><div id="scoreRow"><button class="colBtn pe" data-col="log" aria-label="Toggle combat log">LOG ▾</button><span id="score">0</span><span id="hiScore"></span></div><div id="log" aria-live="polite"></div></div>
 </div>
 
 <div id="commDock"></div>
@@ -436,6 +458,8 @@ body.classic .fchip .c,body.classic .fchip .st{font-size:13px}
 </div>
 
 <div id="alert"></div>
+<div id="announce"></div>
+<div id="flashFx"></div>
 <div id="skLayer"></div>
 <div class="hud" id="skHud" hidden>
   <div id="skTop"><div class="box" id="skMe"></div><div class="box" id="skClock">0:45</div><div class="box" id="skThem"></div></div>
@@ -452,6 +476,7 @@ body.classic .fchip .c,body.classic .fchip .st{font-size:13px}
     <div id="hint" class="pe" data-col="hint" role="button" aria-label="Collapse hint"><span id="hintTxt"></span></div>
     <div id="btnRow">
       <button class="big ghost pe" id="dockBtn" data-col="dock" aria-label="Collapse fleet panel">▾</button>
+      <button class="big hot pe" id="rushBtn" hidden>RUSH!</button>
       <button class="big ghost pe" id="auxBtn">AUTO</button>
       <button class="big pe" id="mainBtn" disabled>LAUNCH</button>
     </div>
@@ -1191,6 +1216,7 @@ const HITR = { S:.62, M:.75, L:1.05 };
    BATTLEFIELD EVENTS: fuel depots, munitions caches, derelicts
    ================================================================ */
 const OBJ_INFO = {
+  repair:   { name:'REPAIR DRONES', short:'REPAIR', info:'Fly onto it: patches 30% of that ship\'s hull. Enemies can grab it too.' },
   fuel:     { name:'FUEL DEPOT', short:'FUEL', info:'Fly onto it: +8 fleet fuel. Enemies use it to patch hull.' },
   ammo:     { name:'MUNITIONS CACHE', short:'AMMO', info:'Fly onto it: resets that ship\'s weapon cooldowns and overcharges its next attack (+35%).' },
   derelict: { name:'DERELICT CRUISER', short:'DERELICT', info:'Stay next to it two turns with no rival ship beside it to salvage it. Anyone can claim it: the enemy and pirates want it too.' },
@@ -1212,6 +1238,10 @@ function mObject(kind) {
     part(g, G.cyl, HULL, [0,.12,0], { s:[.235,.06,.235], ol:false }); part(g, G.cyl, HULL, [0,-.12,0], { s:[.235,.06,.235], ol:false });
     part(g, G.cyl, DARK, [0,.3,0], { s:[.08,.1,.08] });
     engine(g, [0,0,0], GRN, .9);
+  } else if (kind === 'repair') {
+    part(g, G.oct, GRN, [0,0,0], { s:[.26,.26,.26] });
+    part(g, G.box, HULL, [0,0,0], { s:[.5,.1,.1], ol:false }); part(g, G.box, HULL, [0,0,0], { s:[.1,.5,.1], ol:false });
+    engine(g, [0,0,0], GRN, .8);
   } else if (kind === 'ammo') {
     part(g, G.box, YEL, [0,0,0], { s:[.46,.3,.34] });
     part(g, G.box, FOE, [0,0,-.172], { s:[.3,.06,.01], ol:false }); part(g, G.box, FOE, [0,0,.172], { s:[.3,.06,.01], ol:false });
@@ -1252,8 +1282,13 @@ ambient.push(t => {
 async function collectAt(u) {
   const o = objAt(u.x, u.y, u.z); if (!o || o.kind === 'derelict') return;
   o.gone = true; const p = W(o.x,o.y,o.z); removeObj(o.id);
-  ringWave(p, o.kind === 'fuel' ? GRN : YEL, 3, 500); sparks(p, o.kind === 'fuel' ? GRN : YEL, 12, 1.6); sfx.heal();
-  if (o.kind === 'fuel') {
+  ringWave(p, o.kind === 'ammo' ? YEL : GRN, 3, 500); sparks(p, o.kind === 'ammo' ? YEL : GRN, 12, 1.6); sfx.heal();
+  if (o.kind === 'repair') {
+    const h = Math.min(u.maxHp - u.hp, Math.round(u.maxHp*(u.side === 'ally' ? .3 : .25))); u.hp += h;
+    if (u.side === 'ally' || isVisible(u)) popText(p.clone().add(new THREE.Vector3(0,1,0)), '+' + h + ' HULL', 'heal');
+    log(`${u.name} picks up repair drones`, u.side === 'ally' ? '' : 'foe');
+    if (u.side === 'ally') addScore(50, null);
+  } else if (o.kind === 'fuel') {
     if (u.side === 'ally') { S.fuel = Math.min(FUEL_MAX, S.fuel + 8); popText(p.clone().add(new THREE.Vector3(0,1,0)), '+8 FUEL', 'info', 'var(--fg)'); log(`${u.name} refuels at a depot`); if (!S.said.depot) { S.said.depot = 1; say('ops', 'Fuel depot tapped. Tanks topped up!', 'happy'); } }
     else { const h = Math.round(u.maxHp*.25); u.hp = Math.min(u.maxHp, u.hp + h); if (isVisible(u)) popText(p.clone().add(new THREE.Vector3(0,1,0)), '+' + h, 'heal'); log(`${u.name} patches up at a fuel depot`, 'foe'); }
   } else {
@@ -1283,7 +1318,7 @@ async function claimDerelict(o, side, near) {
   explode(p, false); removeObj(o.id);
   if (side === 'ally') {
     S.kits += 2; S.fuel = Math.min(FUEL_MAX, S.fuel + 6); S.salvage = (S.salvage || 0) + 1;
-    popText(p.clone().add(new THREE.Vector3(0,1.4,0)), '+2 KITS +6 FUEL +1 PART', 'info', 'var(--fm)');
+    popText(p.clone().add(new THREE.Vector3(0,1.4,0)), 'SALVAGED!', 'info', 'var(--fm)'); addScore(400, p);
     log('Derelict salvaged: kits, fuel and a spare part');
     say('ops', 'Salvage crews are back! Two repair kits, fuel, and a spare part for the repair bay.', 'happy');
   } else {
@@ -1917,6 +1952,9 @@ function renderHUD() {
   [...$('fuelGauge').children].forEach((el, i) => { el.className = i < S.fuel - hoverCost ? 'on' : (i < S.fuel ? 'cost' : ''); });
   $('fuelNum').textContent = S.fuel + '/' + FUEL_MAX;
   $('kitNum').textContent = S.kits; $('contactNum').textContent = visFoes().length;
+  $('score').textContent = (S.score || 0).toLocaleString(); $('hiScore').textContent = camp.hiScore ? 'HI ' + camp.hiScore.toLocaleString() : '';
+  $('rushFill').style.width = (S.rush || 0) + '%'; $('rushFill').parentElement.classList.toggle('full', (S.rush || 0) >= 100);
+  $('rushBtn').hidden = !(S.phase === 'player' && (S.rush || 0) >= 100 && allies().some(a => a.acted));
   renderTimeline();
   const moveLayers = new Set([...ui.valid.values()].map(c => c.z));
   for (let z = 0; z < NZ; z++) {
@@ -2205,6 +2243,7 @@ function scoreMove(u, c, reserve) {
   const ob = objAt(c.x,c.y,c.z);
   if (ob && objVisible(ob) && ob.kind === 'fuel') sc += S.fuel < 16 ? 9 : 3;
   if (ob && objVisible(ob) && ob.kind === 'ammo') sc += 7;
+  if (ob && objVisible(ob) && ob.kind === 'repair') sc += u.hp < u.maxHp*.7 ? 10 : 2;
   for (const d of (S.objs || []).filter(q => q.kind === 'derelict' && !q.gone && objVisible(q))) if (cheb(c, d) <= 1) sc += 6;
   if (!strike) {   // nothing to hit from here: close in on what we can see, or push into the fog
     if (vf.length) sc -= Math.min(...vf.map(f => dist(c, f)))*(fragile ? .8 : 1.6);
@@ -2253,6 +2292,97 @@ async function attackWith(u, st, target) {
   if (checkEnd()) return;
   afterOrder(u);
 }
+/* ================= arcade layer: score, crits, streaks, rush, drops, hit-pause ================= */
+let hitstopUntil = 0;
+function hitstop(ms) { hitstopUntil = Math.max(hitstopUntil, performance.now() + ms); }
+function screenFlash() { const f = $('flashFx'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }
+function announce(big, small) {
+  const el = $('announce'); el.innerHTML = big + (small ? `<small>${small}</small>` : ''); el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+}
+const KILL_PTS = { e_fighter:100, e_mecha:250, e_destroyer:300, e_ace:900, e_boss:3000, p_raider:150, p_corsair:400 };
+function addScore(n, at) {
+  if (!S || n <= 0) return;
+  S.score = (S.score || 0) + Math.round(n);
+  const el = $('score'); el.textContent = S.score.toLocaleString(); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+  if (at && n >= 50) popText(at.clone().add(new THREE.Vector3(.6, 1.9, 0)), '+' + Math.round(n), 'info', 'var(--fy)');
+}
+function addRush(n) {
+  if (!S) return; const was = S.rush || 0; S.rush = Math.min(100, was + n);
+  if (was < 100 && S.rush >= 100) { announce('RUSH READY', 'every ship can attack again'); sfx.alarm(); }
+}
+const COMBO_WORDS = ['', '', 'NICE!', 'GREAT!', 'AWESOME!', 'UNSTOPPABLE!'];
+const STREAK_WORDS = ['', '', 'DOUBLE KILL', 'TRIPLE KILL', 'RAMPAGE', 'ANNIHILATION'];
+async function useRush() {
+  if (!S || S.phase !== 'player' || (S.rush || 0) < 100 || ui.busy) return;
+  S.rush = 0; ui.busy = true;
+  await cutIn('adm', 'ALL SHIPS', 'FLEET RUSH', '総攻撃', 'ally');
+  for (const a of allies()) a.acted = false;
+  ui.busy = false; announce('FLEET RUSH!', 'one more attack for everyone'); screenFlash(); sfx.big();
+  const first = allies().find(a => visFoes().some(f => bestStyleFor(a, f)));
+  if (first) select(first.id, false); else refresh();
+}
+$('rushBtn').addEventListener('click', e => { e.stopPropagation(); useRush(); });
+function dropLoot(u) {
+  if (!S.objs || Math.random() > .38 || objAt(u.x, u.y, u.z)) return;
+  const kind = pick(['fuel', 'ammo', 'repair', 'repair']);
+  S.objs.push({ id:'d' + S.objs.length + '_' + S.turn, kind, x:u.x, y:u.y, z:u.z, gone:false, prog:{} });
+  syncObjs(); popText(W(u.x,u.y,u.z).add(new THREE.Vector3(0,1.2,0)), 'DROP: ' + OBJ_INFO[kind].short, 'info', 'var(--fg)');
+}
+
+/* ---------- set dressing: once contact is made, drones and tracers fill the gaps between turns (no damage) ---------- */
+const AMB = { drones:[], next:0, interlude:false };
+function ambBattleOn() {
+  if (!S || SK.on || !['enemy','fog','pirate'].includes(S.phase) && !AMB.interlude) return false;
+  return allies().length && visFoes().length;
+}
+function droneMesh(side) {
+  const g = new THREE.Group();
+  if (side === 'ally') g.add(fighterCraft(HULL, BLU, BLU));
+  else { const f = new THREE.Group(); part(f, G.oct, side === 'pirate' ? GRN : MAG, [0,0,0], { s:[.1,.05,.26] }); mirror(sd => part(f, G.box, side === 'pirate' ? MAG : ACC, [sd*.12,0,-.02], { s:[.18,.014,.09], r:[0,sd*.5,0] })); engine(f, [0,0,.24], side === 'pirate' ? GRN : ACC, .28); g.add(f); }
+  g.scale.setScalar(1.35);
+  const tr = new THREE.Sprite(new THREE.SpriteMaterial({ map:softDot, color:side === 'ally' ? BLU : side === 'pirate' ? GRN : ACC, transparent:true, opacity:.8, depthWrite:false })); tr.scale.setScalar(.55); tr.position.z = .35; g.add(tr);
+  return g;
+}
+function spawnDrone() {
+  const a = pick(allies()), f = visFoes().filter(q => dist(q, a) < 7).sort(() => Math.random() - .5)[0] || pick(visFoes());
+  if (!a || !f) return;
+  const [from, to] = Math.random() < .55 ? [a, f] : [f, a];
+  const A = posOf(from), B = posOf(to), mid = A.clone().lerp(B, .5);
+  const side = new THREE.Vector3(B.z - A.z, 0, A.x - B.x).normalize().multiplyScalar((Math.random() < .5 ? -1 : 1)*(1.2 + Math.random()*1.6));
+  const m = droneMesh(from.side); m.position.copy(A); scene.add(m);
+  const c1 = mid.clone().add(side).add(new THREE.Vector3(0, .6 + Math.random()*1.2, 0)), c2 = B.clone().add(side.clone().multiplyScalar(-.8)).add(new THREE.Vector3(0, 1, 0));
+  AMB.drones.push({ m, A, B, c1, c2, t:0, dur:1.8 + Math.random()*1.2, shots:0, side:from.side, to });
+}
+function bez(a, b, c, d, t, out) { const i = 1 - t; return out.set(i*i*i*a.x + 3*i*i*t*b.x + 3*i*t*t*c.x + t*t*t*d.x, i*i*i*a.y + 3*i*i*t*b.y + 3*i*t*t*c.y + t*t*t*d.y, i*i*i*a.z + 3*i*i*t*b.z + 3*i*t*t*c.z + t*t*t*d.z); }
+const _bp = new THREE.Vector3(), _bq = new THREE.Vector3();
+function ambBattle(dt, t) {
+  const on = ambBattleOn();
+  if (on && t > AMB.next && AMB.drones.length < (AMB.interlude ? 7 : 4)) { spawnDrone(); AMB.next = t + (AMB.interlude ? .18 : .45) + Math.random()*.4; }
+  if (on && Math.random() < dt*(AMB.interlude ? 3 : 1.4)) {   // stray tracer volleys and flak between the lines
+    const a = pick(allies()), f = pick(visFoes());
+    if (a && f && dist(a, f) < 8) {
+      const [s1, s2] = Math.random() < .5 ? [a, f] : [f, a], p1 = posOf(s1), p2 = posOf(s2).add(new THREE.Vector3((Math.random() - .5)*1.6, (Math.random() - .5)*1.2, (Math.random() - .5)*1.6));
+      projectile(p1, p2, s1.side === 'ally' ? BLU : s1.side === 'pirate' ? GRN : ACC, .32, 380 + Math.random()*200, .4);
+      if (Math.random() < .35) setTimeout(() => { if (S && !SK.on) { flash(p2, YEL, .9, 260); sparks(p2, YEL, 4, .8, 300); } }, 420);
+    }
+  }
+  for (const d of AMB.drones) {
+    d.t += dt/d.dur;
+    const k = Math.min(1, d.t);
+    // out along the curve, then peel back home
+    const u = k < .65 ? k/.65 : 1 - (k - .65)/.35;
+    bez(d.A, d.c1, d.c2, d.B, u*.92, _bp); bez(d.A, d.c1, d.c2, d.B, Math.min(1, u*.92 + .02), _bq);
+    d.m.position.copy(_bp);
+    const dir = k < .65 ? _bq.sub(_bp) : _bp.clone().sub(_bq);
+    if (dir.lengthSq() > 1e-6) d.m.rotation.y = Math.atan2(-dir.x, -dir.z);
+    d.m.rotation.z = Math.sin(t*6 + d.dur)*.5;
+    if (d.shots < 2 && k > .35 + d.shots*.12) { d.shots++; projectile(d.m.position.clone(), posOf(d.to).add(new THREE.Vector3((Math.random() - .5)*.9, (Math.random() - .5)*.6, (Math.random() - .5)*.9)), d.side === 'ally' ? BLU : d.side === 'pirate' ? GRN : ACC, .3, 260, 0); if (!muted && Math.random() < .3) sfx.pew(); }
+    if (k >= 1 || !d.to.alive) { scene.remove(d.m); d.dead = true; }
+  }
+  AMB.drones = AMB.drones.filter(d => !d.dead);
+}
+function clearAmb() { for (const d of AMB.drones) scene.remove(d.m); AMB.drones = []; AMB.interlude = false; }
+
 /* one attack, start to finish: cut-in, effect, damage, combo */
 async function executeAttack(src, st, target) {
   const ally = src.side === 'ally', hits = hitsFor(src, st, target);
@@ -2260,7 +2390,7 @@ async function executeAttack(src, st, target) {
   const main = target || hits[0].u;
   if (st.big) await cutIn(ally ? (src.type === 'mecha' ? 'pilot' : src.type === 'fighter' ? 'ace' : 'adm') : (src.type === 'e_ace' ? 'rival' : 'foe'), src.name, st.name, st.jp || '', src.side);
   const oc = src.oc ? 1.35 : 1; src.oc = false;
-  const rolls = hits.map(h => { const combo = S.combo[h.u.id] || 0; return { u:h.u, combo, amt:Math.max(1, Math.round(styleDmg(src, h.u, st)*h.m*oc*(1 + .25*combo)*(.9 + Math.random()*.2))) }; });
+  const rolls = hits.map(h => { const combo = S.combo[h.u.id] || 0, crit = Math.random() < (ally ? .14 : .08); return { u:h.u, combo, crit, amt:Math.max(1, Math.round(styleDmg(src, h.u, st)*h.m*oc*(crit ? 1.5 : 1)*(1 + .25*combo)*(.9 + Math.random()*.2))) }; });
   await faceToward(src, posOf(main), 200);
   const mainRoll = rolls.find(r => r.u === main) || rolls[0];
   await playFx(src, st, main, rolls, tierCol(mainRoll.amt));
@@ -2269,8 +2399,15 @@ async function executeAttack(src, st, target) {
   for (const r of rolls) {
     if (!r.u.alive) continue;
     if (r.combo > 0) popText(posOf(r.u).add(new THREE.Vector3(0,1.6,0)), `COMBO ×${r.combo + 1}`, 'info', 'var(--fy)');
+    if (r.crit) { popText(posOf(r.u).add(new THREE.Vector3(-.6,1.3,0)), 'CRIT!', 'crit', 'var(--fm)'); hitstop(ally ? 110 : 70); shake(.5); if (ally) screenFlash(); sfx.stamp(); }
     S.combo[r.u.id] = (S.combo[r.u.id] || 0) + 1;
-    await damage(r.u, r.amt, st.big || r.combo > 0, src);
+    if (ally) {
+      S.turnHits = (S.turnHits || 0) + 1;
+      addScore(r.amt*10*(1 + .5*r.combo)*(r.crit ? 1.5 : 1), posOf(r.u));
+      addRush(r.amt*.45);
+      if (r.combo >= 1 && r.combo + 1 >= 2) announce(`COMBO ×${r.combo + 1}`, COMBO_WORDS[Math.min(5, r.combo + 1)]);
+    }
+    await damage(r.u, r.amt, st.big || r.combo > 0 || r.crit, src);
   }
 }
 async function playFx(src, st, main, rolls, col) {
@@ -2411,7 +2548,7 @@ async function startPlayerTurn(first) {
   if (S.turn > TL) { await mainFleetArrives(); return; }
   if (!first) S.fuel = Math.min(FUEL_MAX, S.fuel + FUEL_REGEN);
   for (const u of allies()) { u.moved = false; u.acted = false; u.shield = false; tickCds(u); }
-  S.combo = {}; S.phase = 'player'; ui.sel = null; ui.mode = null; ui.confirmFlee = false;
+  S.combo = {}; S.turnHits = 0; S.turnKills = 0; S.phase = 'player'; ui.sel = null; ui.mode = null; ui.confirmFlee = false;
   const w = S.waves.find(q => q.turn === S.turn && !q.arrived);
   if (w) await arriveWave(w);
   if (S.pirateTurn > 0 && S.pirateTurn === S.turn) await arrivePirates();
@@ -2455,6 +2592,10 @@ async function mainFleetArrives() {
 }
 function tickCds(u) { if (!u.cds) u.cds = {}; for (const k in u.cds) u.cds[k] = Math.max(0, u.cds[k] - 1); }
 async function endTurn() {
+  if (visFoes().length && allies().length) {   // a short interlude: the lines trade fire before the enemy acts
+    ui.busy = true; ui.sel = null; ui.mode = null; refresh();
+    AMB.interlude = true; alertMsg('ENGAGED', 'lt'); await wait(1300); AMB.interlude = false; ui.busy = false;
+  }
   S.phase = 'enemy'; ui.sel = null; ui.mode = null; refresh();
   await salvageTick('ally');
   await enemyPhase(); if (checkEnd()) return;
@@ -2489,6 +2630,15 @@ async function destroy(u, src) {
   explode(p, big || T(u).size === 'M');
   if (big) { await wait(250); explode(p.clone().add(new THREE.Vector3(.8,.2,.4)), true); }
   const v = V[u.id];
+  if (u.side !== 'ally' && src && src.side === 'ally') {
+    hitstop(big ? 220 : 120); screenFlash();
+    S.turnKills = (S.turnKills || 0) + 1;
+    addScore((KILL_PTS[u.type] || 100)*(1 + .25*(S.turnKills - 1)), p);
+    addRush(big ? 30 : 12);
+    if (S.turnKills >= 2) announce(STREAK_WORDS[Math.min(5, S.turnKills)], `+${Math.round((KILL_PTS[u.type] || 100)*(1 + .25*(S.turnKills - 1)))}`);
+    else if (!big) announce(pick(['SPLASH ONE!', 'TARGET DOWN!', 'KILL!', 'BOOM!']), '');
+    if (!big) dropLoot(u);
+  }
   if (v) await tween(420, k => { v.body.scale.setScalar(Math.max(.01, 1 - k)); v.body.rotation.z += .08; }, lin);
   removeVisual(u.id);
   if (u.side === 'pirate') {
@@ -2534,7 +2684,7 @@ async function enemyPhase() {
   S.combo = {};
   const act = foes().filter(f => f.active);
   if (!act.length) { refresh(); return; }
-  if (act.some(isVisible)) { alertMsg('ENEMY PHASE', ''); sfx.alarm(); await wait(600); }
+  if (act.some(isVisible)) { alertMsg('ENEMY PHASE', ''); sfx.alarm(); await wait(380); }
   if (!S.said.enemyFirst && act.some(isVisible)) { S.said.enemyFirst = 1; say('foe', traitsOf('foe').scar ? 'You gave me this scar. I will take your fleet in exchange.' : 'Fire at will. Leave nothing floating.', 'smirk'); }
   const order = act.sort((a,b) => (T(a).size > T(b).size ? 1 : -1));
   for (const f of order) {
@@ -2583,7 +2733,7 @@ function planFoe(f, exclude) {
     if ((dx || dy || dz) && inBounds(x,y,z) && !unitAt(x,y,z) && !(ob && ob.kind === 'derelict')) cands.push({ x, y, z });
   }
   const wantObj = c => { const ob = objAt(c.x,c.y,c.z); let b = 0;
-    if (ob && ob.kind === 'fuel' && f.hp < f.maxHp*.8) b += 4; if (ob && ob.kind === 'ammo') b += 4;
+    if (ob && (ob.kind === 'fuel' || ob.kind === 'repair') && f.hp < f.maxHp*.8) b += 4; if (ob && ob.kind === 'ammo') b += 4;
     for (const d of (S.objs || []).filter(q => q.kind === 'derelict' && !q.gone)) if (cheb(c, d) <= 1) b += f.side === 'pirate' ? 6 : 2.5;
     return b; };
   let best = null;
@@ -2726,7 +2876,7 @@ function checkEnd() {
    ================================================================ */
 async function endGame(res) {
   if (S.phase === 'over') return;
-  S.phase = 'over'; S.result = res; ui.sel = null; ui.mode = null; refresh();
+  S.phase = 'over'; S.result = res; ui.sel = null; ui.mode = null; clearAmb(); refresh();
   if (res === 'win') {
     S.marshalBeaten = true;
     alertMsg('ENEMY FLAGSHIP SUNK', 'lt');
@@ -2796,10 +2946,13 @@ function settleOp(res) {
     if (msg.length) changes.push({ who:k, text:msg.join(', ') });
   }
   camp.log.push({ op:camp.op, res, turn:S.turn, kills:S.kills, lost:S.lost.length });
+  const score = (S.score || 0) + (res === 'win' ? 5000 + Math.max(0, TL - S.turn)*500 : 0);
+  const newHi = score > (camp.hiScore || 0); if (newHi) camp.hiScore = score;
+  const rank = res !== 'win' ? (score > 6000 ? 'C' : 'D') : score > 22000 ? 'S' : score > 15000 ? 'A' : score > 10000 ? 'B' : 'C';
   const opNo = camp.op; camp.op++;
   const pal = PALETTES.find(p => p.need === camp.wins && p.need > 0 && res === 'win');
   saveCamp();
-  return { res, opNo, loot, bay, changes, kills:S.kills, lost:S.lost, turn:S.turn, pal };
+  return { res, opNo, loot, bay, changes, kills:S.kills, lost:S.lost, turn:S.turn, pal, score, newHi, rank };
 }
 function showReport(r) {
   const p = $('reportPaper');
@@ -2811,7 +2964,7 @@ function showReport(r) {
     <div class="stamp${r.res === 'win' ? '' : ''}">${stamp[0]}</div>
     <p>${r.res === 'win' ? 'The enemy flagship broke apart in the nebula. Salvage crews stripped the wrecks for supplies.' : r.res === 'retreat' ? 'The fleet jumped out before the enemy main fleet closed in. There was no time to salvage anything.' : 'Hyperion was crippled and towed out under fire. The fleet needs time in the repair bay.'}</p>
     <div class="sec">Engagement</div>
-    <table>${rows([['Enemies destroyed', r.kills], ['Ships lost', r.lost.length ? r.lost.join(', ') : 'none'], ['Turns fought', r.turn]])}</table>
+    <table>${rows([['Score', `<b style="font-size:1.3em">${r.score.toLocaleString()}</b>${r.newHi ? ' <span class="ac">NEW HIGH SCORE</span>' : ''}`], ['Rank', `<b style="font-size:1.6em">${r.rank}</b>`], ['Enemies destroyed', r.kills], ['Ships lost', r.lost.length ? r.lost.join(', ') : 'none'], ['Turns fought', r.turn]])}</table>
     <div class="sec">Loot manifest</div>
     ${r.loot.length ? `<table>${rows(r.loot)}</table>` : '<p class="ac">No salvage. Supplies were abandoned in the withdrawal.</p>'}
     <div class="sec">Repair bay</div>
@@ -3374,6 +3527,7 @@ $('skBail').addEventListener('click', e => { e.stopPropagation(); if (SK.on && !
    ================================================================ */
 function newGame() {
   if (S) clearVisuals();
+  clearAmb();
   campStart = JSON.parse(JSON.stringify(camp));
   S = newState();
   for (const d of availableRoster()) { const u = makeUnit(d, 'ally'); if (u.type === 'flagship' && camp.flagPatched) u.hp = Math.round(u.maxHp*.6); S.units.push(u); }
@@ -3430,14 +3584,15 @@ function frame(now) {
   if (!gest || gest.type !== 'rotate') {
     if (Math.abs(cam.vaz) > 1e-4 || Math.abs(cam.vel) > 1e-4) { cam.az += cam.vaz; cam.el = clamp(cam.el + cam.vel, .12, 1.45); cam.vaz *= .9; cam.vel *= .9; }
   }
+  const tdt = now < hitstopUntil ? 0 : dt;
   for (let i = tweens.length - 1; i >= 0; i--) {
-    const tw = tweens[i]; tw.t += dt*1000;
+    const tw = tweens[i]; tw.t += tdt*1000;
     const k = Math.min(1, tw.t/tw.dur); tw.fn(tw.ease(k));
     if (k >= 1) { tweens.splice(i, 1); tw.res(); }
   }
   if (cam.shake > .001) cam.shake *= .86;
   applyCam(); updateBg(RW, RH);
-  if (SK.on) skUpdate(dt, t); else for (const f of ambient) f(t, dt);
+  if (SK.on) skUpdate(tdt, t); else { for (const f of ambient) f(t, dt); ambBattle(dt, t); }
   renderer.setRenderTarget(rt); renderer.clear(); renderer.render(bgScene, postCam); renderer.clearDepth(); renderer.render(SK.on ? SK.scene : scene, SK.on ? SK.cam : camera);
   renderer.setRenderTarget(null); renderer.clear(); renderer.render(postScene, postCam);
   requestAnimationFrame(frame);
@@ -3456,7 +3611,7 @@ function start(data) {
 window.claude?.hot?.snapshot?.(() => ({ S:S && JSON.parse(JSON.stringify(S)), camp, campStart, cam:{ az:cam.az, el:cam.el, zoom:cam.zoom, tx:cam.tx, ty:cam.ty, tz:cam.tz } }));
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
 
-window.__va = { applyGfx, autoMoveAll, SK, startSkirmish, get S() { return S; }, get camp() { return camp; }, autoDeploy, launch, endTurn, select, doMove, attackWith, bestStyleFor, endGame, showBriefing, openMenu, applyPalette, cam, ui, V, say };
+window.__va = { AMB, useRush, applyGfx, autoMoveAll, SK, startSkirmish, get S() { return S; }, get camp() { return camp; }, autoDeploy, launch, endTurn, select, doMove, attackWith, bestStyleFor, endGame, showBriefing, openMenu, applyPalette, cam, ui, V, say };
 })();
 </script>
 </body>

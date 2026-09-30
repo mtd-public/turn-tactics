@@ -17,6 +17,14 @@ Play it: **https://mtd-public.github.io/turn-tactics/**
    - **AUTO MOVE** repositions every ship that hasn't moved yet, before you attack: each one takes the block with the best mix of targets in reach, pickups and salvage, safety (the flagship and damaged ships hang back) and progress into the fog, while keeping a little fuel in reserve. Ships you've already moved stay put. The ≡ menu can run it automatically at the start of every turn.
 4. Press **END TURN**. The enemy moves and fires, pirates (if any) take their turn, then the fog sweeps again.
 
+## Arcade layer
+
+- **Score** for damage, combos, crits and kills, with a kill-streak announcer (DOUBLE KILL, TRIPLE KILL, RAMPAGE…). Every operation ends with a score, a rank (S to D) and your campaign high score.
+- **Critical hits** (about 1 in 7 of your shots) land with a hit-pause freeze-frame and a screen flash.
+- **RUSH meter**: damage you deal fills it; when it's full, RUSH! gives every ship that already attacked one more attack this turn.
+- **Loot drops**: destroyed enemies sometimes leave fuel, munitions or repair drones on the grid.
+- **Set dressing**: once contact is made, the gaps between turns fill with a cosmetic battle: fighter drones launch from both fleets, swoop around each other trading tracers, and flak bursts between the lines. It never deals damage.
+
 ## Battlefield events
 
 - **Fuel depots** (+8 fuel) and **munitions caches** (resets a ship's cooldowns and overcharges its next attack) sit in the fog. Enemies use them too.

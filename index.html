@@ -157,7 +157,11 @@ button:focus-visible{outline:2px dashed var(--ac);outline-offset:2px}
 .tag.ac{color:var(--ac)}
 .tag.inv{background:var(--lt);color:var(--dk);border-color:var(--lt)}
 #cardX{position:absolute;right:5px;top:5px;width:28px;height:28px;font-size:14px}
-#actions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;flex:2 1 300px}
+#actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(54px,1fr));gap:4px;flex:2 1 320px}
+.act.hasT{border-color:var(--fy)}
+.act.hasT .k{color:var(--fy)}
+.act.on.hasT .k{color:var(--dk)}
+.act.bigSt .k::after{content:" ★"}
 .act{min-height:48px;padding:3px 1px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
 .act .k{font-size:13px;font-weight:700;letter-spacing:.03em}
 .act .jp{font-size:11px}
@@ -369,13 +373,7 @@ body.col-comms .comm .cr{display:none}
       <div id="cardStats"></div>
       <div class="tags" id="cardTags"></div>
     </div>
-    <div id="actions">
-      <button class="btn act" id="aMove" data-a="move"><span class="k">MOVE</span><span class="jp">移動</span><span class="s" id="sMove"></span></button>
-      <button class="btn act" id="aFire" data-a="fire"><span class="k">FIRE</span><span class="jp">攻撃</span><span class="s" id="sFire"></span></button>
-      <button class="btn act" id="aShield" data-a="shield"><span class="k">SHIELD</span><span class="jp">防御</span><span class="s">½ dmg</span></button>
-      <button class="btn act" id="aRepair" data-a="repair"><span class="k">REPAIR</span><span class="jp">修理</span><span class="s" id="sRepair"></span></button>
-      <button class="btn act" id="aCharge" data-a="charge"><span class="k">CHARGE</span><span class="jp">充填</span><span class="s" id="sCharge"></span></button>
-    </div>
+    <div id="actions"></div>
   </div>
 </div>
 
@@ -451,7 +449,7 @@ const campDefault = () => ({
 function loadCamp() { try { const s = localStorage.getItem(SAVE_KEY); if (s) { const c = JSON.parse(s); return Object.assign(campDefault(), c, { npc:Object.assign(campDefault().npc, c.npc || {}) }); } } catch (e) {} return null; }
 function saveCamp() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(camp)); } catch (e) {} }
 let camp = loadCamp() || campDefault();
-const MATCH_KEY = 'void-armada-match-v1';
+const MATCH_KEY = 'void-armada-match-v2';
 function loadMatch() { try { const s = localStorage.getItem(MATCH_KEY); return s ? JSON.parse(s) : null; } catch (e) { return null; } }
 function clearMatch() { try { localStorage.removeItem(MATCH_KEY); } catch (e) {} }
 let matchTimer = 0;
@@ -476,15 +474,51 @@ const FUEL_MAX = 24, FUEL_BASE = 14, FUEL_REGEN = 3;
 const TL = 12;   // war timeline length: the enemy main fleet arrives after turn 12
 
 const TYPES = {
-  flagship:  { side:'ally', cls:'Battleship · flagship', size:'L', hp:170, dmg:30, range:5.2, move:1, mass:3, special:'HADRON LANCE', specialJp:'波動砲発射', sdesc:'line pierce' },
-  cruiser:   { side:'ally', cls:'Heavy cruiser', size:'M', hp:95, dmg:21, range:4.6, move:2, mass:2, special:'MISSILE STORM', specialJp:'全弾発射', sdesc:'splash 1.5' },
-  mecha:     { side:'ally', cls:'Mobile suit · wing type', size:'M', hp:75, dmg:26, range:3.4, move:3, mass:1.5, special:'TWIN BUSTER', specialJp:'ツインバスター', sdesc:'×3 dmg' },
-  fighter:   { side:'ally', cls:'Fighter squadron', size:'S', hp:42, dmg:13, range:3.2, move:3, mass:1, special:'TORPEDO RUN', specialJp:'雷撃', sdesc:'×2, no shield' },
-  e_fighter: { side:'foe', cls:'Interceptor wing', size:'S', hp:34, dmg:9, range:3.0, move:2 },
-  e_mecha:   { side:'foe', cls:'Mono-eye mobile suit', size:'M', hp:68, dmg:14, range:3.2, move:2 },
-  e_ace:     { side:'foe', cls:'Custom suit · enemy ace', size:'M', hp:112, dmg:19, range:3.6, move:3 },
-  e_destroyer:{ side:'foe', cls:'Destroyer', size:'M', hp:88, dmg:16, range:4.2, move:1 },
-  e_boss:    { side:'foe', cls:'Dreadnought · enemy flagship', size:'L', hp:330, dmg:22, range:5.2, move:1, special:'GRAVITON CANNON', specialJp:'重力砲発射' },
+  flagship:  { side:'ally', cls:'Battleship · flagship', size:'L', hp:170, move:1, mass:3 },
+  cruiser:   { side:'ally', cls:'Heavy cruiser', size:'M', hp:95, move:2, mass:2 },
+  mecha:     { side:'ally', cls:'Mobile suit · wing type', size:'M', hp:75, move:3, mass:1.5 },
+  fighter:   { side:'ally', cls:'Fighter squadron', size:'S', hp:42, move:3, mass:1, pawn:true },
+  e_fighter: { side:'foe', cls:'Interceptor wing', size:'S', hp:34, move:2, pawn:true },
+  e_mecha:   { side:'foe', cls:'Mono-eye mobile suit', size:'M', hp:68, move:2, pawn:true },
+  e_ace:     { side:'foe', cls:'Custom suit · enemy ace', size:'M', hp:112, move:3 },
+  e_destroyer:{ side:'foe', cls:'Destroyer', size:'M', hp:88, move:1 },
+  e_boss:    { side:'foe', cls:'Dreadnought · enemy flagship', size:'L', hp:330, move:1, flag:true },
+};
+/* Attack styles. Pawns (fighters, grunt suits) get one; everything else picks from two or three.
+   kind: single · splash (target + radius) · line (pierces everything along the shot) · aura (all around the shooter) · multi (nearest N)
+   cd: turns to wait after use · nofall: no range falloff (melee) · pierce: ignores shields · big: anime cut-in */
+const STYLES = {
+  flagship: [
+    { id:'guns',  name:'MAIN GUNS',    short:'GUNS',  range:5.2, dmg:30, kind:'single', fx:'beam' },
+    { id:'flak',  name:'FLAK SCREEN',  short:'FLAK',  range:2.6, dmg:14, kind:'aura', cd:1, fx:'flak' },
+    { id:'lance', name:'HADRON LANCE', short:'LANCE', range:7.5, dmg:62, kind:'line', cd:4, fx:'lance', big:true, jp:'波動砲発射' },
+  ],
+  cruiser: [
+    { id:'beams', name:'TWIN BEAMS',    short:'BEAMS', range:4.6, dmg:21, kind:'single', fx:'beam' },
+    { id:'storm', name:'MISSILE STORM', short:'STORM', range:5.6, dmg:19, kind:'splash', radius:1.6, cd:3, fx:'missiles', big:true, jp:'全弾発射' },
+  ],
+  mecha: [
+    { id:'rifle',  name:'BEAM RIFLE',  short:'RIFLE',  range:3.6, dmg:24, kind:'single', fx:'beam' },
+    { id:'saber',  name:'BEAM SABER',  short:'SABER',  range:1.8, dmg:44, kind:'single', fx:'melee', nofall:true, pierce:true },
+    { id:'buster', name:'TWIN BUSTER', short:'BUSTER', range:6,   dmg:58, kind:'line', cd:3, fx:'lance', big:true, jp:'ツインバスター' },
+  ],
+  fighter:     [ { id:'pulse', name:'PULSE GUNS',  short:'PULSE', range:3.2, dmg:13, kind:'single', fx:'bolts' } ],
+  e_fighter:   [ { id:'pulse', name:'PULSE GUNS',  short:'PULSE', range:3.0, dmg:9,  kind:'single', fx:'bolts' } ],
+  e_mecha:     [ { id:'mg',    name:'MACHINE GUN', short:'MG',    range:3.2, dmg:14, kind:'single', fx:'burst' } ],
+  e_ace: [
+    { id:'rifle',  name:'CUSTOM RIFLE',  short:'RIFLE',  range:3.6, dmg:18, kind:'single', fx:'burst' },
+    { id:'hawk',   name:'HEAT HAWK',     short:'HAWK',   range:1.8, dmg:34, kind:'single', fx:'melee', nofall:true, pierce:true },
+    { id:'volley', name:'HOMING VOLLEY', short:'VOLLEY', range:4.6, dmg:15, kind:'multi', hits:3, cd:2, fx:'missiles' },
+  ],
+  e_destroyer: [
+    { id:'battery', name:'BEAM BATTERY',   short:'BEAM', range:4.2, dmg:16, kind:'single', fx:'beam' },
+    { id:'torps',   name:'TORPEDO SPREAD', short:'TORP', range:5,   dmg:14, kind:'splash', radius:1.6, cd:3, fx:'missiles' },
+  ],
+  e_boss: [
+    { id:'cannon',    name:'MAIN CANNON',     short:'CANNON', range:5.2, dmg:22, kind:'single', fx:'beam' },
+    { id:'broadside', name:'BROADSIDE',       short:'BROAD',  range:3.6, dmg:16, kind:'aura', cd:2, fx:'flak' },
+    { id:'grav',      name:'GRAVITON CANNON', short:'GRAV',   range:8,   dmg:52, kind:'line', cd:3, fx:'lance', big:true, charge:true, jp:'重力砲発射' },
+  ],
 };
 const ALLY_ROSTER = [
   { type:'flagship', name:'HYPERION' },
@@ -513,19 +547,24 @@ const isVisible = u => u.side === 'ally' || !!S.revealed[sectorKey(u.x,u.y,u.z)]
 const allies = () => S.units.filter(u => u.alive && u.side === 'ally');
 const foes = () => S.units.filter(u => u.alive && u.side === 'foe');
 const visFoes = () => foes().filter(isVisible);
-const falloff = d => clamp(1.15 - 0.12*d, 0.35, 1);
+const stylesOf = u => STYLES[u.type];
+const styleOf = (u, id) => STYLES[u.type].find(q => q.id === id) || STYLES[u.type][0];
+const isReady = (u, st) => !((u.cds || {})[st.id] > 0);
+const cdOf = (u, st) => (u.cds || {})[st.id] || 0;
+const KIND_TXT = { single:'single target', splash:'blasts the target and anything within', line:'pierces everything in its line', aura:'hits every enemy within', multi:'locks several targets' };
 const moveCost = (u, c) => Math.ceil(cheb(u, c) * T(u).mass);
 const diff = () => Math.min(camp.op - 1, 6);
 const hpMul = () => 1 + .07*diff();
 
 function newState() {
-  return { phase:'deploy', turn:0, fuel:Math.min(FUEL_MAX, FUEL_BASE + camp.fuelStock), kits:Math.max(1, camp.kits), units:[], revealed:{}, orders:{}, nextId:1,
+  return { phase:'deploy', turn:0, fuel:Math.min(FUEL_MAX, FUEL_BASE + camp.fuelStock), kits:Math.max(1, camp.kits), units:[], revealed:{}, combo:{}, nextId:1,
     kills:0, lost:[], said:{}, lastBand:null, bossSeen:false, waves:[], valor:{ adm:0, ops:0, pilot:0, ace:0 }, rivalMet:false, rivalBeaten:false, marshalBeaten:false, rivalKills:0, result:null, nameIdx:{} };
 }
 function makeUnit(def, side) {
   const t = TYPES[def.type], mhp = side === 'foe' ? Math.round(t.hp*hpMul()) : t.hp;
   return { id:S.nextId++, type:def.type, name:def.name, side, hp:mhp, maxHp:mhp, x:-1, y:-1, z:-1,
-    alive:true, placed:false, moved:false, acted:false, shield:false, charged:false, bossCharge:0, active:false };
+    alive:true, placed:false, moved:false, acted:false, shield:false, bossCharge:0, active:false,
+    cds:Object.fromEntries(STYLES[def.type].filter(q => q.cd).map(q => [q.id, q.cd - 1])) };
 }
 function foeName(type) {
   if (!WNAMES[type]) return type;
@@ -705,12 +744,12 @@ function paintBg() {
   const w = 1024, h = 512, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
   g.fillStyle = '#000'; g.fillRect(0,0,w,h);
   const blob = (x,y,r,col,a) => { for (const ox of [-w,0,w]) { const gr = g.createRadialGradient(x+ox,y,0,x+ox,y,r); gr.addColorStop(0,`rgba(${col},${a})`); gr.addColorStop(1,`rgba(${col},0)`); g.fillStyle = gr; g.fillRect(x+ox-r,y-r,r*2,r*2); } };
-  for (let i = 0; i < 60; i++) blob(260 + Math.random()*360, 190 + Math.random()*150, 30 + Math.random()*90, '255,255,255', .028);
-  for (let i = 0; i < 30; i++) blob(330 + Math.random()*200, 230 + Math.random()*70, 20 + Math.random()*50, '255,255,255', .035);
-  for (let i = 0; i < 40; i++) blob(760 + Math.random()*260, 150 + Math.random()*220, 30 + Math.random()*80, '255,255,255', .022);
+  for (let i = 0; i < 60; i++) blob(260 + Math.random()*360, 190 + Math.random()*150, 30 + Math.random()*90, '255,255,255', .016);
+  for (let i = 0; i < 30; i++) blob(330 + Math.random()*200, 230 + Math.random()*70, 20 + Math.random()*50, '255,255,255', .02);
+  for (let i = 0; i < 40; i++) blob(760 + Math.random()*260, 150 + Math.random()*220, 30 + Math.random()*80, '255,255,255', .012);
   for (let i = 0; i < 20; i++) blob(360 + Math.random()*240, 240 + Math.random()*40, 16 + Math.random()*30, '0,0,0', .3);
   g.save(); g.translate(w/2, h/2); g.rotate(-.1);
-  for (let i = 0; i < 1400; i++) { const x = (Math.random() - .5)*w*1.2, y = (Math.random() + Math.random() + Math.random() - 1.5)*36; g.fillStyle = `rgba(255,255,255,${Math.random()*.6})`; g.fillRect(x, y, 1, 1); }
+  for (let i = 0; i < 700; i++) { const x = (Math.random() - .5)*w*1.2, y = (Math.random() + Math.random() + Math.random() - 1.5)*36; g.fillStyle = `rgba(255,255,255,${Math.random()*.6})`; g.fillRect(x, y, 1, 1); }
   g.restore();
   for (let i = 0; i < 900; i++) { g.fillStyle = Math.random() < .85 ? 'rgba(255,255,255,.9)' : '#fff'; const s = Math.random() < .93 ? 1 : 2; g.fillRect(Math.random()*w|0, Math.random()*h|0, s, s); }
   // the one colour in the sky: a red ringed planet
@@ -802,34 +841,31 @@ const layerObjs = [];
    ================================================================ */
 const fogGroup = new THREE.Group(); scene.add(fogGroup);
 const fogSectors = {};
+const fogBoxGeo = new THREE.BoxGeometry(SX*CS*.985, SZ*CZ*.985, SY*CS*.985);
+const fogEdgeGeo = new THREE.EdgesGeometry(fogBoxGeo);
 function buildFog() {
   for (const k in fogSectors) { fogGroup.remove(fogSectors[k].g); delete fogSectors[k]; }
   for (let sx = 0; sx < NSX; sx++) for (let sy = 0; sy < NSY; sy++) for (let sz = 0; sz < NSZ; sz++) {
     const k = sx + ',' + sy + ',' + sz, g = new THREE.Group();
     const c = W(sx*SX + (SX-1)/2, sy*SY + (SY-1)/2, sz*SZ + (SZ-1)/2);
-    for (let i = 0; i < 4; i++) {
-      const m = new THREE.SpriteMaterial({ map:cloudTex, color:0x767676, transparent:true, opacity:.34 + Math.random()*.1, depthWrite:false, rotation:Math.random()*6.28 });
-      const s = new THREE.Sprite(m);
-      s.position.set(c.x + (Math.random() - .5)*SX*CS*.7, c.y + (Math.random() - .5)*SZ*CZ*.7, c.z + (Math.random() - .5)*SY*CS*.7);
-      const sc = 3.6 + Math.random()*1.8; s.scale.set(sc, sc, 1);
-      s.userData = { rs:(Math.random() - .5)*.1 };
-      g.add(s);
-    }
-    fogGroup.add(g); fogSectors[k] = { g, center:c };
+    const fill = new THREE.Mesh(fogBoxGeo, new THREE.MeshBasicMaterial({ color:0x0e0e0e, transparent:true, opacity:.8, depthWrite:false }));
+    const edge = new THREE.LineSegments(fogEdgeGeo, new THREE.LineDashedMaterial({ color:0x5c5c5c, dashSize:.1, gapSize:.26, transparent:true }));
+    edge.computeLineDistances();
+    g.add(fill, edge); g.position.copy(c);
+    fogGroup.add(g); fogSectors[k] = { g, fill, edge, center:c };
   }
 }
-ambient.push((t, dt) => { for (const k in fogSectors) for (const s of fogSectors[k].g.children) s.material.rotation += s.userData.rs*dt; });
 function clearFogInstant(k) { const f = fogSectors[k]; if (!f) return; fogGroup.remove(f.g); delete fogSectors[k]; }
 async function dissolveFog(k) {
   const f = fogSectors[k]; if (!f) return; delete fogSectors[k];
-  const box = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(SX*CS, SZ*CZ, SY*CS)), new THREE.LineBasicMaterial({ color:0xffffff, transparent:true, opacity:1 }));
-  box.position.copy(f.center); scene.add(box);
-  const starts = f.g.children.map(s => ({ s, p:s.position.clone(), sc:s.scale.x, o:s.material.opacity, d:s.position.clone().sub(f.center).normalize() }));
-  await tween(1400, k2 => {
-    for (const q of starts) { q.s.material.opacity = q.o*(1 - k2); q.s.scale.setScalar(q.sc*(1 + k2*.8)); q.s.position.copy(q.p).addScaledVector(q.d, k2*1.6); }
-    box.visible = Math.floor(k2*10) % 2 === 0 && k2 < .7;
+  f.edge.material.color.setHex(0xffffff); f.edge.material.dashSize = .3; f.edge.material.gapSize = .06;
+  await tween(1100, q => {
+    f.fill.material.opacity = .8*(1 - q);
+    f.edge.material.opacity = 1 - q;
+    f.edge.visible = Math.floor(q*10) % 2 === 0;
+    f.g.scale.setScalar(1 + q*.08);
   }, eout);
-  fogGroup.remove(f.g); scene.remove(box); box.geometry.dispose();
+  fogGroup.remove(f.g); f.fill.material.dispose(); f.edge.material.dispose();
 }
 
 /* ================================================================
@@ -1035,15 +1071,15 @@ function syncVisual(u, snap) {
   v.lab.querySelector('.bar b').style.width = (100*Math.max(0,u.hp)/u.maxHp) + '%';
   let ics = '';
   if (u.shield) ics += '<span class="ic"><span>SH</span></span>';
-  if (u.charged || u.bossCharge >= 2) ics += '<span class="ic"><span>CHG</span></span>';
-  const n = S ? Object.values(S.orders).filter(t => t === u.id).length : 0;
-  if (n) ics += `<span class="ic"><span>◎${n > 1 ? '×' + n : ''}</span></span>`;
+  if (u.bossCharge >= 2) ics += '<span class="ic"><span>CHG</span></span>';
+  const pv = (S && typeof ui !== 'undefined') ? ui.preview.get(u.id) : null;
+  if (pv) ics += `<span class="ic" style="background:var(--${TIERS[tierOf(pv)][2]})"><span>~${pv}</span></span>`;
   v.lab.querySelector('.ics').innerHTML = ics;
   if (u.shield && !v.shieldM) {
     const m = new THREE.Mesh(new THREE.IcosahedronGeometry(HITR[T(u).size]*1.25, 1), new THREE.MeshBasicMaterial({ color:u.side === 'ally' ? BLU : ACC, wireframe:true, transparent:true, opacity:.8, depthWrite:false }));
     v.root.add(m); v.shieldM = m;
   } else if (!u.shield && v.shieldM) { v.root.remove(v.shieldM); v.shieldM = null; }
-  const charging = u.charged || u.bossCharge >= 2;
+  const charging = u.bossCharge >= 2;
   if (charging && !v.chargeM) {
     const s = new THREE.Sprite(new THREE.SpriteMaterial({ map:sparkTex, color:u.side === 'ally' ? YEL : ACC, transparent:true, depthWrite:false }));
     s.scale.setScalar(1.6); v.root.add(s); v.chargeM = s;
@@ -1419,21 +1455,24 @@ function log(txt, cls = '') { const el = $('log'), d = document.createElement('d
 /* ================================================================
    UI STATE, MARKERS
    ================================================================ */
-const ui = { sel:null, mode:null, layer:1, valid:new Map(), busy:false, overlay:true, lastAlly:null, confirmFlee:false };
+const ui = { sel:null, mode:null, style:null, layer:1, valid:new Map(), preview:new Map(), busy:false, overlay:true, lastAlly:null, confirmFlee:false };
 const markerGroup = new THREE.Group(); scene.add(markerGroup);
-const planGroup = new THREE.Group(); scene.add(planGroup);
 const rangeGroup = new THREE.Group(); scene.add(rangeGroup);
 const reticleGroup = new THREE.Group(); scene.add(reticleGroup);
-const markMat = new THREE.SpriteMaterial({ map:markTex, color:WHITE, transparent:true, depthWrite:false });
-const markMatDim = new THREE.SpriteMaterial({ map:softDot, color:0xb0b0b0, transparent:true, opacity:.9, depthWrite:false });
+// grid cues: blue = move, yellow = move into strike range, reticles coloured by predicted damage
+const markMove = new THREE.SpriteMaterial({ map:markTex, color:BLU, transparent:true, depthWrite:false });
+const markStrike = new THREE.SpriteMaterial({ map:markTex, color:YEL, transparent:true, depthWrite:false });
+const markDim = new THREE.SpriteMaterial({ map:softDot, color:BLU, transparent:true, opacity:.9, depthWrite:false });
+const markDimStrike = new THREE.SpriteMaterial({ map:softDot, color:YEL, transparent:true, opacity:.9, depthWrite:false });
 const padGeo = new THREE.RingGeometry(.34, .5, 4, 1, PI/4);
-const padMat = new THREE.MeshBasicMaterial({ color:0xffffff, side:THREE.DoubleSide, depthWrite:false });
+const padMove = new THREE.MeshBasicMaterial({ color:BLU, side:THREE.DoubleSide, depthWrite:false });
+const padStrike = new THREE.MeshBasicMaterial({ color:YEL, side:THREE.DoubleSide, depthWrite:false });
 const selRing = new THREE.Mesh(new THREE.RingGeometry(.64, .76, 6), new THREE.MeshBasicMaterial({ color:WHITE, side:THREE.DoubleSide, depthWrite:false }));
 selRing.rotation.x = -PI/2; selRing.visible = false; scene.add(selRing);
 let hoverKey = null;
 ambient.push(t => {
   const on = Math.sin(t*6) > -.3;
-  markerGroup.children.forEach(m => { if (m.userData.big) { const s = m.userData.key === hoverKey ? .75 : (on ? .5 : .42); m.scale.setScalar(s); } });
+  markerGroup.children.forEach(m => { if (m.userData.big) { const s = m.userData.key === hoverKey ? .78 : (on ? .52 : .44); m.scale.setScalar(s); } });
   reticleGroup.children.forEach(r => { r.material.rotation = Math.round(t*(r.userData.dir || 1)*4)/4*(PI/8); r.scale.setScalar(r.userData.s*(r.userData.pulse && Math.sin(t*7) > 0 ? 1.1 : 1)); });
   if (selRing.visible) selRing.rotation.z = t*.8;
   const u = ui.sel && S && byId(ui.sel);
@@ -1446,13 +1485,14 @@ function computeValid() {
   if (S.phase === 'deploy') {
     for (let x = 0; x < NX; x++) for (let y = 0; y < DEPLOY_ROWS; y++) for (let z = 0; z < NZ; z++) { const o = unitAt(x,y,z); if (o) continue; ui.valid.set(key3(x,y,z), { x, y, z, cost:0 }); }
   } else if (S.phase === 'player' && ui.mode === 'move' && !u.moved) {
-    const m = T(u).move;
+    const m = T(u).move, vf = visFoes(), sts = u.acted ? [] : stylesOf(u).filter(st => isReady(u, st));
     for (let dx = -m; dx <= m; dx++) for (let dy = -m; dy <= m; dy++) for (let dz = -m; dz <= m; dz++) {
       const x = u.x + dx, y = u.y + dy, z = u.z + dz;
       if (!inBounds(x,y,z) || (!dx && !dy && !dz)) continue;
       const o = unitAt(x,y,z); if (o && isVisible(o)) continue;
-      const cost = moveCost(u, { x, y, z }); if (cost > S.fuel) continue;
-      ui.valid.set(key3(x,y,z), { x, y, z, cost });
+      const c = { x, y, z }, cost = moveCost(u, c); if (cost > S.fuel) continue;
+      c.cost = cost; c.strike = sts.some(st => vf.some(f => { const d = dist(c, f); return d <= st.range + 1e-6; }));
+      ui.valid.set(key3(x,y,z), c);
     }
   }
 }
@@ -1461,38 +1501,37 @@ function rebuildMarkers() {
   for (const [k, c] of ui.valid) {
     const p = W(c.x, c.y, c.z);
     if (c.z === ui.layer) {
-      const m = new THREE.Sprite(markMat); m.position.copy(p); m.userData = { big:true, key:k }; m.scale.setScalar(.5); markerGroup.add(m);
-      const pad = new THREE.Mesh(padGeo, padMat); pad.rotation.x = -PI/2; pad.position.copy(p); pad.position.y -= .01; markerGroup.add(pad);
-    } else { const s = new THREE.Sprite(markMatDim); s.position.copy(p); s.scale.setScalar(.22); markerGroup.add(s); }
+      const m = new THREE.Sprite(c.strike ? markStrike : markMove); m.position.copy(p); m.userData = { big:true, key:k }; m.scale.setScalar(.5); markerGroup.add(m);
+      const pad = new THREE.Mesh(padGeo, c.strike ? padStrike : padMove); pad.rotation.x = -PI/2; pad.position.copy(p); pad.position.y -= .01; markerGroup.add(pad);
+    } else { const s = new THREE.Sprite(c.strike ? markDimStrike : markDim); s.position.copy(p); s.scale.setScalar(.22); markerGroup.add(s); }
   }
 }
 function addReticle(p, color, s, pulse, dir) {
   const r = new THREE.Sprite(new THREE.SpriteMaterial({ map:reticleTex, color, transparent:true, depthWrite:false, depthTest:false }));
   r.position.copy(p); r.userData = { s, pulse, dir }; r.scale.setScalar(s); r.renderOrder = 5; reticleGroup.add(r);
 }
-function rebuildRange() {
-  rangeGroup.clear(); reticleGroup.clear();
-  const u = selUnit();
-  if (S.phase === 'player' || S.phase === 'resolving') {
-    for (const id of new Set(Object.values(S.orders))) { const f = byId(id); if (!f || !f.alive || !isVisible(f)) continue; addReticle(posOf(f), WHITE, 2.1, false, -1); }
-  }
-  if (!u || u.side !== 'ally' || S.phase !== 'player' || ui.mode !== 'fire') return;
-  const R = T(u).range;
+function rangeRings(u, R, color, gap) {
   for (let z = 0; z < NZ; z++) {
     const dz = z - u.z; if (Math.abs(dz) > R) continue;
     const r = Math.sqrt(R*R - dz*dz)*CS, pts = [];
     for (let i = 0; i <= 48; i++) { const a = i/48*PI*2; pts.push(new THREE.Vector3(Math.cos(a)*r, 0, Math.sin(a)*r)); }
-    const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineDashedMaterial({ color:ACC, dashSize:.2, gapSize:z === u.z ? .12 : .35 }));
+    const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineDashedMaterial({ color, dashSize:.2, gapSize:z === u.z ? gap : gap*3 }));
     l.computeLineDistances(); l.position.copy(W(u.x, u.y, z)); rangeGroup.add(l);
   }
-  for (const f of visFoes()) if (dist(u, f) <= R + 1e-6) addReticle(posOf(f), ACC, 1.8, true, 1);
 }
-function rebuildPlan() {
-  planGroup.clear();
-  for (const [sid, tid] of Object.entries(S.orders)) {
-    const s = byId(+sid), t = byId(tid); if (!s || !t || !s.alive || !t.alive) continue;
-    const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints([posOf(s), posOf(t)]), new THREE.LineDashedMaterial({ color:ACC, dashSize:.25, gapSize:.18, depthTest:false }));
-    l.computeLineDistances(); l.renderOrder = 4; planGroup.add(l);
+function rebuildRange() {
+  rangeGroup.clear(); reticleGroup.clear(); ui.preview = new Map();
+  const u = selUnit();
+  if (!u || u.side !== 'ally' || S.phase !== 'player' || u.acted) return;
+  if (ui.mode === 'attack' && ui.style) {
+    const st = styleOf(u, ui.style);
+    rangeRings(u, st.range, ACC, .12);
+    if (st.kind === 'splash') for (const f of visFoes()) if (canTarget(u, st, f)) rangeRings(f, st.radius, YEL, .3);
+    const tg = st.kind === 'aura' ? visFoes().filter(f => dist(u, f) <= st.range + 1e-6) : visFoes().filter(f => canTarget(u, st, f));
+    for (const f of tg) { const est = Math.round(styleDmg(u, f, st)*(1 + .25*(S.combo[f.id] || 0))); ui.preview.set(f.id, est); addReticle(posOf(f), tierCol(est), 1.8, true, 1); }
+  } else {
+    // idle cue: anything any ready style can hit right now gets a faint reticle
+    for (const f of visFoes()) { const st = bestStyleFor(u, f); if (st) { const est = Math.round(styleDmg(u, f, st)); ui.preview.set(f.id, est); addReticle(posOf(f), tierCol(est), 1.5, false, -1); } }
   }
 }
 function applyLayerLook() {
@@ -1503,12 +1542,13 @@ function applyLayerLook() {
     o.plane.material.opacity = on ? .06 : 0;
     o.dots.material.opacity = on ? 1 : .35;
     o.lab.material.opacity = on ? 1 : .45;
-    o.dz.material.opacity = (S && S.phase === 'deploy' && on) ? .16 : 0;
+    o.dz.material.color.setHex(BLU);
+    o.dz.material.opacity = (S && S.phase === 'deploy' && on) ? .3 : 0;
   });
 }
 function refresh() {
   if (!S) return;
-  computeValid(); rebuildMarkers(); rebuildRange(); rebuildPlan(); applyLayerLook();
+  computeValid(); rebuildMarkers(); rebuildRange(); applyLayerLook();
   selRing.visible = !!selUnit();
   for (const u of S.units) syncVisual(u, false);
   renderHUD();
@@ -1573,7 +1613,7 @@ function renderHUD() {
       if (!a.alive) b.classList.add('dead'); else if (S.phase === 'player' && a.moved && a.acted) b.classList.add('done');
       let st;
       if (S.phase === 'deploy') st = a.placed ? `■ Z${a.z+1} ${a.x+1}·${a.y+1}` : '□ awaiting';
-      else st = (a.moved ? '◇' : '◆') + 'MOV ' + (a.acted ? (S.orders[a.id] ? '◎FIRE' : '✓ACT') : '◆ACT');
+      else st = (a.moved ? '◇' : '◆') + 'MOV ' + (a.acted ? '◇' : '◆') + 'ATK';
       b.innerHTML = `<div class="n">${a.name}</div><div class="c">${T(a).cls.split(' · ')[0]}</div><div class="hp"><b style="width:${100*Math.max(0,a.hp)/a.maxHp}%"></b></div><div class="st">${st}</div>`;
       b.addEventListener('click', () => { if (!a.alive) return; select(a.id, true); sfx.blip(); });
       fs.appendChild(b);
@@ -1592,34 +1632,24 @@ function renderHUD() {
     card.classList.toggle('foe', foe);
     $('cardName').textContent = u.name; $('cardClass').textContent = t.cls;
     $('cardHp').firstElementChild.style.width = (100*Math.max(0,u.hp)/u.maxHp) + '%';
-    let stats = `<span>HP <b>${Math.max(0,u.hp)}/${u.maxHp}</b></span><span>DMG <b>${t.dmg}</b></span><span>RNG <b>${t.range}</b></span><span>MOV <b>${t.move}</b></span>`;
+    let stats = `<span>HP <b>${Math.max(0,u.hp)}/${u.maxHp}</b></span><span>MOV <b>${t.move}</b></span>`;
     if (!foe) stats += `<span>FUEL/CELL <b>${t.mass}</b></span>`;
     stats += `<span>AT <b>${u.x+1}·${u.y+1}·Z${u.z+1}</b></span>`;
+    if (foe) stats += '<span style="flex-basis:100%">' + stylesOf(u).map(st => `${st.short} <b>${st.dmg}</b> r${st.range}`).join(' · ') + '</span>';
     const other = S.units.find(o => o.id === ui.lastAlly);
-    if (foe && other && other.alive) { const d = dist(other, u); stats += `<span>${other.name}→ <b>${d.toFixed(1)}${d <= T(other).range ? ' ~' + Math.round(T(other).dmg*falloff(d)) + 'dmg' : ' out of rng'}</b></span>`; }
+    if (foe && other && other.alive && !other.acted) { const st = bestStyleFor(other, u); stats += `<span>${other.name}→ <b>${st ? st.short + ' ~' + Math.round(styleDmg(other, u, st)) + ' dmg' : 'out of range'}</b></span>`; }
     $('cardStats').innerHTML = stats;
     let tags = '';
     if (u.shield) tags += '<span class="tag inv">Shielded</span>';
-    if (u.charged) tags += `<span class="tag inv">${t.special} armed</span>`;
     if (u.bossCharge >= 2) tags += '<span class="tag ac">Graviton cannon charging</span>';
     if (u.type === 'e_ace') tags += '<span class="tag ac">Rival · Capt. Vex</span>';
-    if (!foe && S.phase === 'player') { if (u.moved) tags += '<span class="tag">Moved</span>'; if (u.acted) tags += `<span class="tag">${S.orders[u.id] ? 'Target: ' + byId(S.orders[u.id]).name : 'Acted'}</span>`; }
-    if (foe && t.special) tags += '<span class="tag ac">Flagship · sink to win</span>';
+    if (t.pawn) tags += '<span class="tag">Pawn · one weapon</span>';
+    if (!foe && S.phase === 'player') { if (u.moved) tags += '<span class="tag">Moved</span>'; if (u.acted) tags += '<span class="tag">Attacked</span>'; }
+    if (foe && t.flag) tags += '<span class="tag ac">Flagship · sink to win</span>';
+    if (!foe && ui.mode === 'attack' && ui.style) { const st = styleOf(u, ui.style); tags += `<span class="tag inv">${st.name}: ${KIND_TXT[st.kind]}${st.kind === 'aura' ? ' ' + st.range : st.kind === 'splash' ? ' ' + st.radius : ''}${st.nofall ? ', melee' : ''}${st.pierce ? ', ignores shields' : ''}</span>`; }
     $('cardTags').innerHTML = tags;
     $('actions').hidden = foe;
-    if (!foe) {
-      const can = S.phase === 'player';
-      $('aMove').disabled = !can || u.moved || S.fuel < Math.ceil(t.mass);
-      $('aFire').disabled = !can || (u.acted && !S.orders[u.id]);
-      $('aShield').disabled = !can || u.acted;
-      $('aRepair').disabled = !can || u.acted || S.kits <= 0 || u.hp >= u.maxHp;
-      $('aCharge').disabled = !can || u.acted || u.charged;
-      $('aMove').classList.toggle('on', ui.mode === 'move'); $('aFire').classList.toggle('on', ui.mode === 'fire');
-      $('sMove').textContent = u.moved ? 'done' : `${t.mass}/cell`;
-      $('sFire').textContent = S.orders[u.id] ? '→' + byId(S.orders[u.id]).name : (u.charged ? 'SPECIAL' : `rng ${t.range}`);
-      $('sCharge').textContent = u.charged ? 'armed' : t.sdesc;
-      $('sRepair').textContent = `${S.kits} kit${S.kits === 1 ? '' : 's'}`;
-    }
+    if (!foe) renderActions(u);
   }
   const mb = $('mainBtn'), ab = $('auxBtn');
   mb.classList.remove('hot');
@@ -1629,11 +1659,25 @@ function renderHUD() {
   } else if (S.phase === 'player') {
     ab.hidden = false; ab.textContent = ui.confirmFlee ? 'CONFIRM?' : 'FLEE';
     ab.classList.toggle('hot', ui.confirmFlee);
-    mb.disabled = false; mb.innerHTML = 'ENGAGE<span class="jp">交戦</span>'; mb.classList.add('hot');
+    const left = allies().filter(a => !a.acted).length;
+    mb.disabled = ui.busy; mb.innerHTML = `END TURN${left ? '<span class="jp">' + left + ' ready</span>' : ''}`;
+    if (!left) mb.classList.add('hot');
   } else {
     ab.hidden = true; mb.disabled = true; mb.innerHTML = S.phase === 'over' ? 'OVER' : 'STAND BY';
   }
   renderHint();
+}
+function renderActions(u) {
+  const acts = $('actions'), can = S.phase === 'player' && !ui.busy, t = T(u);
+  let h = `<button class="btn act${ui.mode === 'move' ? ' on' : ''}" data-a="move"${(!can || u.moved || S.fuel < Math.ceil(t.mass)) ? ' disabled' : ''}><span class="k">MOVE</span><span class="s">${u.moved ? 'done' : t.mass + '/cell'}</span></button>`;
+  for (const st of stylesOf(u)) {
+    const cd = cdOf(u, st), hasT = st.kind === 'aura' ? visFoes().some(f => dist(u, f) <= st.range + 1e-6) : visFoes().some(f => canTarget(u, st, f));
+    const on = ui.mode === 'attack' && ui.style === st.id;
+    h += `<button class="btn act${on ? ' on' : ''}${hasT && !cd && !u.acted ? ' hasT' : ''}${st.big ? ' bigSt' : ''}" data-a="style:${st.id}"${(!can || u.acted || cd) ? ' disabled' : ''}><span class="k">${st.short}</span><span class="s">${cd ? 'ready in ' + cd : st.dmg + ' · r' + st.range}</span></button>`;
+  }
+  h += `<button class="btn act" data-a="shield"${(!can || u.acted) ? ' disabled' : ''}><span class="k">SHIELD</span><span class="s">½ dmg</span></button>`;
+  h += `<button class="btn act" data-a="repair"${(!can || u.acted || S.kits <= 0 || u.hp >= u.maxHp) ? ' disabled' : ''}><span class="k">REPAIR</span><span class="s">${S.kits} kit${S.kits === 1 ? '' : 's'}</span></button>`;
+  if (acts.dataset.sig !== h) { acts.innerHTML = h; acts.dataset.sig = h; }
 }
 function waveWeight(w) { return w.size + (w.elite ? 1 : 0); }
 function renderTimeline() {
@@ -1673,37 +1717,88 @@ function intelDetail() {
 $('timelineBox').addEventListener('click', e => { if (!S || e.target.closest('[data-col]')) return; setCol('hint', false); $('hintTxt').innerHTML = intelDetail(); sfx.blip(); });
 function renderHint() {
   const u = selUnit(); let h = '';
+  const tiers = '<span style="color:var(--fb)">blue</span> <span style="color:var(--fg)">green</span> <span style="color:var(--fy)">yellow</span> <span style="color:var(--ac)">red</span> <span style="color:var(--fm)">violet</span>';
   if (S.phase === 'deploy') {
     const left = allies().filter(a => !a.placed).length;
-    if (u && !u.placed) h = `Placing <b>${u.name}</b>. Tap a ◆ node on layer Z${ui.layer+1}, or pick another layer on the right.`;
+    if (u && !u.placed) h = `Placing <b>${u.name}</b>. Tap a blue node on layer Z${ui.layer+1}, or pick another layer on the right.`;
     else if (u) h = `Moving <b>${u.name}</b>. Tap a new node or drag the ship.`;
     else h = left ? 'Pick a ship below, then tap a node in your deployment zone.' : 'Fleet in position. Drag ships to adjust, or press LAUNCH.';
   } else if (S.phase === 'player') {
-    if (!u) h = 'Tap a ship to give orders, then press ENGAGE. Tap the timeline for intel.';
-    else if (u.side === 'foe') h = `<b>${u.name}</b> ${T(u).cls}. Select your ship, then FIRE.`;
+    if (!u) h = allies().some(a => !a.acted) ? 'Tap a ship. Each one can move and attack this turn. Tap the timeline for intel.' : 'Every ship has attacked. Press END TURN.';
+    else if (u.side === 'foe') h = `<b>${u.name}</b> ${T(u).cls}. Select your ship, then tap this target.`;
     else if (ui.mode === 'move') {
-      const onL = [...ui.valid.values()].filter(c => c.z === ui.layer).length;
-      h = ui.valid.size ? `Tap a node to move <b>${u.name}</b>.${onL ? '' : ' No nodes on Z' + (ui.layer+1) + '.'} ◇ on the Z rail marks other reachable layers.` : `Not enough fuel to move ${u.name}.`;
-    } else if (ui.mode === 'fire') {
-      const n = visFoes().filter(f => dist(u, f) <= T(u).range).length;
-      h = n ? `Tap a red reticle. ${u.charged ? T(u).special + ' armed.' : 'Closer targets take more damage.'} Bolt colour shows strength: <span style="color:var(--fb)">blue</span> <span style="color:var(--fg)">green</span> <span style="color:var(--fy)">yellow</span> <span style="color:var(--ac)">red</span> <span style="color:var(--fm)">violet</span>.` : `No visible enemy within range ${T(u).range}. Move closer or wait for the fog to lift.`;
-    } else h = u.acted && u.moved ? `${u.name} has its orders.` : `Choose an order for ${u.name}.`;
+      const onL = [...ui.valid.values()].filter(c => c.z === ui.layer).length, strike = [...ui.valid.values()].some(c => c.strike);
+      h = ui.valid.size ? `Tap a node to move <b>${u.name}</b>. <span style="color:var(--fb)">Blue</span> moves${strike ? ', <span style="color:var(--fy)">yellow</span> puts an enemy in range' : ''}.${onL ? '' : ' No nodes on Z' + (ui.layer+1) + '.'}${u.acted ? '' : ' Or tap a marked enemy to attack first.'}` : `Not enough fuel to move ${u.name}.`;
+    } else if (ui.mode === 'attack' && ui.style) {
+      const st = styleOf(u, ui.style), n = ui.preview.size;
+      if (st.kind === 'aura') h = n ? `${st.name} fires on ${n} target${n > 1 ? 's' : ''} in range. Tap ${st.short} again or any marked enemy.` : `${st.name} needs an enemy within ${st.range}.`;
+      else h = n ? `${st.name}: tap a reticle. Reticle colour shows damage: ${tiers}. Hitting a target another ship already hit this turn adds a combo bonus.` : `No enemy in ${st.name} range (${st.range}). Try another weapon or move closer.`;
+    } else h = u.acted && u.moved ? `${u.name} is done this turn.` : `Pick an order for ${u.name}.`;
   } else if (S.phase === 'enemy') h = 'Enemy phase. Brace for fire.';
-  else if (S.phase === 'resolving') h = 'Executing fire orders…';
   else if (S.phase === 'fog') h = 'Sensors sweeping the nebula…';
   else h = 'The engagement is over.';
   $('hintTxt').innerHTML = h;
 }
 
 /* ================================================================
-   SELECTION & ORDERS
+   SELECTION, MOVE, ATTACK (arcade: every ship moves and attacks each turn)
    ================================================================ */
+function canTarget(u, st, f) {
+  if (st.kind === 'aura' || !f.alive || !isVisible(f) || !isReady(u, st)) return false;
+  const d = dist(u, f); return d <= st.range + 1e-6 && d >= (st.min || 0);
+}
+function styleDmg(src, t, st, from = src) {
+  const d = dist(from, t);
+  let v = st.dmg*(st.nofall ? 1 : clamp(1.12 - .55*d/st.range, .5, 1));
+  if (t.shield && !st.pierce) v *= .5;
+  return v;
+}
+function oppOf(src) { return src.side === 'ally' ? visFoes() : allies(); }
+function hitsFor(src, st, target, from = src) {
+  const opp = oppOf(src), inR = o => dist(from, o) <= st.range + 1e-6;
+  if (st.kind === 'aura') return opp.filter(inR).map(u => ({ u, m:1 }));
+  if (st.kind === 'multi') return opp.filter(inR).sort((a, b) => dist(from, a) - dist(from, b)).slice(0, st.hits).map(u => ({ u, m:1 }));
+  if (!target) return [];
+  if (st.kind === 'splash') return [{ u:target, m:1 }, ...opp.filter(o => o !== target && dist(o, target) <= st.radius).map(u => ({ u, m:.7 }))];
+  if (st.kind === 'line') {
+    const dx = target.x - from.x, dy = target.y - from.y, dz = target.z - from.z, L = Math.hypot(dx, dy, dz) || 1;
+    const hit = opp.filter(o => {
+      const vx = o.x - from.x, vy = o.y - from.y, vz = o.z - from.z, pr = (vx*dx + vy*dy + vz*dz)/L;
+      if (pr <= 0 || pr > st.range + .5) return false;
+      return Math.hypot(vx - dx/L*pr, vy - dy/L*pr, vz - dz/L*pr) < .75;
+    });
+    if (!hit.includes(target)) hit.push(target);
+    return hit.map(u => ({ u, m:1 }));
+  }
+  return [{ u:target, m:1 }];
+}
+function expected(src, st, target, from = src) { return hitsFor(src, st, target, from).reduce((s, h) => s + styleDmg(src, h.u, st, from)*h.m, 0); }
+function bestStyleFor(u, f) {
+  let best = null, bv = 0;
+  for (const st of stylesOf(u)) {
+    if (!isReady(u, st)) continue;
+    const ok = st.kind === 'aura' ? dist(u, f) <= st.range + 1e-6 : canTarget(u, st, f);
+    if (!ok) continue;
+    const v = expected(u, st, st.kind === 'aura' ? null : f);
+    if (v > bv) { bv = v; best = st; }
+  }
+  return best;
+}
+function defaultStyle(u) {
+  let best = null, bv = -1;
+  for (const st of stylesOf(u)) {
+    if (!isReady(u, st)) continue;
+    const tg = st.kind === 'aura' ? [null] : visFoes().filter(f => canTarget(u, st, f));
+    for (const f of tg) { const v = expected(u, st, f); if (v > bv) { bv = v; best = st; } }
+  }
+  return (best || stylesOf(u).find(st => isReady(u, st)) || stylesOf(u)[0]).id;
+}
 function select(id, focus) {
   ui.sel = id; ui.confirmFlee = false; const u = selUnit();
   if (u) {
     if (u.placed && (u.side === 'ally' || isVisible(u))) ui.layer = u.z;
     if (u.side === 'ally') ui.lastAlly = u.id;
-    if (S.phase === 'player' && u.side === 'ally') ui.mode = !u.moved ? 'move' : (!u.acted || S.orders[u.id]) ? 'fire' : null;
+    if (S.phase === 'player' && u.side === 'ally') { ui.mode = !u.moved ? 'move' : !u.acted ? 'attack' : null; ui.style = defaultStyle(u); }
     else ui.mode = null;
     if (focus && u.placed) panTo(posOf(u));
   } else ui.mode = null;
@@ -1714,7 +1809,19 @@ function panTo(p) {
   const f = { x:cam.tx, y:cam.ty, z:cam.tz }, t = { x:p.x*.6, y:clamp(p.y*.5, -3, 3), z:p.z*.6 };
   tween(400, k => { cam.tx = f.x + (t.x - f.x)*k; cam.ty = f.y + (t.y - f.y)*k; cam.tz = f.z + (t.z - f.z)*k; });
 }
-function setMode(m) { const u = selUnit(); if (!u) return; ui.mode = ui.mode === m ? null : m; refresh(); sfx.blip(); }
+function nextReady(after) {
+  const list = allies(), i = list.indexOf(after);
+  for (let k = 1; k <= list.length; k++) { const a = list[(i + k) % list.length]; if (a !== after && (!a.acted || !a.moved)) return a; }
+  return null;
+}
+function afterOrder(u) {
+  if (!u.alive || S.phase !== 'player') { refresh(); return; }
+  if (u.moved && u.acted) {
+    const n = nextReady(u);
+    if (n) { select(n.id, false); popText(posOf(n).add(new THREE.Vector3(0,1.2,0)), 'READY', 'info'); }
+    else { ui.sel = null; ui.mode = null; refresh(); }
+  } else { ui.mode = !u.moved ? 'move' : 'attack'; ui.style = defaultStyle(u); refresh(); }
+}
 async function doMove(u, c) {
   const cost = moveCost(u, c); if (cost > S.fuel) return;
   ui.busy = true;
@@ -1723,56 +1830,111 @@ async function doMove(u, c) {
   const from = posOf(u);
   if (occupant && occupant.side === 'foe' && !isVisible(occupant)) {
     const to = from.clone().lerp(W(c.x,c.y,c.z), .45);
-    await animateMove(u, from, to, 360); await animateMove(u, to, from, 300);
+    await animateMove(u, from, to, 300); await animateMove(u, to, from, 260);
     log(`${u.name}: proximity alarm at ${c.x+1}·${c.y+1}·Z${c.z+1}`, 'foe');
     await revealSector(sectorKey(c.x,c.y,c.z));
   } else {
     u.x = c.x; u.y = c.y; u.z = c.z;
-    await animateMove(u, from, W(c.x,c.y,c.z), 560);
+    await animateMove(u, from, W(c.x,c.y,c.z), 420);
     const sk = sectorKey(u.x,u.y,u.z);
     if (!S.revealed[sk]) { log(`${u.name} scouts sector ${sk.replace(/,/g,'·')}`); await revealSector(sk); }
   }
   if (S.fuel <= 4 && !S.said.fuel) { S.said.fuel = 1; say('ops', 'Fuel is under five units, Admiral. Hold position a turn and let the tanks refill.', 'worried'); }
-  ui.busy = false; ui.mode = u.acted ? null : 'fire';
-  refresh();
+  ui.busy = false;
+  afterOrder(u);
 }
 async function animateMove(u, from, to, dur) {
   const v = V[u.id]; if (!v) return;
   tone(220, dur/1000, 'triangle', .025, 180);
   const d = to.clone().sub(from);
-  if (d.lengthSq() > .01) await faceToward(u, to, 200);
+  if (d.lengthSq() > .01) await faceToward(u, to, 160);
   const gl = v.body.userData.glows || [];
   await tween(dur, k => { v.root.position.copy(from).addScaledVector(d, k); v.root.position.y += Math.sin(k*PI)*.25; setStem(v); for (const s of gl) s.scale.setScalar(s.userData.base*1.7); });
   setStem(v);
 }
-function orderFire(u, f) {
-  if (S.orders[u.id] === f.id) { delete S.orders[u.id]; u.acted = false; log(`${u.name}: order cancelled`); }
-  else { S.orders[u.id] = f.id; u.acted = true; const d = dist(u, f); log(`${u.name}→${f.name} rng ${d.toFixed(1)} ~${Math.round(T(u).dmg*falloff(d))}dmg`); }
-  sfx.blip(); ui.mode = null;
-  const n = Object.values(S.orders).filter(t => t === f.id).length;
-  if (n >= 2) popText(posOf(f).add(new THREE.Vector3(0,1.2,0)), `FOCUS ×${n}`, 'info');
-  refresh();
+async function attackWith(u, st, target) {
+  if (ui.busy || u.acted) return;
+  ui.busy = true; u.acted = true; ui.mode = null; refresh();
+  await executeAttack(u, st, target);
+  ui.busy = false;
+  if (checkEnd()) return;
+  afterOrder(u);
 }
-function doShield(u) { u.shield = true; u.acted = true; delete S.orders[u.id]; sfx.shield(); ringWave(posOf(u), BLU, 3); popText(posOf(u).add(new THREE.Vector3(0,1,0)), 'SHIELD', 'info'); log(`${u.name} shields up`); ui.mode = null; refresh(); }
+/* one attack, start to finish: cut-in, effect, damage, combo */
+async function executeAttack(src, st, target) {
+  const ally = src.side === 'ally', hits = hitsFor(src, st, target);
+  if (!hits.length) return;
+  const main = target || hits[0].u;
+  if (st.big) await cutIn(ally ? (src.type === 'mecha' ? 'pilot' : src.type === 'fighter' ? 'ace' : 'adm') : (src.type === 'e_ace' ? 'rival' : 'foe'), src.name, st.name, st.jp || '', src.side);
+  const rolls = hits.map(h => { const combo = S.combo[h.u.id] || 0; return { u:h.u, combo, amt:Math.max(1, Math.round(styleDmg(src, h.u, st)*h.m*(1 + .25*combo)*(.9 + Math.random()*.2))) }; });
+  await faceToward(src, posOf(main), 200);
+  const mainRoll = rolls.find(r => r.u === main) || rolls[0];
+  await playFx(src, st, main, rolls, tierCol(mainRoll.amt));
+  if (st.cd) { src.cds = src.cds || {}; src.cds[st.id] = st.cd + 1; }
+  if (ally && st.big) { if (src.type === 'mecha') S.valor.pilot += 1; else if (src.type === 'flagship') S.valor.adm += 1; else S.valor.ops += 1; }
+  for (const r of rolls) {
+    if (!r.u.alive) continue;
+    if (r.combo > 0) popText(posOf(r.u).add(new THREE.Vector3(0,1.6,0)), `COMBO ×${r.combo + 1}`, 'info', 'var(--fy)');
+    S.combo[r.u.id] = (S.combo[r.u.id] || 0) + 1;
+    await damage(r.u, r.amt, st.big || r.combo > 0, src);
+  }
+}
+async function playFx(src, st, main, rolls, col) {
+  const a = nosePos(src), b = posOf(main), wide = T(src).size === 'L' ? .14 : .09;
+  if (st.fx === 'beam') { sfx.laser(src.side === 'ally' ? 1000 : 600); flash(a, col, 1.2, 250); await beam(a, b, col, wide, 360); }
+  else if (st.fx === 'bolts' || st.fx === 'burst') {
+    const n = st.fx === 'bolts' ? 3 : (src.type === 'e_ace' ? 6 : 4);
+    for (let i = 0; i < n; i++) { sfx.pew(); projectile(a.clone().add(new THREE.Vector3((Math.random() - .5)*.3, (Math.random() - .5)*.2, 0)), b.clone().add(new THREE.Vector3((Math.random() - .5)*.3, (Math.random() - .5)*.3, 0)), col, st.fx === 'bolts' ? .35 : .28, 230); await wait(st.fx === 'bolts' ? 90 : 60); }
+    await wait(170);
+  } else if (st.fx === 'melee') {
+    const v = V[src.id], home = posOf(src), strike = home.clone().lerp(b, .78);
+    noise(.12, .2, 2400); tone(900, .15, 'sawtooth', .04, 900);
+    if (v) await tween(200, k => { v.root.position.copy(home).lerp(strike, k); setStem(v); }, eout);
+    ringWave(b, col, 2.6, 380); sparks(b, col, 12, 2.4, 500); flash(b, WHITE, 1.4, 200); shake(.3);
+    await wait(120);
+    if (v) await tween(260, k => { v.root.position.copy(strike).lerp(home, k); setStem(v); });
+  } else if (st.fx === 'missiles') {
+    const ps = [], n = Math.max(6, rolls.length*3);
+    for (let i = 0; i < n; i++) { const r = rolls[i % rolls.length]; sfx.pew(); ps.push(projectile(a, posOf(r.u).add(new THREE.Vector3((Math.random() - .5)*.5, (Math.random() - .5)*.5, (Math.random() - .5)*.5)), tierCol(r.amt), .36, 480 + Math.random()*200, 1.6)); await wait(50); }
+    await Promise.all(ps);
+    for (const r of rolls) explode(posOf(r.u), false);
+  } else if (st.fx === 'flak') {
+    const c = posOf(src); sfx.laser(700); noise(.3, .2, 1800);
+    ringWave(c, col, st.range*CS*2, 520); ringWave(c, YEL, st.range*CS*1.4, 420);
+    for (const r of rolls) for (let i = 0; i < 3; i++) projectile(c, posOf(r.u).add(new THREE.Vector3((Math.random() - .5)*.4, (Math.random() - .5)*.4, 0)), tierCol(r.amt), .3, 220 + i*60);
+    await wait(420);
+  } else if (st.fx === 'lance') {
+    sfx.big();
+    for (let i = 0; i < 5; i++) { flash(a, i % 2 ? WHITE : col, 1 + i*.6, 280); await wait(80); }
+    const dir = b.clone().sub(a).normalize(), end = a.clone().addScaledVector(dir, 40);
+    shake(.7); beam(a, end, col, .72, 950);
+    await wait(320);
+  }
+}
+function doShield(u) { if (u.acted) return; u.shield = true; u.acted = true; sfx.shield(); ringWave(posOf(u), BLU, 3); popText(posOf(u).add(new THREE.Vector3(0,1,0)), 'SHIELD', 'info'); log(`${u.name} shields up`); afterOrder(u); }
 function doRepair(u) {
-  if (S.kits <= 0) return;
+  if (S.kits <= 0 || u.acted) return;
   const amt = Math.min(u.maxHp - u.hp, Math.round(u.maxHp*.35));
-  u.hp += amt; S.kits--; u.acted = true; delete S.orders[u.id];
-  sfx.heal(); sparks(posOf(u), WHITE, 12, 1.2); popText(posOf(u).add(new THREE.Vector3(0,1,0)), '+' + amt, 'heal'); log(`${u.name} repaired +${amt}`); ui.mode = null; refresh();
+  u.hp += amt; S.kits--; u.acted = true;
+  sfx.heal(); sparks(posOf(u), WHITE, 12, 1.2); popText(posOf(u).add(new THREE.Vector3(0,1,0)), '+' + amt, 'heal'); log(`${u.name} repaired +${amt}`); afterOrder(u);
 }
-function doCharge(u) {
-  u.charged = true; u.acted = true; delete S.orders[u.id];
-  sfx.charge(); flash(posOf(u), YEL, 3, 700); popText(posOf(u).add(new THREE.Vector3(0,1,0)), 'CHARGING', 'info');
-  log(`${u.name} charges ${T(u).special}`);
-  if (u.type === 'mecha' && !S.said.pilotCharge) { S.said.pilotCharge = 1; say('pilot', traitsOf('pilot').slick ? 'Buster at full charge. Point me at something big.' : 'Buster rifle charged. Give me a target and I end it.'); }
-  if (u.type === 'fighter' && !S.said.aceCharge) { S.said.aceCharge = 1; say('ace', 'Torpedoes armed, boss. Lancers are itching for a run.', 'happy'); }
-  ui.mode = null; refresh();
+function chooseStyle(u, id) {
+  const st = styleOf(u, id);
+  if (!isReady(u, st) || u.acted) return;
+  if (st.kind === 'aura') {
+    if (ui.mode === 'attack' && ui.style === id || hitsFor(u, st, null).length) { if (hitsFor(u, st, null).length) { attackWith(u, st, null); return; } }
+  }
+  if (ui.mode === 'attack' && ui.style === id && st.kind !== 'aura') { ui.mode = u.moved ? null : 'move'; }
+  else { ui.mode = 'attack'; ui.style = id; }
+  refresh(); sfx.blip();
 }
 $('actions').addEventListener('click', e => {
   const b = e.target.closest('.act'); if (!b || b.disabled) return;
   const u = selUnit(); if (!u || u.side !== 'ally' || S.phase !== 'player' || ui.busy) return;
   const a = b.dataset.a;
-  if (a === 'move' || a === 'fire') setMode(a); else if (a === 'shield') doShield(u); else if (a === 'repair') doRepair(u); else if (a === 'charge') doCharge(u);
+  if (a === 'move') { ui.mode = ui.mode === 'move' ? null : 'move'; refresh(); sfx.blip(); }
+  else if (a.startsWith('style:')) chooseStyle(u, a.slice(6));
+  else if (a === 'shield') doShield(u); else if (a === 'repair') doRepair(u);
 });
 $('cardX').addEventListener('click', () => deselect());
 
@@ -1809,7 +1971,7 @@ function autoDeploy() {
    ================================================================ */
 $('mainBtn').addEventListener('click', () => {
   if (S.phase === 'deploy') launch();
-  else if (S.phase === 'player' && !ui.busy) { ui.confirmFlee = false; engage(); }
+  else if (S.phase === 'player' && !ui.busy) { ui.confirmFlee = false; endTurn(); }
 });
 $('auxBtn').addEventListener('click', () => {
   if (S.phase === 'deploy') autoDeploy();
@@ -1853,8 +2015,8 @@ async function startPlayerTurn(first) {
   S.turn++;
   if (S.turn > TL) { await mainFleetArrives(); return; }
   if (!first) S.fuel = Math.min(FUEL_MAX, S.fuel + FUEL_REGEN);
-  for (const u of allies()) { u.moved = false; u.acted = false; u.shield = false; }
-  S.orders = {}; S.phase = 'player'; ui.sel = null; ui.mode = null; ui.confirmFlee = false;
+  for (const u of allies()) { u.moved = false; u.acted = false; u.shield = false; tickCds(u); }
+  S.combo = {}; S.phase = 'player'; ui.sel = null; ui.mode = null; ui.confirmFlee = false;
   const w = S.waves.find(q => q.turn === S.turn && !q.arrived);
   if (w) await arriveWave(w);
   if (!first) { alertMsg('TURN ' + S.turn + ' · PLAYER PHASE', 'lt'); statusReport(); }
@@ -1894,20 +2056,13 @@ async function mainFleetArrives() {
   await wait(1200);
   endGame('retreat');
 }
-async function engage() {
-  S.phase = 'resolving'; ui.sel = null; ui.mode = null; refresh();
-  await resolveAllyOrders(); if (checkEnd()) return;
-  S.phase = 'enemy'; refresh();
+function tickCds(u) { if (!u.cds) u.cds = {}; for (const k in u.cds) u.cds[k] = Math.max(0, u.cds[k] - 1); }
+async function endTurn() {
+  S.phase = 'enemy'; ui.sel = null; ui.mode = null; refresh();
   await enemyPhase(); if (checkEnd()) return;
   S.phase = 'fog'; refresh();
   await fogPhase(); if (checkEnd()) return;
   await startPlayerTurn(false);
-}
-function computeDmg(s, t, mult = 1, focus = 1, pierce = false) {
-  let v = T(s).dmg*falloff(dist(s, t))*mult*focus;
-  if (t.shield && !pierce) v *= .5;
-  v *= .9 + Math.random()*.2;
-  return Math.max(1, Math.round(v));
 }
 async function damage(t, amt, crit, src) {
   if (!t.alive) return;
@@ -1936,8 +2091,6 @@ async function destroy(u, src) {
   const v = V[u.id];
   if (v) await tween(420, k => { v.body.scale.setScalar(Math.max(.01, 1 - k)); v.body.rotation.z += .08; }, lin);
   removeVisual(u.id);
-  for (const k in S.orders) if (S.orders[k] === u.id) delete S.orders[k];
-  delete S.orders[u.id];
   if (u.side === 'foe') {
     S.kills++; creditKill(src, u);
     log(`${u.name} destroyed`);
@@ -1966,147 +2119,98 @@ async function destroy(u, src) {
   if (ui.sel === u.id) ui.sel = null;
   refresh();
 }
-async function resolveAllyOrders() {
-  const entries = Object.entries(S.orders).map(([sid, tid]) => ({ s:byId(+sid), t:byId(tid) })).filter(o => o.s && o.s.alive && o.t && o.t.alive);
-  if (!entries.length) return;
-  const groups = new Map();
-  for (const o of entries) { if (!groups.has(o.t.id)) groups.set(o.t.id, []); groups.get(o.t.id).push(o.s); }
-  for (const [tid, shooters] of groups) {
-    const t = byId(tid), inR = shooters.filter(s => dist(s, t) <= T(s).range + 1e-6);
-    shooters.filter(s => !inR.includes(s)).forEach(s => log(`${s.name}: target out of range`));
-    const focus = 1 + .25*(inR.length - 1);
-    if (inR.length > 1) { popText(posOf(t).add(new THREE.Vector3(0,1.5,0)), `FOCUS ×${inR.length}`, 'info'); await wait(280); }
-    for (const s of inR) {
-      if (!t.alive || !s.alive) break;
-      await faceToward(s, posOf(t), 240);
-      if (s.charged) await fireSpecial(s, t, focus); else await fireNormal(s, t, focus);
-      await wait(130);
-    }
-  }
-  S.orders = {}; refresh();
-}
-async function fireNormal(s, t, focus) {
-  const a = nosePos(s), b = posOf(t), amt = computeDmg(s, t, 1, focus), col = tierCol(amt);
-  if (s.type === 'fighter' || s.type === 'e_fighter') {
-    for (let i = 0; i < 3; i++) { sfx.pew(); projectile(a.clone().add(new THREE.Vector3((Math.random() - .5)*.4, 0, 0)), b, col, .35, 260, .3); await wait(90); }
-    await wait(200);
-  } else if (s.type === 'e_mecha' || s.type === 'e_ace') {
-    for (let i = 0; i < (s.type === 'e_ace' ? 6 : 4); i++) { sfx.pew(); projectile(a, b.clone().add(new THREE.Vector3((Math.random() - .5)*.3, (Math.random() - .5)*.3, 0)), col, .28, 200); await wait(60); }
-    await wait(180);
-  } else {
-    sfx.laser(s.side === 'ally' ? 1000 : 600); flash(a, col, 1.2, 250);
-    await beam(a, b, col, s.type === 'flagship' || s.type === 'e_boss' ? .14 : .09, 380);
-  }
-  await damage(t, amt, focus > 1.2, s);
-}
-async function fireSpecial(s, t, focus) {
-  const tt = T(s), who = s.type === 'mecha' ? 'pilot' : s.type === 'fighter' ? 'ace' : 'adm';
-  await cutIn(who, s.name, tt.special, tt.specialJp, 'ally');
-  s.charged = false; syncVisual(s, false);
-  if (s.type === 'mecha') S.valor.pilot += 1;
-  if (s.type === 'fighter') S.valor.ace += 1;
-  const a = nosePos(s), b = posOf(t);
-  if (s.type === 'flagship') {
-    sfx.big();
-    for (let i = 0; i < 5; i++) { flash(a, i % 2 ? WHITE : BLU, 1 + i*.6, 300); await wait(90); }
-    const dir = b.clone().sub(a).normalize(), end = a.clone().addScaledVector(dir, 40);
-    shake(.6); beam(a, end, tierCol(computeDmg(s, t, 2.2, focus)), .75, 950);
-    await wait(300);
-    const hits = visFoes().filter(f => { const p = posOf(f).sub(a), pr = p.dot(dir); return pr > 0 && p.clone().addScaledVector(dir, -pr).length() < CS; });
-    if (!hits.includes(t)) hits.push(t);
-    for (const f of hits) await damage(f, computeDmg(s, f, 2.2, f === t ? focus : 1), true, s);
-  } else if (s.type === 'cruiser') {
-    const area = visFoes().filter(f => dist(f, t) <= 1.5), ps = [], mc = tierCol(computeDmg(s, t, 1.5, focus));
-    for (let i = 0; i < 10; i++) { const tg = pick(area); sfx.pew(); ps.push(projectile(a, posOf(tg).add(new THREE.Vector3((Math.random() - .5)*.5, (Math.random() - .5)*.5, (Math.random() - .5)*.5)), mc, .38, 520 + Math.random()*200, 1.8)); await wait(55); }
-    await Promise.all(ps);
-    for (const f of area) { explode(posOf(f), false); await damage(f, computeDmg(s, f, f === t ? 1.5 : .85, f === t ? focus : 1), true, s); }
-  } else if (s.type === 'mecha') {
-    sfx.big();
-    const off = new THREE.Vector3(.18,0,0), amt = computeDmg(s, t, 3, focus), bc = tierCol(amt);
-    flash(a, bc, 2.5, 400);
-    beam(a.clone().add(off), b.clone().add(off), bc, .3, 700); await beam(a.clone().sub(off), b.clone().sub(off), bc, .3, 700);
-    explode(b, true);
-    await damage(t, amt, true, s);
-  } else if (s.type === 'fighter') {
-    const ps = [], amt = computeDmg(s, t, 2, focus, true), tc = tierCol(amt);
-    for (let i = 0; i < 3; i++) { sfx.pew(); ps.push(projectile(a, b, tc, .5, 650, .8)); await wait(120); }
-    await Promise.all(ps); explode(b, false);
-    await damage(t, amt, true, s);
-  }
-}
-
 /* ---------- enemy AI ---------- */
 function nearestAlly(f) { let best = null, bd = 1e9; for (const a of allies()) { const d = dist(a, f); if (d < bd) { bd = d; best = a; } } return best; }
 async function enemyPhase() {
-  for (const f of foes()) { f.shield = false; if (isVisible(f)) f.active = true; }
+  for (const f of foes()) { f.shield = false; tickCds(f); if (isVisible(f)) f.active = true; }
+  S.combo = {};
   const act = foes().filter(f => f.active);
   if (!act.length) { refresh(); return; }
-  if (act.some(isVisible)) { alertMsg('ENEMY PHASE', ''); sfx.alarm(); await wait(650); }
+  if (act.some(isVisible)) { alertMsg('ENEMY PHASE', ''); sfx.alarm(); await wait(600); }
   if (!S.said.enemyFirst && act.some(isVisible)) { S.said.enemyFirst = 1; say('foe', traitsOf('foe').scar ? 'You gave me this scar. I will take your fleet in exchange.' : 'Fire at will. Leave nothing floating.', 'smirk'); }
   const order = act.sort((a,b) => (T(a).size > T(b).size ? 1 : -1));
   for (const f of order) {
     if (!f.alive || !allies().length) continue;
     if (f.type === 'e_boss') { if (isVisible(f)) { await bossAct(f); if (checkEnd()) return; } continue; }
-    let tgt = nearestAlly(f);
-    if (dist(f, tgt) > T(f).range) { await foeMove(f, tgt); tgt = nearestAlly(f); }
-    if (!f.alive || !tgt) continue;
-    if (dist(f, tgt) <= T(f).range) {
-      if (!isVisible(f)) {   // muzzle flash gives away a hidden attacker
-        alertMsg('AMBUSH', ''); log(`Ambush from the fog: ${f.name}`, 'foe');
-        await revealSector(sectorKey(f.x,f.y,f.z));
-      }
-      await faceToward(f, posOf(tgt), 220);
-      await fireNormal(f, tgt, 1);
-      if (checkEnd()) return;
-    } else if (f.type === 'e_destroyer' && f.hp < f.maxHp*.6) { f.shield = true; syncVisual(f); }
-    await wait(isVisible(f) ? 110 : 0);
+    await foeTurn(f);
+    if (checkEnd()) return;
+    await wait(isVisible(f) ? 100 : 0);
   }
   refresh();
 }
-async function foeMove(f, tgt) {
-  const m = T(f).move, want = T(f).range*.8;
-  let best = null, bs = Math.abs(dist(f, tgt) - want);
+/* the planner: try every reachable cell and every ready weapon, take the most damage */
+function planFoe(f, exclude) {
+  const m = T(f).move, cands = [{ x:f.x, y:f.y, z:f.z }];
   for (let dx = -m; dx <= m; dx++) for (let dy = -m; dy <= m; dy++) for (let dz = -m; dz <= m; dz++) {
     const x = f.x + dx, y = f.y + dy, z = f.z + dz;
-    if (!inBounds(x,y,z) || unitAt(x,y,z)) continue;
-    const c = { x,y,z }, sc = Math.abs(dist(c, tgt) - want) + Math.random()*.2;
-    if (sc < bs) { bs = sc; best = c; }
+    if ((dx || dy || dz) && inBounds(x,y,z) && !unitAt(x,y,z)) cands.push({ x, y, z });
   }
-  if (!best) return;
+  let best = null;
+  const sts = stylesOf(f).filter(st => isReady(f, st) && !(exclude && exclude(st)));
+  for (const c of cands) {
+    const pen = cheb(f, c)*.8 + Math.random()*.4;
+    for (const st of sts) {
+      const tg = st.kind === 'aura' || st.kind === 'multi' ? [null] : allies().filter(a => { const d = dist(c, a); return d <= st.range + 1e-6 && d >= (st.min || 0); });
+      for (const t of tg) {
+        const hits = hitsFor(f, st, t, c); if (!hits.length) continue;
+        const val = hits.reduce((s, h) => s + styleDmg(f, h.u, st, c)*h.m + (h.u.type === 'flagship' ? 3 : 0), 0) - pen;
+        if (!best || val > best.val) best = { c, st, t, val };
+      }
+    }
+  }
+  return best;
+}
+async function moveFoeTo(f, c) {
+  if (c.x === f.x && c.y === f.y && c.z === f.z) return;
   const wasVis = isVisible(f), from = posOf(f);
-  f.x = best.x; f.y = best.y; f.z = best.z;
+  f.x = c.x; f.y = c.y; f.z = c.z;
   const nowVis = isVisible(f);
-  if (wasVis && V[f.id]) await animateMove(f, from, W(f.x,f.y,f.z), 480);
+  if (wasVis && V[f.id]) await animateMove(f, from, W(f.x,f.y,f.z), 420);
   if (nowVis && !V[f.id]) { buildVisual(f); log(`${f.name} emerges from the fog`, 'foe'); flash(posOf(f), ACC, 2.2, 400); }
   syncVisual(f, true);
   if (wasVis && !nowVis) log(`${f.name} slips into the fog`, 'foe');
 }
-async function bossAct(b) {
-  b.bossCharge++;
-  const tgt0 = allies().find(u => u.type === 'flagship') || nearestAlly(b);
-  if (b.bossCharge === 2) {
-    syncVisual(b); sfx.charge();
-    alertMsg('GRAVITON CANNON CHARGING', '');
-    say('foe', 'Graviton cannon, begin charging. Enjoy your final moments, rebels.', 'smirk');
-    say('ops', 'Massive energy spike from the dreadnought! Shields up on anything in its line of fire!', 'worried');
-    await wait(900); return;
-  }
-  if (b.bossCharge >= 3) {
-    b.bossCharge = 0; syncVisual(b);
-    const tgt = dist(b, tgt0) <= 8 ? tgt0 : nearestAlly(b);
-    await faceToward(b, posOf(tgt), 400);
-    await cutIn('foe', b.name, T(b).special, T(b).specialJp, 'foe');
-    const a = nosePos(b), dir = posOf(tgt).sub(a).normalize(), end = a.clone().addScaledVector(dir, 40);
-    sfx.big(); shake(.8); beam(a, end, tierCol(52), .65, 1000);
-    await wait(350);
-    const hits = allies().filter(u => { const p = posOf(u).sub(a), pr = p.dot(dir); return pr > 0 && p.clone().addScaledVector(dir, -pr).length() < CS; });
-    if (!hits.includes(tgt)) hits.push(tgt);
-    for (const u of hits) { let v = u === tgt ? 52 : 30; if (u.shield) v = Math.round(v*.5); await damage(u, v, true, b); }
+async function foeTurn(f, exclude) {
+  const plan = planFoe(f, exclude);
+  if (!plan) {   // nothing in reach: close the distance
+    const tgt = nearestAlly(f); if (!tgt) return;
+    const m = T(f).move, want = stylesOf(f)[0].range*.8;
+    let best = null, bs = Math.abs(dist(f, tgt) - want);
+    for (let dx = -m; dx <= m; dx++) for (let dy = -m; dy <= m; dy++) for (let dz = -m; dz <= m; dz++) {
+      const x = f.x + dx, y = f.y + dy, z = f.z + dz;
+      if (!inBounds(x,y,z) || unitAt(x,y,z)) continue;
+      const sc = Math.abs(dist({ x,y,z }, tgt) - want) + Math.random()*.2;
+      if (sc < bs) { bs = sc; best = { x,y,z }; }
+    }
+    if (best) await moveFoeTo(f, best);
+    if (f.type === 'e_destroyer' && f.hp < f.maxHp*.6) { f.shield = true; syncVisual(f); }
     return;
   }
-  let tgt = nearestAlly(b);
-  if (dist(b, tgt) > T(b).range) { await foeMove(b, tgt); tgt = nearestAlly(b); }
-  if (tgt && dist(b, tgt) <= T(b).range && isVisible(b)) { await faceToward(b, posOf(tgt), 400); await fireNormal(b, tgt, 1); }
+  await moveFoeTo(f, plan.c);
+  if (!isVisible(f)) {   // muzzle flash gives away a hidden attacker
+    alertMsg('AMBUSH', ''); log(`Ambush from the fog: ${f.name}`, 'foe');
+    await revealSector(sectorKey(f.x,f.y,f.z));
+  }
+  if (plan.st.big && f.type === 'e_ace' && !S.said.aceBig) { S.said.aceBig = 1; say('rival', 'Lock on. All of you. Dance for me.', 'smirk'); }
+  await executeAttack(f, plan.st, plan.t);
+}
+async function bossAct(b) {
+  const grav = styleOf(b, 'grav');
+  if (b.bossCharge >= 2) {
+    b.bossCharge = 0; syncVisual(b);
+    const flag = allies().find(u => u.type === 'flagship');
+    const tgt = flag && dist(b, flag) <= grav.range ? flag : nearestAlly(b);
+    if (tgt) await executeAttack(b, grav, tgt);
+    return;
+  }
+  if (isReady(b, grav) && allies().some(a => dist(b, a) <= grav.range) && Math.random() < .7) {
+    b.bossCharge = 2; syncVisual(b); sfx.charge();
+    alertMsg('GRAVITON CANNON CHARGING', '');
+    say('foe', 'Graviton cannon, begin charging. Enjoy your final moments, rebels.', 'smirk');
+    say('ops', 'Massive energy spike from the dreadnought! It fires next turn. Shield anything in its line!', 'worried');
+    await wait(800); return;
+  }
+  await foeTurn(b, st => st.charge);
 }
 
 /* ---------- fog sweep ---------- */
@@ -2459,9 +2563,12 @@ function handleTap(cx, cy) {
   if (S.phase !== 'player') { if (u) { ui.sel = u.id; refresh(); } return; }
   const cur = selUnit();
   if (u) {
-    if (u.side === 'foe' && cur && cur.side === 'ally' && (ui.mode === 'fire' || (!cur.acted && ui.mode !== 'move'))) {
-      if (dist(cur, u) <= T(cur).range + 1e-6) { orderFire(cur, u); return; }
-      if (ui.mode === 'fire') { popText(posOf(u).add(new THREE.Vector3(0,1,0)), 'OUT OF RANGE', 'info'); sfx.blip(); return; }
+    if (u.side === 'foe' && cur && cur.side === 'ally' && !cur.acted) {
+      let st = ui.mode === 'attack' && ui.style ? styleOf(cur, ui.style) : null;
+      if (st && !(st.kind === 'aura' ? dist(cur, u) <= st.range + 1e-6 && isReady(cur, st) : canTarget(cur, st, u))) st = null;
+      if (!st) st = bestStyleFor(cur, u);
+      if (st) { attackWith(cur, st, st.kind === 'aura' ? null : u); return; }
+      if (ui.mode === 'attack') { popText(posOf(u).add(new THREE.Vector3(0,1,0)), 'OUT OF RANGE', 'info'); sfx.blip(); return; }
     }
     select(u.id); sfx.blip(); return;
   }
@@ -2509,8 +2616,10 @@ window.addEventListener('keydown', e => {
   else if (e.key === 'Escape') deselect();
   else if (e.key === 'Enter') $('mainBtn').click();
   else if (u && u.side === 'ally' && S.phase === 'player') {
-    const id = { m:'aMove', f:'aFire', s:'aShield', r:'aRepair', c:'aCharge' }[e.key.toLowerCase()];
-    if (id && !$(id).disabled) $(id).click();
+    const k = e.key.toLowerCase();
+    if (k === 'm' && !u.moved) { ui.mode = 'move'; refresh(); }
+    else if ((k === 'f' || k === 'a') && !u.acted) { const r = stylesOf(u).filter(st => isReady(u, st)); if (r.length) { const i = r.findIndex(st => st.id === ui.style); ui.mode = 'attack'; ui.style = r[(i + 1) % r.length].id; refresh(); } }
+    else if (k === 's') doShield(u); else if (k === 'r') doRepair(u);
   }
 });
 
@@ -2538,7 +2647,9 @@ function restore(data) {
   if (S) clearVisuals();
   camp = data.camp || camp; campStart = data.campStart || JSON.parse(JSON.stringify(camp));
   S = data.S; ui.sel = null; ui.mode = null; ui.busy = false;
-  if (['resolving','enemy','fog'].includes(S.phase)) { S.phase = 'player'; S.orders = {}; }
+  if (['resolving','enemy','fog'].includes(S.phase)) S.phase = 'player';
+  S.combo = S.combo || {};
+  for (const u of S.units) { if (!u.cds) u.cds = {}; delete u.charged; }
   buildFog(); for (const k in S.revealed) clearFogInstant(k);
   for (const u of S.units) if (u.alive && u.placed && (u.side === 'ally' || isVisible(u))) buildVisual(u);
   if (data.cam) Object.assign(cam, data.cam, { shake:0, vaz:0, vel:0 });
@@ -2593,7 +2704,7 @@ function start(data) {
 window.claude?.hot?.snapshot?.(() => ({ S:S && JSON.parse(JSON.stringify(S)), camp, campStart, cam:{ az:cam.az, el:cam.el, zoom:cam.zoom, tx:cam.tx, ty:cam.ty, tz:cam.tz } }));
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
 
-window.__va = { get S() { return S; }, get camp() { return camp; }, autoDeploy, launch, engage, select, doMove, orderFire, endGame, showBriefing, openMenu, applyPalette, cam, ui, V, say };
+window.__va = { get S() { return S; }, get camp() { return camp; }, autoDeploy, launch, endTurn, select, doMove, attackWith, bestStyleFor, endGame, showBriefing, openMenu, applyPalette, cam, ui, V, say };
 })();
 </script>
 </body>

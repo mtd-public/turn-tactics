@@ -668,7 +668,7 @@ const STYLES = {
     { id:'mend', name:'REPAIR BEAM',   short:'MEND', range:3.6, dmg:30, kind:'heal', cd:1, fx:'heal' },
     { id:'pd',   name:'POINT DEFENCE', short:'PD',   range:2.4, dmg:11, kind:'aura', fx:'flak' },
   ],
-  e_bomber:    [ { id:'torp', name:'TORPEDO RUN', short:'TORP', range:3.8, dmg:20, kind:'single', cd:1, fx:'torpedo', pierce:true } ],
+  e_bomber:    [ { id:'torp', name:'TORPEDO RUN', short:'TORP', range:3.8, dmg:24, kind:'single', cd:1, fx:'torpedo', pierce:true } ],
   e_carrier: [
     { id:'flak',   name:'FLAK BATTERY', short:'FLAK',   range:2.8, dmg:12, kind:'aura', cd:1, fx:'flak' },
     { id:'launch', name:'LAUNCH WING',  short:'LAUNCH', range:0,   dmg:0,  kind:'spawn', cd:3 },
@@ -772,9 +772,9 @@ function planOp() {
   spawnFoe('e_boss', NY-2, NY-1, false, 'GRAUHALLE');
   for (let i = 0; i < 1 + (d >= 2 ? 1 : 0); i++) spawnFoe('e_destroyer', 4, NY-1, false);
   for (let i = 0; i < 1 + (d >= 3 ? 1 : 0); i++) spawnFoe('e_mecha', 4, NY-2, false);
-  for (let i = 0; i < 1 + Math.floor(d/2); i++) spawnFoe('e_fighter', 4, NY-2, false);
+  for (let i = 0; i < 2 + Math.floor(d/2); i++) spawnFoe('e_fighter', 4, NY-2, false);
   for (let i = 0; i < 1 + (d >= 4 ? 1 : 0); i++) spawnFoe('e_bomber', 4, NY-2, false);
-  if (d >= 2 || Math.random() < (d ? .6 : .35)) spawnFoe('e_carrier', 5, NY-1, false);
+  if (d >= 1 || Math.random() < .5) spawnFoe('e_carrier', 5, NY-1, false);
   placeObjects();
   S.pirateTurn = Math.random() < .6 ? rint(4, 7) : 0;
   // reinforcement waves on the war timeline
@@ -786,7 +786,7 @@ function planOp() {
 function waveUnits(w) {
   const d = diff(), list = [];
   if (w.size === 1) list.push('e_fighter','e_fighter');
-  if (w.size === 2) list.push('e_mecha', d >= 1 ? 'e_bomber' : 'e_fighter', ...(d >= 2 ? ['e_fighter'] : []));
+  if (w.size === 2) list.push('e_mecha','e_bomber', ...(d >= 2 ? ['e_fighter'] : []));
   if (w.size === 3) list.push(d >= 2 && Math.random() < .5 ? 'e_carrier' : 'e_destroyer','e_mecha','e_bomber','e_fighter');
   if (w.elite) list.push('e_ace');
   return list;

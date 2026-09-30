@@ -24,6 +24,13 @@ Play it: **https://mtd-public.github.io/turn-tactics/**
 - **RUSH meter**: damage you deal fills it; when it's full, RUSH! gives every ship that already attacked one more attack this turn.
 - **Loot drops**: destroyed enemies sometimes leave fuel, munitions or repair drones on the grid.
 - **Set dressing**: once contact is made, the gaps between turns fill with a cosmetic battle: fighter drones launch from both fleets, swoop around each other trading tracers, and flak bursts between the lines. It never deals damage.
+- **Slow motion**: when you end a turn in contact, the camera letterboxes and drops into slow motion while both lines trade salvos of smoke-trailing missiles. Missile weapons fire the same slow salvos, and killing anything bigger than a fighter wing triggers a moment of bullet time.
+
+## Ships
+
+- **Your fleet:** the battleship **Hyperion** (flagship), heavy cruisers **Artemis** and **Valkyrie**, the mobile suit **Seraph-01**, the support tender **Hestia** (a repair beam that restores 30 hull to a damaged ship within 3.6, plus point-defence flak), and the **Lancer** and **Sparrow** fighter squadrons.
+- **The Empire:** interceptor wings, mono-eye mobile suits, destroyers, **torpedo bomber wings** (slow torpedoes that ignore shields), **drone carriers** (flak, a drone swarm, and a hangar that launches new interceptor wings every few turns; sink them early), the ace Capt. Vex, and the dreadnought **Grauhalle**.
+- **Pirates:** raider wings and corsairs that fight everyone.
 
 ## Battlefield events
 

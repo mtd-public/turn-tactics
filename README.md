@@ -24,13 +24,6 @@ Play it: **https://mtd-public.github.io/turn-tactics/**
 - **RUSH meter**: damage you deal fills it; when it's full, RUSH! gives every ship that already attacked one more attack this turn.
 - **Loot drops**: destroyed enemies sometimes leave fuel, munitions or repair drones on the grid.
 - **Set dressing**: once contact is made, the gaps between turns fill with a cosmetic battle: fighter drones launch from both fleets, swoop around each other trading tracers, and flak bursts between the lines. It never deals damage.
-- **Slow motion**: when you end a turn in contact, the camera letterboxes and drops into slow motion while both lines trade salvos of smoke-trailing missiles. Missile weapons fire the same slow salvos, and killing anything bigger than a fighter wing triggers a moment of bullet time.
-
-## Ships
-
-- **Your fleet:** the battleship **Hyperion** (flagship), heavy cruisers **Artemis** and **Valkyrie**, the mobile suit **Seraph-01**, the support tender **Hestia** (a repair beam that restores 30 hull to a damaged ship within 3.6, plus point-defence flak), and the **Lancer** and **Sparrow** fighter squadrons.
-- **The Empire:** interceptor wings, mono-eye mobile suits, destroyers, **torpedo bomber wings** (slow torpedoes that ignore shields), **drone carriers** (flak plus a hangar that launches new interceptor wings every few turns; sink them early), the ace Capt. Vex, and the dreadnought **Grauhalle**.
-- **Pirates:** raider wings and corsairs that fight everyone.
 
 ## Battlefield events
 
@@ -56,6 +49,7 @@ Each match is one operation in an ongoing campaign:
 - **Withdrawing** (FLEE, or the timeline running out) and **defeat** bring no loot. Destroyed and badly damaged ships go to the repair bay and sit out the next one or two operations. Spare parts shorten repairs.
 - **Valor heroes:** your officers earn valor from kills, specials and victories. Their portraits change as they level up: slicked-back hair, then a flight jacket, then aviators.
 - **Rivals and villains:** the enemy ace, Capt. Sigrun Vex, and Marshal von Grau escape when beaten and come back marked by it: a scar, then an eyepatch, then a cybernetic eye.
+- Wins unlock extra palettes, selectable from the ≡ menu.
 
 The campaign and the match in progress are saved in your browser (`localStorage`). Reopening the page resumes where you left off. **New Campaign** on the title screen erases the save.
 
@@ -75,8 +69,8 @@ Most HUD panels collapse with their ▾ buttons: the timeline, log, comms, hint,
 
 Two graphics modes, switched from **≡ → Graphics** (the choice is remembered):
 
-- **Polished** (default): full-resolution, anti-aliased rendering with metallic shading, emissive trims, bloom, vignette and film grain. It has a painted colour nebula with a ringed gas giant, a holographic grid with a scanning sweep on the active layer, drifting cloud-block fog, hex move tiles, and pickups with light pillars and spinning holo rings. Ships have engine flames, running lights and lit hull windows; portraits are shaded anime talking heads; HUD panels are rounded and translucent.
-- **Grunge**: hard sci-fi in the style of PS1 / early PS2 space games. The scene renders at low resolution with wobbling pixel-snapped vertices, faceted gunmetal and oxidised hulls with grimy panel textures, extra armour plating, pipes and antenna masts, and warm thrusters. The image is a bleach-bypass colour grade with 15-bit colour banding (no dithering) and scanlines, and the grid is an amber DRADIS-style plot. Portraits come through as noisy low-res CIC video feeds, and the HUD uses square steel bezels with amber readouts.
+- **Retro** (default): the board renders at low resolution and is dithered down to a three-colour palette (black, white and one accent, in the style of Downwell), with pixel-art talking-head portraits and paper-document screens. Only weapon fire, thrusters, explosions and trims break the palette. Wins unlock extra retro palettes.
+- **Classic**: the same scene at full screen resolution with anti-aliasing, smooth shading and full colour: a navy-to-violet nebula, full-colour anime portraits, and rounded translucent HUD panels in a clean sans font.
 
 In both modes, shot colour shows damage: blue under 12, green under 23, yellow under 36, red under 56, violet above.
 

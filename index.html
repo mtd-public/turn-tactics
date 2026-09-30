@@ -15,7 +15,7 @@
 <meta name="description" content="Void Armada: a turn-based 3D fleet tactics game for touch screens.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=VT323&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=VT323&family=Oxanium:wght@600;800&family=Chakra+Petch:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&text=%E3%82%A4%E3%82%A7%E3%82%B9%E3%82%BA%E3%82%BF%E3%83%84%E3%83%90%E3%83%95%E3%83%B3%E3%83%BC%E4%B8%AD%E4%BA%A4%E5%85%A8%E5%88%A9%E5%8A%9B%E5%8B%95%E5%8B%9D%E5%8C%97%E5%B0%84%E5%BC%BE%E6%88%A6%E6%8E%A5%E6%92%A4%E6%95%97%E6%95%B5%E6%B2%B3%E6%B3%A2%E6%B5%B7%E7%99%BA%E7%A0%B2%E7%A9%BA%E7%BD%AE%E8%87%AA%E8%89%A6%E8%A1%93%E8%A7%A6%E8%B3%8A%E8%BB%8D%E9%80%80%E9%80%B2%E9%85%8D%E9%87%8D%E9%8A%80%E9%9A%8A&display=swap">
 <style>
 /* Layout: full-bleed dithered 3-colour battlespace; paper-document HUD stacks pinned top and bottom (portrait) or docked left (short landscape); Z-layer rail right, view rail left. */
@@ -299,6 +299,48 @@ body.col-comms .comm canvas{display:none}
 body.col-comms .comm .cm{min-height:0;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 body.col-comms .comm{padding:3px 8px}
 body.col-comms .comm .cr{display:none}
+
+/* ---------- classic graphics: smooth, full-colour chrome ---------- */
+body.classic{--f-pix:"Oxanium","Chakra Petch",system-ui,sans-serif;--f-txt:"Chakra Petch",system-ui,sans-serif;--f-jp:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;font-size:16px}
+body.classic #stage,body.classic .comm canvas,body.classic .person canvas,body.classic #cutin canvas{image-rendering:auto}
+body.classic .box,body.classic .btn{border-width:1px;border-color:rgba(140,170,240,.5);border-radius:7px;background:rgba(10,15,31,.84);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+body.classic .btn:active,body.classic .btn.on{background:linear-gradient(180deg,#5a9bff,#2f6fe0);color:#fff;border-color:#7fb0ff}
+body.classic .btn:disabled{border-style:solid;opacity:.35}
+body.classic .comm canvas{border-radius:6px;border-width:1px}
+body.classic .comm.foe{background:rgba(40,8,18,.86)}
+body.classic .big{border-radius:7px;border-width:1px;box-shadow:0 3px 14px rgba(0,0,0,.45)}
+body.classic .big.hot{background:linear-gradient(180deg,#ff7482,#e0344a);border-color:transparent;color:#fff}
+body.classic .big.ghost{background:rgba(10,15,31,.84)}
+body.classic .overlay{background:radial-gradient(ellipse at 50% 60%,rgba(8,12,30,.5),rgba(5,8,18,.9))}
+body.classic .paper{border-radius:12px;border:0;box-shadow:0 14px 50px rgba(0,0,0,.55)}
+body.classic .paper .big{background:#1c2744;color:#fff}
+body.classic .paper .big.ghost{background:transparent;color:#1c2744;border:1px solid #1c2744}
+body.classic .paper .big.hot{background:linear-gradient(180deg,#ff7482,#e0344a);color:#fff}
+body.classic .notch{border-width:1px;border-radius:4px}
+body.classic .notch.past{background:rgba(234,240,255,.85)}
+body.classic .gauge i{border-radius:2px;opacity:.35;background:#2a3a66}
+body.classic .gauge i.on{background:linear-gradient(#ffd97a,#e69a2c);opacity:1}
+body.classic #hint{border-left-width:3px;border-left-color:var(--fy);background:rgba(7,10,28,.72);border-radius:0 6px 6px 0}
+body.classic #hint b{border-radius:3px}
+body.classic .ulab{font-weight:600;font-size:14px}
+body.classic .ulab .nm{border-radius:3px;background:rgba(7,10,28,.75)}
+body.classic .ulab .bar{border-radius:2px}
+body.classic .tag{border-width:1px;border-radius:4px}
+body.classic .dmg{font-style:italic;text-shadow:0 2px 0 rgba(0,0,0,.8),0 0 10px rgba(0,0,0,.6)}
+body.classic #alert{border-width:1px;border-radius:8px;background:rgba(7,10,28,.8)}
+body.classic #cutin .band{background:linear-gradient(90deg,#0b1a44,#2f6fe0 45%,#0b1a44);border-block-color:#ffc94a;outline:0}
+body.classic #cutin.foe .band{background:linear-gradient(90deg,#2a0610,#c0283c 45%,#2a0610);border-block-color:#ff4b5c}
+body.classic #cutin .txt{color:#fff}
+body.classic #cutin canvas{border-radius:8px;border-width:2px}
+body.classic .railBtn{border-radius:7px}
+body.classic .fchip .hp,body.classic #cardHp,body.classic .skBar{background:rgba(120,150,220,.2);border-radius:3px}
+body.classic .fchip .hp b,body.classic #cardHp b,body.classic .skBar b{border-radius:3px;background:linear-gradient(90deg,#3d8bff,#9fd0ff)}
+body.classic #card.foe #cardHp b,body.classic #skThem .skBar b{background:linear-gradient(90deg,#ff4b5c,#ffa0aa)}
+body.classic .stamp{border-radius:8px}
+body.classic #phaseName{font-size:14px}
+body.classic #phaseTop{font-size:12px}
+body.classic .fchip .n{font-size:12px}
+body.classic .fchip .c,body.classic .fchip .st{font-size:13px}
 
 /* ---------- responsive ---------- */
 @media (max-width:560px){
@@ -674,20 +716,45 @@ function waveUnits(w) {
    RENDERER: low-res scene -> palette + ordered-dither post pass
    ================================================================ */
 const canvas = $('stage');
+/* graphics mode: 'retro' = low-res, palette-dithered · 'classic' = full-res, smooth-shaded, full colour */
+let GFX = (() => { try { return JSON.parse(localStorage.getItem('void-armada-ui-v1') || '{}').gfx || 'retro'; } catch (e) { return 'retro'; } })();
+const CLASSIC_PAL = { id:'classic', name:'CLASSIC', dk:'#0a0f1f', lt:'#eaf0ff', ac:'#ff4b5c', fb:'#3d8bff', fg:'#35d07f', fy:'#ffc94a', fm:'#b25cff' };
 const renderer = new THREE.WebGLRenderer({ canvas, antialias:false, powerPreference:'high-performance' });
 renderer.setPixelRatio(1);
 renderer.autoClear = false;
-const rt = new THREE.WebGLRenderTarget(4, 4, { minFilter:THREE.NearestFilter, magFilter:THREE.NearestFilter, depthBuffer:true });
+const rtRetro = new THREE.WebGLRenderTarget(4, 4, { minFilter:THREE.NearestFilter, magFilter:THREE.NearestFilter, depthBuffer:true });
+const rtClassic = renderer.capabilities.isWebGL2 && THREE.WebGLMultisampleRenderTarget
+  ? Object.assign(new THREE.WebGLMultisampleRenderTarget(4, 4, { depthBuffer:true }), { samples:4 })
+  : new THREE.WebGLRenderTarget(4, 4, { depthBuffer:true });
+let rt = GFX === 'classic' ? rtClassic : rtRetro;
 const postCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 const postMat = new THREE.ShaderMaterial({
-  uniforms:{ tDiffuse:{ value:rt.texture }, uDark:{ value:new THREE.Vector3() }, uLight:{ value:new THREE.Vector3() }, uAcc:{ value:new THREE.Vector3() }, uBlue:{ value:new THREE.Vector3() }, uYel:{ value:new THREE.Vector3() }, uGrn:{ value:new THREE.Vector3() }, uMag:{ value:new THREE.Vector3() } },
+  uniforms:{ uMode:{ value:0 }, tDiffuse:{ value:rt.texture }, uDark:{ value:new THREE.Vector3() }, uLight:{ value:new THREE.Vector3() }, uAcc:{ value:new THREE.Vector3() }, uBlue:{ value:new THREE.Vector3() }, uYel:{ value:new THREE.Vector3() }, uGrn:{ value:new THREE.Vector3() }, uMag:{ value:new THREE.Vector3() } },
   vertexShader:'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
   fragmentShader:`
-    uniform sampler2D tDiffuse; uniform vec3 uDark, uLight, uAcc, uBlue, uYel, uGrn, uMag; varying vec2 vUv;
+    uniform sampler2D tDiffuse; uniform vec3 uDark, uLight, uAcc, uBlue, uYel, uGrn, uMag; uniform float uMode; varying vec2 vUv;
+    vec3 hueOf(vec3 c){
+      if (c.r > c.g*1.4 && c.b > c.g*1.4 && min(c.r, c.b) > 0.25) return uMag;
+      if (c.b > c.r*1.4 && c.b > c.g*1.2) return uBlue;
+      if (c.g > c.r*1.4 && c.g > c.b*1.4) return uGrn;
+      if (c.g > c.b*1.6 && c.r > c.b*1.6 && c.g > c.r*0.55) return uYel;
+      return uAcc;
+    }
     float b2(vec2 a){ a = floor(a); return fract(dot(a, vec2(0.5, a.y*0.75))); }
     float b4(vec2 a){ return b2(0.5*a)*0.25 + b2(a); }
     void main(){
       vec3 c = texture2D(tDiffuse, vUv).rgb;
+      if (uMode > 0.5) {   // classic: smooth shading, full colour, greys tinted from deep navy to bright steel
+        float cmx = max(c.r, max(c.g, c.b)), cmn = min(c.r, min(c.g, c.b)), l = dot(c, vec3(0.299, 0.587, 0.114));
+        vec3 o;
+        if (cmx - cmn > 0.2) { o = hueOf(c)*clamp(cmx*1.15, 0.0, 1.25); o = mix(o, vec3(1.0), clamp((l - 0.7)*1.4, 0.0, 0.55)); }
+        else {
+          vec3 deep = mix(uDark, vec3(0.16, 0.12, 0.34), smoothstep(0.0, 0.2, l));
+          o = mix(deep, uLight, smoothstep(0.12, 1.0, l));
+        }
+        gl_FragColor = vec4(o, 1.0);
+        return;
+      }
       float th = b4(gl_FragCoord.xy) * 0.94 + 0.03;
       float mx = max(c.r, max(c.g, c.b)), mn = min(c.r, min(c.g, c.b));
       vec3 o;
@@ -707,6 +774,8 @@ const postMat = new THREE.ShaderMaterial({
 const postScene = new THREE.Scene(); postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2), postMat));
 function setPaletteUniforms() {
   const f = h => { const [r,g,b] = hexRGB(h); return new THREE.Vector3(r/255, g/255, b/255); };
+  const PAL = GFX === 'classic' ? CLASSIC_PAL : window.__retroPal || PALETTES[0];
+  postMat.uniforms.uMode.value = GFX === 'classic' ? 1 : 0;
   postMat.uniforms.uDark.value.copy(f(PAL.dk)); postMat.uniforms.uLight.value.copy(f(PAL.lt)); postMat.uniforms.uAcc.value.copy(f(PAL.ac)); postMat.uniforms.uBlue.value.copy(f(PAL.fb)); postMat.uniforms.uYel.value.copy(f(PAL.fy)); postMat.uniforms.uGrn.value.copy(f(PAL.fg)); postMat.uniforms.uMag.value.copy(f(PAL.fm));
 }
 
@@ -756,7 +825,13 @@ const toonGrad = (() => {
   t.minFilter = t.magFilter = THREE.NearestFilter; t.generateMipmaps = false; t.needsUpdate = true; return t;
 })();
 const matCache = {}, glowCache = {};
-const toon = c => matCache[c] || (matCache[c] = new THREE.MeshToonMaterial({ color:c, gradientMap:toonGrad }));
+const smoothGrad = (() => {
+  const n = 64, d = new Uint8Array(n*4);
+  for (let i = 0; i < n; i++) { const v = Math.round(70 + 185*Math.pow(i/(n - 1), .85)); d.set([v, v, v, 255], i*4); }
+  const t = new THREE.DataTexture(d, n, 1, THREE.RGBAFormat); t.minFilter = t.magFilter = THREE.LinearFilter; t.generateMipmaps = false; t.needsUpdate = true; return t;
+})();
+const curGrad = () => GFX === 'classic' ? smoothGrad : toonGrad;
+const toon = c => matCache[c] || (matCache[c] = new THREE.MeshToonMaterial({ color:c, gradientMap:curGrad() }));
 const glowM = c => glowCache[c] || (glowCache[c] = new THREE.MeshBasicMaterial({ color:c }));
 const outlineMat = new THREE.MeshBasicMaterial({ color:0x000000, side:THREE.BackSide });
 const ACC = 0xff0000;       // any pure-red pixel becomes the palette accent
@@ -1549,8 +1624,17 @@ function drawMouth(g, st, L) {
   }
 }
 const hiC = document.createElement('canvas'); hiC.width = hiC.height = 160;
+const CLASSIC_LOOK = {
+  adm:   { skin:'#f7dccb', shade:'#e2b39e', hair:'#f0c85a', uni:'#1c2238', bg:'#1e3a78' },
+  ops:   { skin:'#fbe0cf', shade:'#e8b8a2', hair:'#35b8c8', uni:'#e8eef8', bg:'#1a4a6a' },
+  pilot: { skin:'#f3d3bf', shade:'#dcae98', hair:'#2e2430', uni:'#2a3a6a', bg:'#3a1a4a' },
+  ace:   { skin:'#f2d0b8', shade:'#d9aa92', hair:'#7a4e2e', uni:'#5a4632', bg:'#4a3020' },
+  foe:   { skin:'#efd6cf', shade:'#cfa89e', hair:'#c9ccd8', uni:'#18261e', bg:'#5a0f22' },
+  rival: { skin:'#f0d8d0', shade:'#d2aaa0', hair:'#1a1a2a', uni:'#16161e', bg:'#3a0014' },
+  pirate:{ skin:'#e6c3a8', shade:'#c69c82', hair:'#3a2a24', uni:'#2e2a28', bg:'#0a3a1a' },
+};
 function drawPortraitHi(who, st, src) {
-  const L = BASE[who], tr = traitsOf(who, src), g = hiC.getContext('2d');
+  const L = GFX === 'classic' ? Object.assign({}, BASE[who], CLASSIC_LOOK[who]) : BASE[who], tr = traitsOf(who, src), g = hiC.getContext('2d');
   g.setTransform(1,0,0,1,0,0); g.clearRect(0,0,160,160);
   g.fillStyle = L.bg; g.fillRect(0,0,160,160);
   g.save(); g.translate(80,64);
@@ -1604,6 +1688,11 @@ function drawPortraitHi(who, st, src) {
 const bayer = [0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
 function renderPortrait(cv, who, st, src) {
   drawPortraitHi(who, st || { mouth:0, blink:false, expr:'normal' }, src);
+  if (GFX === 'classic') {   // keep the vector drawing: full colour, smooth
+    if (cv.width !== 160) { cv.width = cv.height = 160; }
+    const g = cv.getContext('2d'); g.clearRect(0,0,160,160); g.drawImage(hiC, 0, 0); return;
+  }
+  if (cv.width !== 64) { cv.width = cv.height = 64; }
   const N = cv.width, g = cv.getContext('2d');
   g.imageSmoothingEnabled = true; g.clearRect(0,0,N,N); g.drawImage(hiC, 0, 0, N, N);
   const id = g.getImageData(0,0,N,N), d = id.data, dk = hexRGB(PAL.dk), lt = hexRGB(PAL.lt), ac = hexRGB(PAL.ac), fb = hexRGB(PAL.fb), fg = hexRGB(PAL.fg), fy = hexRGB(PAL.fy), fm = hexRGB(PAL.fm);
@@ -2789,11 +2878,12 @@ function openMenu() {
   const p = $('menuPaper'), inBattle = S && S.phase === 'player';
   p.innerHTML = `
     <div class="kick"><span>Menu</span><span>OP ${String(camp.op).padStart(2,'0')}</span></div>
-    <div class="sec">Palette</div>
+    <div class="sec">Palette${GFX === 'classic' ? ' <span style="font-weight:400;letter-spacing:0;text-transform:none">(retro graphics only)</span>' : ''}</div>
     <div class="menuList">${PALETTES.map(pl => { const ok = camp.wins >= pl.need; return `<button class="big ${pl.id === PAL.id ? '' : 'ghost'}" data-pal="${pl.id}" ${ok ? '' : 'disabled'}><span><span class="pal"><i style="background:${pl.dk}"></i><i style="background:${pl.lt}"></i><i style="background:${pl.ac}"></i></span>${pl.name}</span><span>${ok ? (pl.id === PAL.id ? 'IN USE' : 'USE') : 'WIN ' + pl.need}</span></button>`; }).join('')}</div>
     <div class="sec">Options</div>
     <div class="menuList">
       <button class="big ghost" id="mSound"><span>Sound</span><span>${muted ? 'OFF' : 'ON'}</span></button>
+      <button class="big ghost" id="mGfx"><span>Graphics</span><span>${GFX === 'classic' ? 'CLASSIC · smooth colour' : 'RETRO · dithered pixels'}</span></button>
       <button class="big ghost" id="mAuto"><span>Auto move at the start of each turn</span><span>${col.autoMove ? 'ON' : 'OFF'}</span></button>
       ${inBattle ? '<button class="big ghost" id="mFlee"><span>Withdraw from battle</span><span>FLEE</span></button>' : ''}
     </div>
@@ -2806,6 +2896,7 @@ function openMenu() {
   paintDossiers(p, campStart);
   p.querySelectorAll('[data-pal]').forEach(b => b.onclick = () => { applyPalette(b.dataset.pal); camp.palette = b.dataset.pal; saveCamp(); openMenu(); });
   $('mSound').onclick = () => { muted = !muted; openMenu(); };
+  $('mGfx').onclick = () => { applyGfx(GFX === 'classic' ? 'retro' : 'classic'); sfx.blip(); openMenu(); };
   $('mAuto').onclick = () => { col.autoMove = !col.autoMove; try { localStorage.setItem(COL_KEY, JSON.stringify(col)); } catch (e) {} openMenu(); };
   if ($('mFlee')) $('mFlee').onclick = () => { $('menuOv').hidden = true; ui.overlay = false; endGame('retreat'); };
   $('mClose').onclick = () => { $('menuOv').hidden = true; ui.overlay = !$('titleOv').hidden || !$('briefOv').hidden || !$('reportOv').hidden; };
@@ -2828,11 +2919,21 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
   window.addEventListener('load', () => { try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {} });
 }
 function applyPalette(id) {
-  PAL = PALETTES.find(p => p.id === id) || PALETTES[0];
+  window.__retroPal = PALETTES.find(p => p.id === id) || PALETTES[0];
+  PAL = GFX === 'classic' ? CLASSIC_PAL : window.__retroPal;
   const r = document.documentElement.style;
   r.setProperty('--dk', PAL.dk); r.setProperty('--lt', PAL.lt); r.setProperty('--ac', PAL.ac); r.setProperty('--fb', PAL.fb); r.setProperty('--fy', PAL.fy); r.setProperty('--fg', PAL.fg); r.setProperty('--fm', PAL.fm);
   document.querySelector('meta[name=theme-color]').setAttribute('content', PAL.dk);
   setPaletteUniforms();
+}
+function applyGfx(mode) {
+  GFX = mode === 'classic' ? 'classic' : 'retro';
+  document.body.classList.toggle('classic', GFX === 'classic');
+  for (const k in matCache) { matCache[k].gradientMap = curGrad(); matCache[k].needsUpdate = true; }
+  rt = GFX === 'classic' ? rtClassic : rtRetro; postMat.uniforms.tDiffuse.value = rt.texture;
+  applyPalette(camp.palette);
+  resize();
+  try { const c = JSON.parse(localStorage.getItem(COL_KEY) || '{}'); c.gfx = GFX; localStorage.setItem(COL_KEY, JSON.stringify(c)); col.gfx = GFX; } catch (e) {}
 }
 
 /* ================================================================
@@ -3314,8 +3415,9 @@ function restore(data) {
 let RW = 1, RH = 1;
 function resize() {
   const w = innerWidth, h = innerHeight;
-  const px = clamp(Math.round(Math.min(w, h)/340), 1, 4);
+  const px = GFX === 'classic' ? 1/Math.min(window.devicePixelRatio || 1, 2) : clamp(Math.round(Math.min(w, h)/340), 1, 4);
   RW = Math.max(64, Math.round(w/px)); RH = Math.max(64, Math.round(h/px));
+  rtRetro.setSize(RW, RH); rtClassic.setSize(RW, RH);
   renderer.setSize(RW, RH, false); rt.setSize(RW, RH);
   measureFree(); for (const k of ['x0','y0','x1','y1']) free[k] = free['t' + k];
 }
@@ -3343,6 +3445,7 @@ function frame(now) {
 
 paintBg();
 applyPalette(camp.palette);
+document.body.classList.toggle('classic', GFX === 'classic');
 function start(data) {
   resize();
   if (data && data.S) restore(data);
@@ -3353,7 +3456,7 @@ function start(data) {
 window.claude?.hot?.snapshot?.(() => ({ S:S && JSON.parse(JSON.stringify(S)), camp, campStart, cam:{ az:cam.az, el:cam.el, zoom:cam.zoom, tx:cam.tx, ty:cam.ty, tz:cam.tz } }));
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
 
-window.__va = { autoMoveAll, SK, startSkirmish, get S() { return S; }, get camp() { return camp; }, autoDeploy, launch, endTurn, select, doMove, attackWith, bestStyleFor, endGame, showBriefing, openMenu, applyPalette, cam, ui, V, say };
+window.__va = { applyGfx, autoMoveAll, SK, startSkirmish, get S() { return S; }, get camp() { return camp; }, autoDeploy, launch, endTurn, select, doMove, attackWith, bestStyleFor, endGame, showBriefing, openMenu, applyPalette, cam, ui, V, say };
 })();
 </script>
 </body>

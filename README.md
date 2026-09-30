@@ -59,7 +59,12 @@ Most HUD panels collapse with their ▾ buttons: the timeline, log, comms, hint,
 
 ## Look
 
-The board renders at low resolution and is dithered down to a three-colour palette (black, white and one accent, in the style of Downwell), with pixel-art talking-head portraits. Only weapon fire, thrusters and explosions break the palette. Shot colour shows damage: blue under 12, green under 23, yellow under 36, red under 56, violet above.
+Two graphics modes, switched from **≡ → Graphics** (the choice is remembered):
+
+- **Retro** (default): the board renders at low resolution and is dithered down to a three-colour palette (black, white and one accent, in the style of Downwell), with pixel-art talking-head portraits and paper-document screens. Only weapon fire, thrusters, explosions and trims break the palette. Wins unlock extra retro palettes.
+- **Classic**: the same scene at full screen resolution with anti-aliasing, smooth shading and full colour: a navy-to-violet nebula, full-colour anime portraits, and rounded translucent HUD panels in a clean sans font.
+
+In both modes, shot colour shows damage: blue under 12, green under 23, yellow under 36, red under 56, violet above.
 
 ## Tech
 
